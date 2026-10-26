@@ -1,0 +1,58 @@
+name: Update Stats (15m)
+
+on:
+  schedule:
+    - cron: '*/15 * * * *' # Every 15 minutes
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+# Never run two updates at once (avoids push conflicts)
+concurrency:
+  group: update-stats
+  cancel-in-progress: false
+
+jobs:
+  update-stats:
+    runs-on: ubuntu-latest
+    env:
+      COC_API_TOKEN: ${{ secrets.COC_API_TOKEN }}
+      CLAN_TAG: ${{ secrets.CLAN_TAG }}
+      PYTHONPATH: scrapers
+
+    steps:
+      - name: Checkout Repo
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+          cache: pip
+
+      - name: Install Dependencies
+        run: pip install requests python-dotenv
+
+      # Each scraper runs even if the one before it failed
+      - name: Run Clan Scraper
+        run: python scrapers/clan_scraper.py
+
+      - name: Run War Scraper
+        if: ${{ !cancelled() }}
+        run: python scrapers/war_scraper.py
+
+      - name: Run Raid Scraper
+        if: ${{ !cancelled() }}
+        run: python scrapers/raid_scraper.py
+
+      - name: Commit and Push
+        if: ${{ !cancelled() }}
+        run: |
+          git config user.name "Stats Bot"
+          git config user.email "bot@github.com"
+          git add data/
+          git diff --cached --quiet && exit 0
+          git commit -m "Auto-update clan, war and raid stats"
+          git pull --rebase
+          git push

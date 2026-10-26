@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sambal Balabwdo Clan</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700&family=Inter:wght@400;600&family=Fruktur&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Symbols+Outlined" rel="stylesheet">
+    <link rel="stylesheet" href="pages/style.css">
+</head>
+<body class="min-h-screen flex flex-col antialiased">
+    <main class="w-full max-w-5xl mx-auto px-4 pt-4 pb-28 flex-1">
+        <header id="clanHeader" class="w-full pt-3"></header>
+        <section id="section-about" class="w-full">
+            <div id="aboutContent"></div>
+        </section>
+        <section id="section-members" class="w-full hidden-section">
+            <div id="membersContent"></div>
+        </section>
+        <section id="section-war" class="w-full hidden-section">
+            <div id="warContent" class="px-0 py-3 pb-28 w-full">
+                <div id="warDataContainer" class="text-gray-300 text-sm">Loading war data...</div>
+            </div>
+        </section>
+        <section id="section-raid" class="w-full hidden-section">
+            <div id="raidContent"></div>
+        </section>
+        <section id="section-settings" class="w-full hidden-section">
+            <div id="settingsContent"></div>
+        </section>
+    </main>
+    <nav id="bottomToolbar" aria-label="Main Navigation">
+        <button id="tab-about" class="active">
+            <span class="material-symbols-outlined nav-icon">home</span><span class="nav-label">Home</span>
+        </button>
+        <button id="tab-members">
+            <span class="material-symbols-outlined nav-icon">groups</span><span class="nav-label">Member</span>
+        </button>
+        <button id="tab-war">
+            <span class="material-symbols-outlined nav-icon">swords</span><span class="nav-label">Battle</span>
+        </button>
+        <button id="tab-raid">
+            <span class="material-symbols-outlined nav-icon">savings</span><span class="nav-label">Raid</span>
+        </button>
+    </nav>
+    <script type="module" src="js/app.js"></script>
+</body>
+</html>
+
