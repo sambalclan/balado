@@ -43,4 +43,3 @@ def update_clan_data():
 
 if __name__ == "__main__":
     update_clan_data()
-

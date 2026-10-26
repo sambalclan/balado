@@ -44,7 +44,7 @@ const renderWarCard = (w) => {
 
     const startTimeHtml = w.state === 'preparation'
         ? `<span class="text-[#D4A72C] font-semibold">Start Time: ${formatWarStartTime(w)}</span>`
-        : '<span></span>';
+        : '';
 
     return `
     <div data-war-open="${state.wars.indexOf(w)}" class="bg-[#1E1E1E] border border-[#3A3A3A] rounded-xl px-3 py-2 cursor-pointer active:scale-[0.99] transition-transform">
@@ -79,9 +79,17 @@ const renderWarCard = (w) => {
 // Running wars first (preparation and in war), then finished wars in their original order
 const isRunning = (w) => warResult(w).key === 'ongoing';
 const filterWars = () => [...state.wars]
-    .sort((a, b) => isRunning(b) - isRunning(a))
+    .sort((a, b) => {
+        // Running wars first
+        const aRunning = isRunning(a), bRunning = isRunning(b);
+        if (aRunning !== bRunning) return bRunning - aRunning;
+        // Then finished wars: newest first
+        const aDate = parseCoCDate(a.endTime || a.startTime || a.preparationStartTime)?.getTime() || 0;
+        const bDate = parseCoCDate(b.endTime || b.startTime || b.preparationStartTime)?.getTime() || 0;
+        return bDate - aDate;
+    })
     .filter((w) => warFilter === 'all' || warResult(w).key === warFilter);
-
+    
 const renderWarList = () => {
     const shown = filterWars();
     const count = document.getElementById('warCount');
@@ -116,7 +124,7 @@ const renderWarChartCard = () => {
     return renderAreaChart({
         title: 'War',
         subtitle: 'Stars per war (last 7)',
-        extraClass: 'mb-3',
+        extraClass: 'mt-3',
         points: done.slice(-7).map((w) => ({ label: dayLabel(warDate(w)), value: w.clan?.stars || 0 })),
         stats: done.length ? warSummary(done) : [],
         note: done.length ? `Summary of ${done.length} finished wars` : '',
@@ -193,7 +201,7 @@ function renderWarDetail(w) {
 }
 
 export function renderWar(wars) {
-    const container = document.getElementById('warDataContainer');
+    const container = document.getElementById('section-war');
     if (!container) return;
 
     state.wars = (Array.isArray(wars) ? wars : wars ? [wars] : [])
@@ -221,7 +229,6 @@ export function renderWar(wars) {
     }
 
     container.innerHTML = `
-        ${renderWarChartCard()}
         <div class="w-full bg-[#1a1a1a] border border-[#2A2A2A] rounded-2xl p-3">
             <div class="flex items-center gap-3 mb-3">
                 <h2 class="medieval text-lg font-bold text-white uppercase">Wars</h2>
@@ -238,6 +245,7 @@ export function renderWar(wars) {
 
             <div id="warList" class="flex flex-col gap-2">${renderWarList()}</div>
         </div>
+        ${renderWarChartCard()}
     `;
 
     container.onclick = (e) => {

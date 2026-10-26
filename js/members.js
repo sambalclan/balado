@@ -43,17 +43,16 @@ const renderMemberRow = (m, index) => {
 
     return `
     <div data-member="${escapeHtml(m.tag)}" class="flex items-center gap-3 px-3 py-1.5 cursor-pointer ${index > 0 ? 'border-t border-[#2A2A2A]' : ''}">
-        <img src="${getTHImage(m.townHallLevel)}" class="w-8 h-8 shrink-10 object-contain"
+        <img src="${getTHImage(m.townHallLevel)}" class="w-8 h-8 shrink-0 object-contain"
              alt="TH${m.townHallLevel}" onerror="this.style.visibility='hidden'">
         <div class="min-w-0 flex-1 leading-tight">
             <p class="text-[11px] font-bold text-white truncate">
                 ${escapeHtml(m.name)}
                 <span class="ml-1 text-[8px] font-mono font-normal tracking-wide text-[#6B7280]">XP ${m.expLevel ?? '-'}</span>
             </p>
-            </p>
             <div class="mt-0.5 flex gap-5 text-[8px] tracking-wide uppercase text-[#8B8F98]">
-                <span>Donated <b class="block text-[2px] text-green-500">${m.donations}</b></span>
-                <span>Received <b class="block text-[2px] text-red-400">${m.donationsReceived}</b></span>
+                <span>Donated <b class="block text-[8px] text-green-500">${m.donations}</b></span>
+                <span>Received <b class="block text-[8px] text-red-400">${m.donationsReceived}</b></span>
             </div>
         </div>
         <div class="shrink-0 w-14 flex flex-col items-center leading-tight">
@@ -78,7 +77,7 @@ const renderMembersList = (clan) => {
 };
 
 export function renderMembers(clan) {
-    const container = document.getElementById('membersContent');
+    const container = document.getElementById('section-members');
     if (!container || !clan) return;
 
     const roleButtons = MEMBER_ROLE_FILTERS.map(renderRoleButton).join('');

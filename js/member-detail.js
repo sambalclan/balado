@@ -121,7 +121,7 @@ export function buildMemberDetailHtml(member, { wars = [], raid = null } = {}) {
 
         <div class="grid grid-cols-3 gap-2 mb-4">
             ${statTile('Trophies', trophies, 'text-[#D4A72C]')}
-            ${statTile('Donated', fmt(member.donations), 'text-[9px] text-green-500')}
+            ${statTile('Donated', fmt(member.donations), 'text-green-500')}
             ${statTile('Received', fmt(member.donationsReceived), 'text-red-400')}
         </div>
 

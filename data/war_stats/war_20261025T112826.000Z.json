@@ -1,5 +1,5 @@
 {
-    "state": "inWar",
+    "state": "warEnded",
     "teamSize": 10,
     "attacksPerMember": 2,
     "battleModifier": "none",
@@ -15,9 +15,9 @@
             "medium": "https://api-assets.clashofclans.com/badges/200/kMzbLtABCLcdaaEsZGiLn2Tvnv-nXvhq8z008z-gGz4.png"
         },
         "clanLevel": 10,
-        "attacks": 11,
-        "stars": 14,
-        "destructionPercentage": 64.5,
+        "attacks": 18,
+        "stars": 26,
+        "destructionPercentage": 93.3,
         "members": [
             {
                 "tag": "#GPCYQG89Y",
@@ -123,7 +123,25 @@
                 "name": "Oni Mask",
                 "townhallLevel": 15,
                 "mapPosition": 5,
-                "opponentAttacks": 2,
+                "attacks": [
+                    {
+                        "attackerTag": "#QYU9CCQ28",
+                        "defenderTag": "#Q0P98VR9L",
+                        "stars": 3,
+                        "destructionPercentage": 100,
+                        "order": 27,
+                        "duration": 147
+                    },
+                    {
+                        "attackerTag": "#QYU9CCQ28",
+                        "defenderTag": "#QYPLUQ2VQ",
+                        "stars": 3,
+                        "destructionPercentage": 100,
+                        "order": 35,
+                        "duration": 130
+                    }
+                ],
+                "opponentAttacks": 4,
                 "bestOpponentAttack": {
                     "attackerTag": "#L8R09GGUR",
                     "defenderTag": "#QYU9CCQ28",
@@ -146,6 +164,14 @@
                         "destructionPercentage": 99,
                         "order": 12,
                         "duration": 180
+                    },
+                    {
+                        "attackerTag": "#QYVQR80PU",
+                        "defenderTag": "#L8U8R8Q2L",
+                        "stars": 2,
+                        "destructionPercentage": 73,
+                        "order": 34,
+                        "duration": 168
                     }
                 ],
                 "opponentAttacks": 1,
@@ -181,7 +207,7 @@
                         "duration": 180
                     }
                 ],
-                "opponentAttacks": 1,
+                "opponentAttacks": 3,
                 "bestOpponentAttack": {
                     "attackerTag": "#L8R09GGUR",
                     "defenderTag": "#GJLJ8YLJV",
@@ -196,6 +222,24 @@
                 "name": "Zysss ur clown",
                 "townhallLevel": 15,
                 "mapPosition": 4,
+                "attacks": [
+                    {
+                        "attackerTag": "#QJUYL2L9V",
+                        "defenderTag": "#2QP9GPPGQ",
+                        "stars": 3,
+                        "destructionPercentage": 100,
+                        "order": 25,
+                        "duration": 121
+                    },
+                    {
+                        "attackerTag": "#QJUYL2L9V",
+                        "defenderTag": "#2LLQJR0J8",
+                        "stars": 3,
+                        "destructionPercentage": 100,
+                        "order": 26,
+                        "duration": 110
+                    }
+                ],
                 "opponentAttacks": 1,
                 "bestOpponentAttack": {
                     "attackerTag": "#2LLQJR0J8",
@@ -226,6 +270,24 @@
                 "name": "Skyzo",
                 "townhallLevel": 11,
                 "mapPosition": 10,
+                "attacks": [
+                    {
+                        "attackerTag": "#QR98PU0QJ",
+                        "defenderTag": "#QYPLUQ2VQ",
+                        "stars": 1,
+                        "destructionPercentage": 45,
+                        "order": 28,
+                        "duration": 66
+                    },
+                    {
+                        "attackerTag": "#QR98PU0QJ",
+                        "defenderTag": "#90GVP0VVR",
+                        "stars": 2,
+                        "destructionPercentage": 54,
+                        "order": 29,
+                        "duration": 77
+                    }
+                ],
                 "opponentAttacks": 1,
                 "bestOpponentAttack": {
                     "attackerTag": "#QYPLUQ2VQ",
@@ -280,7 +342,7 @@
             "medium": "https://api-assets.clashofclans.com/badges/200/Az2KTu1Fo-2eOl6555nLAbcJvV_x3iW-TjJVM8vqt0s.png"
         },
         "clanLevel": 17,
-        "attacks": 13,
+        "attacks": 17,
         "stars": 25,
         "destructionPercentage": 93.5,
         "members": [
@@ -322,14 +384,32 @@
                 "name": "snow country",
                 "townhallLevel": 15,
                 "mapPosition": 7,
-                "opponentAttacks": 1,
+                "attacks": [
+                    {
+                        "attackerTag": "#2QP9GPPGQ",
+                        "defenderTag": "#GJLJ8YLJV",
+                        "stars": 2,
+                        "destructionPercentage": 85,
+                        "order": 30,
+                        "duration": 116
+                    },
+                    {
+                        "attackerTag": "#2QP9GPPGQ",
+                        "defenderTag": "#QYU9CCQ28",
+                        "stars": 2,
+                        "destructionPercentage": 84,
+                        "order": 31,
+                        "duration": 85
+                    }
+                ],
+                "opponentAttacks": 2,
                 "bestOpponentAttack": {
-                    "attackerTag": "#GPCYQG89Y",
+                    "attackerTag": "#QJUYL2L9V",
                     "defenderTag": "#2QP9GPPGQ",
-                    "stars": 0,
-                    "destructionPercentage": 44,
-                    "order": 11,
-                    "duration": 180
+                    "stars": 3,
+                    "destructionPercentage": 100,
+                    "order": 25,
+                    "duration": 121
                 }
             },
             {
@@ -355,14 +435,14 @@
                         "duration": 62
                     }
                 ],
-                "opponentAttacks": 1,
+                "opponentAttacks": 3,
                 "bestOpponentAttack": {
-                    "attackerTag": "#R2YVRJRYY",
+                    "attackerTag": "#QYU9CCQ28",
                     "defenderTag": "#QYPLUQ2VQ",
-                    "stars": 1,
-                    "destructionPercentage": 53,
-                    "order": 8,
-                    "duration": 81
+                    "stars": 3,
+                    "destructionPercentage": 100,
+                    "order": 35,
+                    "duration": 130
                 }
             },
             {
@@ -388,7 +468,15 @@
                         "duration": 88
                     }
                 ],
-                "opponentAttacks": 0
+                "opponentAttacks": 1,
+                "bestOpponentAttack": {
+                    "attackerTag": "#QYU9CCQ28",
+                    "defenderTag": "#Q0P98VR9L",
+                    "stars": 3,
+                    "destructionPercentage": 100,
+                    "order": 27,
+                    "duration": 147
+                }
             },
             {
                 "tag": "#8QULQRPGY",
@@ -428,7 +516,7 @@
                         "duration": 138
                     }
                 ],
-                "opponentAttacks": 2,
+                "opponentAttacks": 3,
                 "bestOpponentAttack": {
                     "attackerTag": "#GLJR89GYC",
                     "defenderTag": "#L8U8R8Q2L",
@@ -461,7 +549,15 @@
                         "duration": 83
                     }
                 ],
-                "opponentAttacks": 0
+                "opponentAttacks": 1,
+                "bestOpponentAttack": {
+                    "attackerTag": "#QJUYL2L9V",
+                    "defenderTag": "#2LLQJR0J8",
+                    "stars": 3,
+                    "destructionPercentage": 100,
+                    "order": 26,
+                    "duration": 110
+                }
             },
             {
                 "tag": "#GJPPP0RUY",
@@ -493,14 +589,32 @@
                 "name": "ZANAKA",
                 "townhallLevel": 15,
                 "mapPosition": 9,
-                "opponentAttacks": 2,
+                "attacks": [
+                    {
+                        "attackerTag": "#90GVP0VVR",
+                        "defenderTag": "#QYU9CCQ28",
+                        "stars": 2,
+                        "destructionPercentage": 61,
+                        "order": 32,
+                        "duration": 92
+                    },
+                    {
+                        "attackerTag": "#90GVP0VVR",
+                        "defenderTag": "#GJLJ8YLJV",
+                        "stars": 2,
+                        "destructionPercentage": 73,
+                        "order": 33,
+                        "duration": 107
+                    }
+                ],
+                "opponentAttacks": 3,
                 "bestOpponentAttack": {
-                    "attackerTag": "#GPCYQG89Y",
+                    "attackerTag": "#QR98PU0QJ",
                     "defenderTag": "#90GVP0VVR",
-                    "stars": 1,
-                    "destructionPercentage": 69,
-                    "order": 13,
-                    "duration": 145
+                    "stars": 2,
+                    "destructionPercentage": 54,
+                    "order": 29,
+                    "duration": 77
                 }
             },
             {

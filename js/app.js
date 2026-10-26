@@ -1,6 +1,7 @@
 import { fetchClanData, fetchClanHistory, fetchLatestRaid, fetchWarIndex, fetchWarData, fetchRaidIndex, fetchRaidData } from './api.js';
 import { setWarData, setClanHistory, setRaidData, setRaids } from './state.js';
-import { renderAbout, renderRaid, renderSettings } from './render.js';
+import { renderAbout, renderSettings } from './render.js';
+import { renderRaid } from './raid.js';
 import { renderMembers } from './members.js';
 import { renderWar } from './war.js';
 
@@ -70,10 +71,15 @@ async function loadWarData() {
         const results = await Promise.allSettled(index.map(fetchWarData));
         const wars = results
             .map((r, i) => (r.status === 'fulfilled' && r.value ? { ...r.value, __file: index[i] } : null))
-            .filter(Boolean);
+            .filter(Boolean)
+            .sort((a, b) => {
+                const aDate = (a.preparationStartTime || a.startTime || '').slice(0, 10);
+                const bDate = (b.preparationStartTime || b.startTime || '').slice(0, 10);
+                return bDate.localeCompare(aDate); // Newest first
+            });
 
         if (wars.length === 0) return renderWar(null);
-        setWarData(wars[0]);
+        setWarData(wars[0]); // Sekarang ambil yang terbaru
         renderWar(wars);
     } catch {
         renderWar(null);
