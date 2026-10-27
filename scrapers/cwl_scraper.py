@@ -1,149 +1,88 @@
-import requests
 import json
 import os
+from datetime import datetime, timezone
+from urllib.parse import quote
+
+import requests
 from config import BASE_URL, CLAN_TAG, HEADERS
 
-# CLAN_TAG is URL-encoded ("%23ABC"); war data uses the plain tag ("#ABC")
-MY_TAG = CLAN_TAG.replace('%23', '#').upper()
-STARTED = ('inWar', 'warEnded')  # rounds that count towards player stats
+DATA_DIR = 'data/cwl_stats'
+INDEX_PATH = 'data/cwl_stats_index.json'
+TIMEOUT = 25
 
 
-def api_get(path):
-    return requests.get(f"{BASE_URL}{path}", headers=HEADERS, timeout=30)
-
-
-def fetch_round(war_tag, number):
-    """Fetch one CWL war. Returns our side of it, or None when we are not in this war."""
-    res = api_get(f"/clanwarleagues/wars/{war_tag.replace('#', '%23')}")
-    if res.status_code != 200:
-        print(f"Failed to fetch CWL war {war_tag}: {res.status_code}")
+def fetch_json(session, path):
+    response = session.get(f"{BASE_URL.rstrip('/')}{path}", timeout=TIMEOUT)
+    if response.status_code == 404:
+        print(f"Not found or unavailable: {path}")
         return None
-
-    war = res.json()
-    for mine, enemy in (('clan', 'opponent'), ('opponent', 'clan')):
-        if (war.get(mine) or {}).get('tag', '').upper() != MY_TAG:
-            continue
-        return {
-            'round': number,
-            'warTag': war_tag,
-            'state': war.get('state'),
-            'opponent': war[enemy].get('name', ''),
-            'stars': war[mine].get('stars', 0),
-            'members': [
-                {
-                    'tag': m.get('tag'),
-                    'name': m.get('name'),
-                    'townHallLevel': m.get('townhallLevel'),
-                    'attacks': [
-                        {'stars': a.get('stars', 0), 'destructionPercentage': a.get('destructionPercentage', 0)}
-                        for a in m.get('attacks', [])
-                    ],
-                }
-                for m in war[mine].get('members', [])
-            ],
-        }
-    return None
+    response.raise_for_status()
+    return response.json()
 
 
-def collect_rounds(group, cached):
-    rounds = []
-    for number, rnd in enumerate(group.get('rounds', []), start=1):
-        tags = [t for t in rnd.get('warTags', []) if t != '#0']
-        if not tags:
-            continue  # round is not created yet
-
-        old = cached.get(number)
-        if old and old.get('state') == 'warEnded':
-            rounds.append(old)  # finished rounds never change, no need to ask the API again
-            continue
-
-        # Our war in this round: try the one we already know first, otherwise scan all of them
-        if old:
-            tags.sort(key=lambda t: t != old['warTag'])
-        found = next(filter(None, (fetch_round(t, number) for t in tags)), old)
-        if found:
-            rounds.append(found)
-    return rounds
-
-
-def summarize(rounds):
-    """Per player totals over all rounds that have started."""
-    players = {}
-    for rnd in rounds:
-        if rnd['state'] not in STARTED:
-            continue
-        for m in rnd['members']:
-            p = players.setdefault(m['tag'], {
-                'tag': m['tag'], 'name': m['name'], 'townHallLevel': m['townHallLevel'],
-                'rounds': 0, 'attacks': 0, 'stars': 0, 'destruction': 0,
-            })
-            p['rounds'] += 1
-            for a in m['attacks']:
-                p['attacks'] += 1
-                p['stars'] += a['stars']
-                p['destruction'] += a['destructionPercentage']
-    return sorted(players.values(), key=lambda p: (-p['stars'], -p['destruction']))
-
-
-def update_index(filename):
-    index_path = 'data/cwl_stats_index.json'
-    index = []
-    if os.path.exists(index_path):
-        with open(index_path, 'r') as f:
-            try:
-                index = json.load(f)
-            except ValueError:
-                index = []
-
-    if filename not in index:
-        index.append(filename)
-        index.sort(reverse=True)  # Newest first
-        with open(index_path, 'w') as f:
-            json.dump(index, f, indent=4)
-        print(f"Added {filename} to CWL stats index.")
+def save_json(path, data):
+    with open(path, 'w', encoding='utf-8') as file:
+        json.dump(data, file, indent=2, ensure_ascii=False)
 
 
 def update_cwl_data():
-    res = api_get(f"/clans/{CLAN_TAG}/currentwar/leaguegroup")
-    if res.status_code == 404:
-        print("Clan is not in a Clan War League right now.")
-        return
-    if res.status_code != 200:
-        print(f"Failed to fetch CWL group: {res.status_code}")
-        return
+    os.makedirs(DATA_DIR, exist_ok=True)
+    clan_tag = quote(CLAN_TAG if CLAN_TAG.startswith('#') else f'#{CLAN_TAG}', safe='')
 
-    group = res.json()
-    season = group.get('season')
-    if group.get('state') in (None, 'notInWar') or not season:
-        print("No CWL group found.")
-        return
-
-    os.makedirs('data/cwl_stats', exist_ok=True)
-    filename = f"cwl_{season}.json"
-    file_path = os.path.join('data/cwl_stats', filename)
-
-    cached = {}
-    if os.path.exists(file_path):
+    with requests.Session() as session:
+        session.headers.update(HEADERS)
         try:
-            with open(file_path, 'r') as f:
-                cached = {r['round']: r for r in json.load(f).get('rounds', [])}
-        except (ValueError, KeyError, AttributeError, TypeError):
-            cached = {}
+            group = fetch_json(session, f'/clans/{clan_tag}/currentwar/leaguegroup')
+            if group is None:
+                print('CWL group data is not available. No snapshot saved.')
+                return
 
-    rounds = collect_rounds(group, cached)
-    data = {
-        'season': season,
-        'state': group.get('state'),
-        'rounds': rounds,
-        'members': summarize(rounds),
-    }
-    with open(file_path, 'w') as f:
-        json.dump(data, f, indent=4)
-    print(f"Saved CWL {season} ({len(rounds)} rounds) to {file_path}")
+            war_tags = list(dict.fromkeys(
+                tag for round_data in group.get('rounds', [])
+                for tag in round_data.get('warTags', [])
+                if tag and tag != '#0'
+            ))
+            wars = []
+            for tag in war_tags:
+                try:
+                    war = fetch_json(session, f'/clanwarleagues/wars/{quote(tag, safe="")}')
+                    if war is not None:
+                        wars.append(war)
+                except requests.RequestException as error:
+                    print(f'Could not fetch CWL war {tag}: {error}')
 
-    update_index(filename)
+        except requests.RequestException as error:
+            print(f'Failed to fetch CWL group: {error}')
+            return
+
+    today = datetime.now(timezone.utc).strftime('%Y%m%d')
+    filename = f'cwl_{today}.json'
+    snapshot_path = os.path.join(DATA_DIR, filename)
+    save_json(snapshot_path, {
+        'collectedAt': datetime.now(timezone.utc).isoformat(),
+        'clanTag': CLAN_TAG,
+        'leagueGroup': group,
+        'wars': wars,
+        'warsFetched': len(wars),
+        'warTagsTotal': len(war_tags),
+    })
+
+    index = []
+    if os.path.exists(INDEX_PATH):
+        try:
+            with open(INDEX_PATH, encoding='utf-8') as file:
+                existing = json.load(file)
+                if isinstance(existing, list):
+                    index = existing
+        except (OSError, ValueError):
+            print('Index invalid; creating a new index.')
+
+    if filename not in index:
+        index.append(filename)
+    index.sort(reverse=True)
+    save_json(INDEX_PATH, index)
+    print(f'Saved {snapshot_path} ({len(wars)}/{len(war_tags)} CWL wars fetched)')
 
 
-if __name__ == "__main__":
+if __name__ == '__main__':
     update_cwl_data()
-    
