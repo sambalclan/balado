@@ -101,7 +101,7 @@ export function buildMemberDetailHtml(member, { wars = [], raid = null } = {}) {
     const trophies = `${league ? `<img src="${league}" class="inline w-4 h-4 mr-1 object-contain" alt="">` : ''}${fmt(member.trophies)}`;
 
     return `
-    <div class="w-full bg-[#1a1a1a] border border-[#2A2A2A] rounded-2xl p-4">
+    <div class="w-full bg-[#1a1a1a] border border-[#3A2F17] rounded-xl p-4">
         <div class="flex items-center gap-3 mb-4">
             <button type="button" data-back aria-label="Back"
                     class="shrink-0 w-9 h-9 rounded-full bg-white/10 hover:bg-white/20 text-white
@@ -113,9 +113,6 @@ export function buildMemberDetailHtml(member, { wars = [], raid = null } = {}) {
             <div class="min-w-0 flex-1 leading-tight">
                 <p class="text-base font-bold text-white truncate">${escapeHtml(member.name)}</p>
                 <p class="text-[10px] font-mono text-[#8B8F98]">${escapeHtml(member.tag)}</p>
-                <p class="text-[9px] font-semibold tracking-wide text-[#D4A72C] uppercase">
-                    ${roleMap[member.role] || member.role || ''} · XP ${member.expLevel ?? '-'}
-                </p>
             </div>
         </div>
 

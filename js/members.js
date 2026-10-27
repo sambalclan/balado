@@ -87,7 +87,7 @@ export function renderMembers(clan) {
 
     container.innerHTML = `
         <div class="px-0 py-3 pb-28 w-full">
-            <div class="w-full bg-[#1a1a1a] border border-[#2A2A2A] rounded-2xl p-3">
+            <div class="w-full bg-[#1a1a1a] border border-[#2A2A2A] rounded-xl p-3">
                 <div class="flex items-baseline gap-3 mb-3">
                     <h2 class="medieval text-lg font-bold text-white uppercase">Members</h2>
                     <span class="text-[11px] text-[#8B8F98] font-mono">${clan.members ?? clan.memberList?.length ?? 0} / 50</span>

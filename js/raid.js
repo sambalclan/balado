@@ -55,19 +55,6 @@ const renderRaidCard = (w, i) => {
     </div>`;
 };
 
-const renderRaidTargetRow = (t, i) => `
-    <div class="flex items-center gap-3 px-3 py-2 ${i > 0 ? 'border-t border-[#2A2A2A]' : ''}">
-        ${t.badge ? `<img src="${t.badge}" class="w-9 h-9 shrink-0 object-contain" alt="" onerror="this.style.visibility='hidden'">` : ''}
-        <div class="min-w-0 flex-1 leading-tight">
-            <p class="text-[12px] font-bold text-white truncate">${escapeHtml(t.name)}</p>
-            <p class="text-[9px] text-[#8B8F98]">${fmt(t.attacks)} attacks</p>
-        </div>
-        <div class="shrink-0 text-right leading-tight">
-            <p class="text-[13px] font-bold text-[#D4A72C]">${t.districts ? `${fmt(t.destroyed)}/${fmt(t.districts)}` : fmt(t.destroyed)}</p>
-            <p class="text-[7px] tracking-wide uppercase text-[#6B7280]">Districts</p>
-        </div>
-    </div>`;
-
 const renderRaidMemberRow = (m, i) => {
     // Raid data has no TH/role, so look the member up in the clan list
     const info = (state.clan?.memberList || []).find((c) => c.tag === m.tag) || {};
@@ -118,7 +105,6 @@ export function renderRaid() {
             || (b.capitalResourcesLooted || 0) - (a.capitalResourcesLooted || 0)
             || (b.attacks || 0) - (a.attacks || 0));
         const attacked = members.filter((m) => (m.attacks || 0) > 0).length;
-        const targets = raidTargets(open);
         page.innerHTML = `
             <div class="px-0 py-3 pb-28 w-full">
                 <div class="w-full bg-[#1a1a1a] border border-[#2A2A2A] rounded-2xl p-3">
@@ -133,10 +119,6 @@ export function renderRaid() {
                             <p class="text-[10px] text-[#8B8F98]">${attacked}/${members.length} members attacked</p>
                         </div>
                     </div>
-                    ${targets.length ? `
-                    <h4 class="medieval text-[11px] font-bold text-[#D4A72C] uppercase tracking-wide mb-2">Clans attacked</h4>
-                    <div class="rounded-xl overflow-hidden border border-[#2A2A2A] mb-4">${targets.map(renderRaidTargetRow).join('')}</div>
-                    <h4 class="medieval text-[11px] font-bold text-[#D4A72C] uppercase tracking-wide mb-2">Members</h4>` : ''}
                     ${members.length
                         ? `<div class="rounded-xl overflow-hidden border border-[#2A2A2A]">${members.map(renderRaidMemberRow).join('')}</div>`
                         : '<p class="text-sm text-gray-400 text-center py-6">No member data.</p>'}

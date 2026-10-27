@@ -392,8 +392,8 @@ async function generateReport(type) {
 }
 
 const SETTINGS_REPORTS = [
-    { type: 'members', icon: 'groups', title: 'Members Report', desc: 'Create a members list image' },
-    { type: 'war',     icon: 'swords', title: 'War Report',     desc: 'Create a war report image' },
+    { type: 'members', icon: 'groups', title: 'Members Report', desc: 'Creation Pdf War' },
+    { type: 'war',     icon: 'swords', title: 'War Report',     desc: 'Creation Pdf War' },
 ];
 
 const reportButtonHtml = ({ type, icon, title, desc }) => `
@@ -503,7 +503,7 @@ const renderRecordTile = (label, value, color) => `
     </div>
 `;
 
-const renderPersonRow = (m, index, value, label, color = 'text-green-500') => `
+const renderPersonRow = (m, index, value, label, color = 'text-[#D4A72C]') => `
     <div class="flex items-center gap-3 px-3 py-1.5 ${index > 0 ? 'border-t border-[#2A2A2A]' : ''}">
         <img src="${getTHImage(m.townHallLevel)}" class="w-9 h-9 shrink-0 object-contain"
              alt="TH${m.townHallLevel}" onerror="this.style.visibility='hidden'">
@@ -583,7 +583,7 @@ export function renderAbout(clan) {
     container.innerHTML = `
         <div class="pt-4 pb-3 px-0 md:p-5 w-full flex flex-col gap-4">
             <div class="w-full overflow-hidden
-                        bg-[#1E1E1E] border border-[#3A3A3A]
+                        bg-[#1E1E1E] border border-[#2A2A2A]
                         p-3 md:p-6 rounded-xl flex flex-col gap-3">
 
                 <div class="pb-3 border-b border-[#2A2A2A]">
@@ -620,4 +620,3 @@ export function renderAbout(clan) {
     // Capital Gold card jumps to the Raid tab
     document.getElementById('raidCard')?.addEventListener('click', () => document.getElementById('tab-raid')?.click());
 }
-

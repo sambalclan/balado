@@ -89,7 +89,7 @@ const filterWars = () => [...state.wars]
         return bDate - aDate;
     })
     .filter((w) => warFilter === 'all' || warResult(w).key === warFilter);
-    
+
 const renderWarList = () => {
     const shown = filterWars();
     const count = document.getElementById('warCount');
@@ -183,7 +183,7 @@ function renderWarDetail(w) {
     const idle = members.filter((m) => !(m.attacks || []).length);
 
     return `
-    <div class="w-full bg-[#1a1a1a] border border-[#2A2A2A] rounded-2xl p-3">
+    <div class="w-full bg-[#1a1a1a] border border-[#3A2F17] rounded-xl p-3">
         <div class="flex items-center gap-3 mb-3">
             <button type="button" data-war-back aria-label="Back"
                     class="shrink-0 w-9 h-9 rounded-full bg-white/10 hover:bg-white/20 text-white
@@ -229,7 +229,7 @@ export function renderWar(wars) {
     }
 
     container.innerHTML = `
-        <div class="w-full bg-[#1a1a1a] border border-[#2A2A2A] rounded-2xl p-3">
+        <div class="w-full bg-[#1a1a1a] border border-[#3A2F17] rounded-xl p-3">
             <div class="flex items-center gap-3 mb-3">
                 <h2 class="medieval text-lg font-bold text-white uppercase">Wars</h2>
                 <span id="warCount" class="text-[11px] text-[#8B8F98] font-mono">${state.wars.length} / ${state.wars.length}</span>
