@@ -1,5 +1,5 @@
 {
-    "state": "preparation",
+    "state": "inWar",
     "teamSize": 10,
     "attacksPerMember": 2,
     "battleModifier": "none",
@@ -24,28 +24,60 @@
                 "name": "kutur18",
                 "townhallLevel": 16,
                 "mapPosition": 6,
-                "opponentAttacks": 0
+                "opponentAttacks": 1,
+                "bestOpponentAttack": {
+                    "attackerTag": "#QQ80GQ8P0",
+                    "defenderTag": "#GPCYQG89Y",
+                    "stars": 3,
+                    "destructionPercentage": 100,
+                    "order": 3,
+                    "duration": 113
+                }
             },
             {
                 "tag": "#R2YVRJRYY",
                 "name": "Banten fc",
                 "townhallLevel": 15,
                 "mapPosition": 7,
-                "opponentAttacks": 0
+                "opponentAttacks": 1,
+                "bestOpponentAttack": {
+                    "attackerTag": "#QR0JL8QUY",
+                    "defenderTag": "#R2YVRJRYY",
+                    "stars": 3,
+                    "destructionPercentage": 100,
+                    "order": 6,
+                    "duration": 77
+                }
             },
             {
                 "tag": "#GVL2QP9JV",
                 "name": "kaco",
                 "townhallLevel": 13,
                 "mapPosition": 8,
-                "opponentAttacks": 0
+                "opponentAttacks": 1,
+                "bestOpponentAttack": {
+                    "attackerTag": "#QR0JL8QUY",
+                    "defenderTag": "#GVL2QP9JV",
+                    "stars": 3,
+                    "destructionPercentage": 100,
+                    "order": 4,
+                    "duration": 84
+                }
             },
             {
                 "tag": "#R0UYQ88YQ",
                 "name": "mpruy",
                 "townhallLevel": 10,
                 "mapPosition": 10,
-                "opponentAttacks": 0
+                "opponentAttacks": 1,
+                "bestOpponentAttack": {
+                    "attackerTag": "#8UY9JLRU0",
+                    "defenderTag": "#R0UYQ88YQ",
+                    "stars": 3,
+                    "destructionPercentage": 100,
+                    "order": 1,
+                    "duration": 88
+                }
             },
             {
                 "tag": "#GLJR89GYC",
@@ -59,7 +91,15 @@
                 "name": "Oni Mask",
                 "townhallLevel": 15,
                 "mapPosition": 5,
-                "opponentAttacks": 0
+                "opponentAttacks": 1,
+                "bestOpponentAttack": {
+                    "attackerTag": "#QQ80GQ8P0",
+                    "defenderTag": "#QYU9CCQ28",
+                    "stars": 3,
+                    "destructionPercentage": 100,
+                    "order": 5,
+                    "duration": 119
+                }
             },
             {
                 "tag": "#QYVQR80PU",
@@ -73,7 +113,15 @@
                 "name": "Nanzi",
                 "townhallLevel": 13,
                 "mapPosition": 9,
-                "opponentAttacks": 0
+                "opponentAttacks": 1,
+                "bestOpponentAttack": {
+                    "attackerTag": "#8UY9JLRU0",
+                    "defenderTag": "#G989PRQJL",
+                    "stars": 1,
+                    "destructionPercentage": 87,
+                    "order": 2,
+                    "duration": 148
+                }
             },
             {
                 "tag": "#QJUYL2L9V",
@@ -100,9 +148,9 @@
             "medium": "https://api-assets.clashofclans.com/badges/200/1M9AgLDPMr24ikHRTXIJ9g3LQgAHebetLkEHwGmPB5g.png"
         },
         "clanLevel": 18,
-        "attacks": 0,
-        "stars": 0,
-        "destructionPercentage": 0.0,
+        "attacks": 6,
+        "stars": 16,
+        "destructionPercentage": 58.7,
         "members": [
             {
                 "tag": "#YRL2JV8CV",
@@ -130,6 +178,24 @@
                 "name": "KANG DONASI",
                 "townhallLevel": 15,
                 "mapPosition": 8,
+                "attacks": [
+                    {
+                        "attackerTag": "#QR0JL8QUY",
+                        "defenderTag": "#GVL2QP9JV",
+                        "stars": 3,
+                        "destructionPercentage": 100,
+                        "order": 4,
+                        "duration": 84
+                    },
+                    {
+                        "attackerTag": "#QR0JL8QUY",
+                        "defenderTag": "#R2YVRJRYY",
+                        "stars": 3,
+                        "destructionPercentage": 100,
+                        "order": 6,
+                        "duration": 77
+                    }
+                ],
                 "opponentAttacks": 0
             },
             {
@@ -151,6 +217,24 @@
                 "name": "Fin Umemiya",
                 "townhallLevel": 15,
                 "mapPosition": 4,
+                "attacks": [
+                    {
+                        "attackerTag": "#QQ80GQ8P0",
+                        "defenderTag": "#GPCYQG89Y",
+                        "stars": 3,
+                        "destructionPercentage": 100,
+                        "order": 3,
+                        "duration": 113
+                    },
+                    {
+                        "attackerTag": "#QQ80GQ8P0",
+                        "defenderTag": "#QYU9CCQ28",
+                        "stars": 3,
+                        "destructionPercentage": 100,
+                        "order": 5,
+                        "duration": 119
+                    }
+                ],
                 "opponentAttacks": 0
             },
             {
@@ -172,6 +256,24 @@
                 "name": "Ahmad za'a",
                 "townhallLevel": 13,
                 "mapPosition": 10,
+                "attacks": [
+                    {
+                        "attackerTag": "#8UY9JLRU0",
+                        "defenderTag": "#R0UYQ88YQ",
+                        "stars": 3,
+                        "destructionPercentage": 100,
+                        "order": 1,
+                        "duration": 88
+                    },
+                    {
+                        "attackerTag": "#8UY9JLRU0",
+                        "defenderTag": "#G989PRQJL",
+                        "stars": 1,
+                        "destructionPercentage": 87,
+                        "order": 2,
+                        "duration": 148
+                    }
+                ],
                 "opponentAttacks": 0
             }
         ]
