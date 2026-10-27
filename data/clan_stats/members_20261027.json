@@ -17,7 +17,7 @@
     },
     "clanLevel": 10,
     "clanPoints": 33050,
-    "clanBuilderBasePoints": 22045,
+    "clanBuilderBasePoints": 22013,
     "clanCapitalPoints": 1289,
     "capitalLeague": {
         "id": 85000006,
@@ -58,12 +58,12 @@
                     "large": "https://api-assets.clashofclans.com/leaguetiers/326/YCZ7O_3_c8eCBYvX-92qiWeLc6Md6eNJ5A8O-2vUg7I.png"
                 }
             },
-            "trophies": 0,
+            "trophies": 141,
             "builderBaseTrophies": 3137,
             "clanRank": 1,
             "previousClanRank": 1,
             "donations": 1232,
-            "donationsReceived": 842,
+            "donationsReceived": 880,
             "playerHouse": {
                 "elements": [
                     {
@@ -164,7 +164,7 @@
                     "large": "https://api-assets.clashofclans.com/leaguetiers/326/vxV7LI0votsz0_n-8lW-Lag96D5HwKsEgEk_7247zC4.png"
                 }
             },
-            "trophies": 0,
+            "trophies": 17,
             "builderBaseTrophies": 2608,
             "clanRank": 3,
             "previousClanRank": 3,
@@ -377,10 +377,10 @@
                 }
             },
             "trophies": 0,
-            "builderBaseTrophies": 2701,
+            "builderBaseTrophies": 2616,
             "clanRank": 7,
             "previousClanRank": 7,
-            "donations": 628,
+            "donations": 658,
             "donationsReceived": 196,
             "playerHouse": {
                 "elements": [
@@ -540,7 +540,7 @@
             "clanRank": 10,
             "previousClanRank": 10,
             "donations": 669,
-            "donationsReceived": 6654,
+            "donationsReceived": 6699,
             "playerHouse": {
                 "elements": [
                     {
@@ -571,7 +571,7 @@
             "name": "Oni Mask",
             "role": "leader",
             "townHallLevel": 15,
-            "expLevel": 181,
+            "expLevel": 182,
             "league": {
                 "id": 29000000,
                 "name": "Unranked",
@@ -589,10 +589,10 @@
                 }
             },
             "trophies": 0,
-            "builderBaseTrophies": 2863,
+            "builderBaseTrophies": 2861,
             "clanRank": 11,
             "previousClanRank": 11,
-            "donations": 3958,
+            "donations": 4094,
             "donationsReceived": 863,
             "playerHouse": {
                 "elements": [
@@ -1282,7 +1282,7 @@
             "clanRank": 24,
             "previousClanRank": 24,
             "donations": 0,
-            "donationsReceived": 53,
+            "donationsReceived": 136,
             "builderBaseLeague": {
                 "id": 44000024,
                 "name": "Iron League II"
