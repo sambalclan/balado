@@ -110,11 +110,13 @@ async function init() {
             if (raid.status === 'fulfilled') setRaidData(raid.value);
             if (cwl.status === 'fulfilled') setCwlData(cwl.value);
             renderAbout(latestClanData);
+            renderMembers(latestClanData);
         });
-        loadRaidWeeks().then(() => renderAbout(latestClanData));
+        loadRaidWeeks().then(() => { renderAbout(latestClanData); renderMembers(latestClanData); });
 
         await loadWarData();
         renderAbout(latestClanData);
+        renderMembers(latestClanData);
     } catch { /* clan data unavailable */ }
 }
 

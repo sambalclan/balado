@@ -9,7 +9,7 @@ const NEXT_ROLE = { member: 'admin', admin: 'coLeader' };
 // ── Season ──
 // A season follows the calendar month and resets on the 1st at 08:00 UTC (15:00 WIB).
 // Donations reset then, so wars and raids are only counted from that day on.
-const seasonDate = (now = new Date()) => {
+export const seasonDate = (now = new Date()) => {
     const y = now.getUTCFullYear(), m = now.getUTCMonth();
     const thisMonth = new Date(Date.UTC(y, m, 1, 8));
     return (now >= thisMonth ? thisMonth : new Date(Date.UTC(y, m - 1, 1, 8))).toISOString().slice(0, 10); // YYYY-MM-DD
@@ -17,9 +17,9 @@ const seasonDate = (now = new Date()) => {
 
 const inSeason = (record) => warDate(record) >= seasonDate();
 
-const endedWars = () =>
+export const endedWars = () =>
     state.wars.filter((w) => ['warEnded', 'ended'].includes(w.state) && inSeason(w));
-const raidWeeks = () =>
+export const raidWeeks = () =>
     (state.raids.length ? state.raids : (state.raid ? [state.raid] : [])).filter(inSeason);
 
 // Sum a per-member value over a list of war/raid records, keyed by member tag

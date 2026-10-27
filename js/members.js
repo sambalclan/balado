@@ -1,6 +1,6 @@
 import { roleMap, roleWeight, getTHImage, escapeHtml } from './constants.js';
-import { openMemberDetail } from './member-detail.js';
-import { state } from './state.js';
+import { renderPromotionCard } from './promotion.js';
+import { renderWatchlistCard } from './watchlist.js';
 
 // Sort options (also used by the Members report in render.js)
 export const MEMBER_SORTS = {
@@ -26,6 +26,24 @@ const MEMBER_SORT_OPTIONS = [
 let membersSortKey = 'rank';
 let membersSearch = '';
 let membersRole = 'all';
+let membersView = 'list'; // 'list' | 'promotion' | 'watchlist'
+
+const MEMBER_VIEWS = [
+    { id: 'list',      label: 'Anggota' },
+    { id: 'promotion', label: 'Promosi' },
+    { id: 'watchlist', label: 'Watchlist' },
+];
+
+const renderViewButton = ({ id, label }) => {
+    const style = id === membersView
+        ? 'bg-[#2A2410] border-[#6B5A1E] text-[#D4A72C]'
+        : 'border-transparent text-[#6B7280]';
+    return `
+        <button type="button" data-view="${id}"
+                class="py-1.5 rounded-lg border text-[9px] font-semibold tracking-wide uppercase ${style}
+                       active:scale-95 transition-all">${label}</button>
+    `;
+};
 
 const renderRoleButton = ({ id, label }) => {
     const style = id === membersRole
@@ -42,7 +60,7 @@ const renderMemberRow = (m, index) => {
     const league = m.leagueTier?.iconUrls?.small || m.league?.iconUrls?.small || '';
 
     return `
-    <div data-member="${escapeHtml(m.tag)}" class="flex items-center gap-3 px-3 py-1.5 cursor-pointer ${index > 0 ? 'border-t border-[#2A2A2A]' : ''}">
+    <div class="flex items-center gap-3 px-3 py-1.5 ${index > 0 ? 'border-t border-[#2A2A2A]' : ''}">
         <img src="${getTHImage(m.townHallLevel)}" class="w-8 h-8 shrink-0 object-contain"
              alt="TH${m.townHallLevel}" onerror="this.style.visibility='hidden'">
         <div class="min-w-0 flex-1 leading-tight">
@@ -85,14 +103,17 @@ export function renderMembers(clan) {
         `<option value="${id}" ${id === membersSortKey ? 'selected' : ''}>${label}</option>`
     ).join('');
 
-    container.innerHTML = `
-        <div class="px-0 py-3 pb-28 w-full">
-            <div class="w-full bg-[#1a1a1a] border border-[#2A2A2A] rounded-xl p-3">
+    const header = `
                 <div class="flex items-baseline gap-3 mb-3">
                     <h2 class="medieval text-lg font-bold text-white uppercase">Members</h2>
                     <span class="text-[11px] text-[#8B8F98] font-mono">${clan.members ?? clan.memberList?.length ?? 0} / 50</span>
                 </div>
 
+                <div class="grid grid-cols-3 gap-1 p-1 mb-3 rounded-xl bg-[#141414] border border-[#2A2A2A]">
+                    ${MEMBER_VIEWS.map(renderViewButton).join('')}
+                </div>`;
+
+    const listBody = `
                 <div class="grid grid-cols-5 gap-1 p-1 mb-3 rounded-xl bg-[#141414] border border-[#2A2A2A]">
                     ${roleButtons}
                 </div>
@@ -115,20 +136,29 @@ export function renderMembers(clan) {
 
                 <div id="membersList" class="rounded-xl overflow-hidden border border-[#2A2A2A]">
                     ${renderMembersList(clan)}
-                </div>
+                </div>`;
+
+    const body = membersView === 'promotion' ? renderPromotionCard()
+        : membersView === 'watchlist' ? renderWatchlistCard()
+        : listBody;
+    const emptyNote = '<p class="text-xs text-[#8B8F98] text-center py-3">Data belum tersedia.</p>';
+
+    container.innerHTML = `
+        <div class="px-0 py-3 pb-28 w-full">
+            <div class="w-full bg-[#1a1a1a] border border-[#2A2A2A] rounded-xl p-3">
+                ${header}
+                ${membersView === 'list' ? body : (body || emptyNote)}
             </div>
         </div>
     `;
 
     container.onclick = (e) => {
+        const view = e.target.closest('[data-view]');
+        if (view) { membersView = view.dataset.view; renderMembers(clan); return; }
         const btn = e.target.closest('[data-role]');
-        if (btn) { membersRole = btn.dataset.role; renderMembers(clan); return; }
-
-        const row = e.target.closest('[data-member]');
-        if (!row) return;
-        const member = (clan.memberList || []).find((m) => m.tag === row.dataset.member);
-        openMemberDetail(member, { raid: state.raid });
+        if (btn) { membersRole = btn.dataset.role; renderMembers(clan); }
     };
+    if (membersView !== 'list') return;
     container.querySelector('#memberSort').onchange = (e) => {
         membersSortKey = e.target.value;
         container.querySelector('#membersList').innerHTML = renderMembersList(clan);

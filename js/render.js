@@ -2,7 +2,6 @@ import { roleMap, roleName, getTHImage, escapeHtml } from './constants.js';
 import { state } from './state.js';
 import { fmt, dayLabel, renderAreaChart } from './chart.js';
 import { MEMBER_SORTS } from './members.js';
-import { renderPromotionCard } from './promotion.js';
 
 // ── Report config ──
 const BASE_STYLE = {
@@ -481,27 +480,6 @@ const renderPersonRow = (m, index, value, label, color = 'text-[#D4A72C]') => `
     </div>
 `;
 
-// Capital Gold from the latest raid weekend
-const renderCapitalCard = () => {
-    const loot = state.raid?.capitalTotalLoot;
-    if (loot == null) return '';
-
-    const meta = `${fmt(state.raid.raidsCompleted)} raids · ${fmt(state.raid.totalAttacks)} attacks`;
-
-    return `
-        <div id="raidCard" role="button" tabindex="0"
-             class="w-full bg-[#1a1a1a] border border-[#2A2A2A] rounded-xl p-3 cursor-pointer active:scale-[0.99] transition-transform">
-            <h4 class="medieval text-[11px] font-bold text-[#D4A72C] uppercase tracking-wide mb-2">Capital Gold</h4>
-            <div class="flex items-center gap-3">
-                <span class="material-symbols-outlined text-[30px] text-[#D4A72C]">savings</span>
-                <div class="leading-tight">
-                    <p class="text-xl font-bold text-[#D4A72C]">${fmt(loot)}</p>
-                    <p class="text-[10px] text-[#8B8F98]">Latest raid weekend · ${meta}</p>
-                </div>
-            </div>
-        </div>`;
-};
-
 const renderMembershipCard = () => renderAreaChart({
     title: 'Membership',
     subtitle: 'Members per day',
@@ -573,12 +551,8 @@ export function renderAbout(clan) {
             <div class="w-full bg-[#1a1a1a] border border-[#2A2A2A] rounded-xl p-3 flex flex-col gap-4">
                 ${renderLeadSection('Ranking', rankingHtml)}
             </div>
-            ${renderCapitalCard()}
-            ${renderPromotionCard()}
             ${renderMembershipCard()}
         </div>
     `;
 
-    // Capital Gold card jumps to the Raid tab
-    document.getElementById('raidCard')?.addEventListener('click', () => document.getElementById('tab-raid')?.click());
 }
