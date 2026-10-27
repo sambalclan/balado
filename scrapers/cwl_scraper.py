@@ -4,11 +4,9 @@ from datetime import datetime, timezone
 from urllib.parse import quote
 
 import requests
-from config import BASE_URL, CLAN_TAG, HEADERS
+from config import BASE_URL, ENCODED_CLAN_TAG, HEADERS
 
-DATA_DIR = 'data/cwl_stats'
-INDEX_PATH = 'data/cwl_stats_index.json'
-TIMEOUT = 25
+url = f"{BASE_URL}/clans/{ENCODED_CLAN_TAG}/currentwar/leaguegroup"
 
 
 def fetch_json(session, path):
