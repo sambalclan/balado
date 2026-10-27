@@ -1,11 +1,9 @@
-import { roleMap, getTHImage, escapeHtml } from './constants.js';
+import { roleMap, roleName, getTHImage, escapeHtml } from './constants.js';
 import { state } from './state.js';
 import { fmt, dayLabel, renderAreaChart } from './chart.js';
 import { MEMBER_SORTS } from './members.js';
 
-// Theme mode: dark only
-
-// ── 3. Report config ──
+// ── Report config ──
 const BASE_STYLE = {
     Footer: '',
     Accent: '#d4a017',
@@ -31,7 +29,8 @@ const REPORT_CONFIG = {
     },
 };
 
-// ── 4. Table columns & sorting ──
+// ── Table columns ──
+// Columns not listed in a report's Cols (e.g. "tag") can be switched on from the config
 const MEMBER_COLS = [
     { id: 'no',        label: 'No',       get: (m, i) => i + 1 },
     { id: 'name',      label: 'Name',     get: (m) => m.name },
@@ -67,8 +66,7 @@ const WAR_COLS = [
     { id: 'defense',     label: 'Defense',     get: bestDefense },
 ];
 
-
-// ── 5. Building report content ──
+// ── Report content ──
 function clanLabel() {
     if (!state.clan?.name) return '';
     return state.clan.tag ? `${state.clan.name} (${state.clan.tag})` : state.clan.name;
@@ -141,7 +139,12 @@ function makeMembersReport() {
     });
 }
 
-// ── 6. Drawing the report as an image ──
+const REPORTS = {
+    members: makeMembersReport,
+    war: makeWarReport,
+};
+
+// ── Drawing the report as an image ──
 const FONT = 'Arial, Helvetica, sans-serif';
 
 const LAYOUT = {
@@ -294,23 +297,17 @@ function drawCenteredText(ctx, text, width, y, font, color) {
     ctx.textAlign = 'left';
 }
 
-const REPORTS = {
-    members: makeMembersReport,
-    war: makeWarReport,
-};
-
 async function createReportImage(type) {
     const report = (REPORTS[type] || makeMembersReport)();
     const { config } = report;
     const theme = THEMES[config.Theme] || THEMES.light;
-    const { pad, rowH, headH, headBlock, minWidth } = LAYOUT;
+    const { pad, rowH, headH, headBlock, minWidth, titleH, gap } = LAYOUT;
 
     const logo = await loadImage(report.logoUrl);
     const widths = measureColumns(report);
 
     const tableW = widths.reduce((a, b) => a + b, 0);
     const width = Math.max(minWidth, tableW + pad * 2);
-    const { titleH, gap } = LAYOUT;
     const tableH = report.rows.length
         ? report.sections.reduce((sum, s) => sum + (s.title ? titleH : 0) + headH + s.rows.length * rowH + gap, 0) - gap
         : 60;
@@ -323,7 +320,6 @@ async function createReportImage(type) {
     canvas.height = Math.round(height * scale);
     const ctx = canvas.getContext('2d');
     ctx.scale(scale, scale);
-    ctx.textBaseline = 'alphabetic';
 
     ctx.fillStyle = theme.bg;
     ctx.fillRect(0, 0, width, height);
@@ -353,7 +349,7 @@ async function createReportImage(type) {
     return { dataUrl: canvas.toDataURL(mime, 0.92), mime, title: report.title };
 }
 
-// ── 7. Settings modal ──
+// ── Settings page (back button is handled in app.js) ──
 function makeFileName(title) {
     const slug = title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
     return slug || 'report';
@@ -388,7 +384,6 @@ const reportButtonHtml = ({ type, icon, title, desc }) => `
     </button>
 `;
 
-// Settings page (same look as the War detail page). Back button is handled in app.js
 export function renderSettings() {
     const page = document.getElementById('section-settings');
     if (!page) return;
@@ -415,9 +410,7 @@ export function renderSettings() {
     };
 }
 
-// ── 8. About page ──
-const roleName = (role) => roleMap[role] || role;
-
+// ── About page ──
 const renderLabel = (label) => `
     <div class="flex items-center gap-1 bg-[#252525] px-2 py-1 rounded-lg">
         <img src="${label.iconUrls?.small || ''}" class="w-4 h-4" alt="">
@@ -439,8 +432,6 @@ const renderSettingsButton = () => `
     </button>
 `;
 
-
-
 function renderClanHeader(clan) {
     const el = document.getElementById('clanHeader');
     if (!el || !clan) return;
@@ -448,7 +439,7 @@ function renderClanHeader(clan) {
         <div class="flex items-center justify-between gap-3 mb-2">
             <div class="flex items-center gap-3 min-w-0">
                 <img src="${clan.badgeUrls?.medium || ''}"
-                     class="w-10 h-10 md:w-12 md:h-12 shrink-0" alt="Clan Badge">
+                     class="w-10 h-10 md:w-12 md:h-12 shrink-0 rounded-lg" style="filter: drop-shadow(0 0 12px rgba(212, 167, 44, 0.6));" alt="Clan Badge">
                 <div class="min-w-0">
                     <h1 class="text-lg md:text-2xl font-bold text-white leading-tight truncate">
                         ${clan.name || 'Unknown Clan'}
@@ -509,6 +500,7 @@ const renderCapitalCard = () => {
             </div>
         </div>`;
 };
+
 const renderMembershipCard = () => renderAreaChart({
     title: 'Membership',
     subtitle: 'Members per day',

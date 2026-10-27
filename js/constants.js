@@ -1,5 +1,6 @@
 export const roleMap = { leader: 'Leader', coLeader: 'CoLead', admin: 'Elder', member: 'Member' };
 export const roleWeight = { leader: 4, coLeader: 3, admin: 2, member: 1 };
+export const roleName = (role) => roleMap[role] || role;
 export const getTHImage = (lv) => `assets/Town_Hall${lv}.webp`;
 
 export function parseCoCDate(dateStr) {

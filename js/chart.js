@@ -1,14 +1,17 @@
 export const fmt = (n) => Number(n || 0).toLocaleString('en-US');
 
-// Area chart (plain SVG, no library). points: [{ label, value }]
+export const dayLabel = (date) => new Date(date + 'T12:00:00')
+    .toLocaleDateString('en-US', { day: 'numeric', month: 'short' });
+
+const STAT_COLS = { 3: 'grid-cols-3', 4: 'grid-cols-4' };
+
 const renderStatTile = ({ label, value, color = 'text-white' }) => `
     <div class="rounded-md bg-[#141414] border border-[#2A2A2A] px-1.5 py-1 text-center leading-tight">
         <p class="text-[11px] font-bold ${color}">${value}</p>
         <p class="text-[7px] tracking-wide uppercase text-[#6B7280]">${label}</p>
     </div>`;
 
-const STAT_COLS = { 3: 'grid-cols-3', 4: 'grid-cols-4' };
-
+// Area chart (plain SVG, no library). points: [{ label, value }]
 // stats: [{ label, value, color? }] shown as small tiles under the chart
 export function renderAreaChart({ title, subtitle, points, stats = [], note = '', extraClass = '' }) {
     if (points.length < 2) return '';
@@ -49,7 +52,3 @@ export function renderAreaChart({ title, subtitle, points, stats = [], note = ''
             ${note ? `<p class="text-[8px] text-[#6B7280] mt-1.5">${note}</p>` : ''}
         </div>`;
 }
-
-export const dayLabel = (date) => new Date(date + 'T12:00:00')
-    .toLocaleDateString('en-US', { day: 'numeric', month: 'short' });
-    

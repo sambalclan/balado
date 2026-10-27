@@ -4,6 +4,7 @@ export async function fetchData(path) {
     return res.json();
 }
 
+// Newest-first indexes: return the first file that loads
 export async function fetchClanData() {
     const index = await fetchData('data/clan_stats_index.json');
     if (!index || index.length === 0) throw new Error('Clan index is empty');
@@ -26,7 +27,7 @@ export async function fetchClanHistory(days = 7) {
         if (day.length !== 10 || perDay.has(day)) continue;
         try {
             const d = await fetchData(`data/clan_stats/${filename}`);
-            perDay.set(day, { members: d.members ?? d.memberList?.length ?? 0, tags: (d.memberList || []).map((m) => m.tag) });
+            perDay.set(day, { members: d.members ?? d.memberList?.length ?? 0 });
         } catch { /* skip broken snapshot */ }
         if (perDay.size >= days) break;
     }

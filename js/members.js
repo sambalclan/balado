@@ -127,7 +127,7 @@ export function renderMembers(clan) {
         const row = e.target.closest('[data-member]');
         if (!row) return;
         const member = (clan.memberList || []).find((m) => m.tag === row.dataset.member);
-        openMemberDetail(member, { wars: state.wars, raid: state.raid });
+        openMemberDetail(member, { raid: state.raid });
     };
     container.querySelector('#memberSort').onchange = (e) => {
         membersSortKey = e.target.value;
