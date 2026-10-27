@@ -15,9 +15,9 @@
             "medium": "https://api-assets.clashofclans.com/badges/200/kMzbLtABCLcdaaEsZGiLn2Tvnv-nXvhq8z008z-gGz4.png"
         },
         "clanLevel": 10,
-        "attacks": 0,
-        "stars": 0,
-        "destructionPercentage": 0.0,
+        "attacks": 2,
+        "stars": 5,
+        "destructionPercentage": 17.3,
         "members": [
             {
                 "tag": "#GPCYQG89Y",
@@ -99,6 +99,24 @@
                 "name": "Oni Mask",
                 "townhallLevel": 15,
                 "mapPosition": 5,
+                "attacks": [
+                    {
+                        "attackerTag": "#QYU9CCQ28",
+                        "defenderTag": "#Q9Y898P2V",
+                        "stars": 3,
+                        "destructionPercentage": 100,
+                        "order": 9,
+                        "duration": 172
+                    },
+                    {
+                        "attackerTag": "#QYU9CCQ28",
+                        "defenderTag": "#QQ80GQ8P0",
+                        "stars": 2,
+                        "destructionPercentage": 73,
+                        "order": 10,
+                        "duration": 180
+                    }
+                ],
                 "opponentAttacks": 1,
                 "bestOpponentAttack": {
                     "attackerTag": "#QQ80GQ8P0",
@@ -269,14 +287,30 @@
                         "duration": 119
                     }
                 ],
-                "opponentAttacks": 0
+                "opponentAttacks": 1,
+                "bestOpponentAttack": {
+                    "attackerTag": "#QYU9CCQ28",
+                    "defenderTag": "#QQ80GQ8P0",
+                    "stars": 2,
+                    "destructionPercentage": 73,
+                    "order": 10,
+                    "duration": 180
+                }
             },
             {
                 "tag": "#Q9Y898P2V",
                 "name": "lahhh beban:(",
                 "townhallLevel": 15,
                 "mapPosition": 5,
-                "opponentAttacks": 0
+                "opponentAttacks": 1,
+                "bestOpponentAttack": {
+                    "attackerTag": "#QYU9CCQ28",
+                    "defenderTag": "#Q9Y898P2V",
+                    "stars": 3,
+                    "destructionPercentage": 100,
+                    "order": 9,
+                    "duration": 172
+                }
             },
             {
                 "tag": "#QC2QL2Q02",
