@@ -49,9 +49,9 @@ img, video, iframe, svg {
   z-index: 999;
 
   /* Warna latar belakang disamakan dengan gaya tombol header (bg-white/10 + border gelap) */
-  background-color: rgba(30, 30, 30, 0.75);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
+  background-color: #1E1E1E;
+backdrop-filter: none;
+-webkit-backdrop-filter: none;
 
   border: 1px solid rgba(255, 255, 255, 0.15);
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
