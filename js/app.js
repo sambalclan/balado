@@ -3,12 +3,13 @@ import { setWarData, setClanHistory, setRaidData, setRaids, setCwlData } from '.
 import { renderAbout, renderSettings } from './render.js';
 import { renderRaid } from './raid.js';
 import { renderMembers } from './members.js';
-import { renderWar } from './war.js';
+import { renderWar, renderCwl } from './war.js';
 
-const VIEWS = ['about', 'members', 'war', 'raid', 'settings'];
+const VIEWS = ['about', 'members', 'battle', 'raid', 'settings'];
 let latestClanData = null;
 let currentView = 'about';
 let lastTab = 'about'; // tab to return to when Settings is closed
+let warMode = 'war'; // 'war' atau 'cwl'
 
 function moveNavIndicator(instant = false) {
     const nav = document.getElementById('bottomToolbar');
@@ -33,11 +34,36 @@ function switchView(view = 'about') {
     const target = VIEWS.includes(view) && document.getElementById('section-' + view) ? view : 'about';
     currentView = target;
 
-    document.querySelectorAll('[id^="section-"]').forEach((section) => {
+    document.querySelectorAll('main > section').forEach((section) => {
         const isTarget = section.id === 'section-' + target;
         section.classList.toggle('hidden-section', !isTarget);
         section.style.display = isTarget ? '' : 'none';
     });
+
+    // Handle battle mode (War vs CWL)
+    if (target === 'battle') {
+        const warSection = document.getElementById('section-war');
+        const cwlSection = document.getElementById('section-cwl');
+        const warBtn = document.getElementById('tab-battle-war');
+        const cwlBtn = document.getElementById('tab-battle-cwl');
+        
+        if (warMode === 'war') {
+            warSection.classList.remove('hidden');
+            cwlSection.classList.add('hidden');
+            warBtn.classList.remove('border-[#3A3A3A]', 'text-[#6B7280]');
+            warBtn.classList.add('bg-[#2A2410]', 'border-[#6B5A1E]', 'text-[#D4A72C]');
+            cwlBtn.classList.remove('bg-[#2A2410]', 'border-[#6B5A1E]', 'text-[#D4A72C]');
+            cwlBtn.classList.add('border-[#3A3A3A]', 'text-[#6B7280]');
+        } else {
+            warSection.classList.add('hidden');
+            cwlSection.classList.remove('hidden');
+            cwlBtn.classList.remove('border-[#3A3A3A]', 'text-[#6B7280]');
+            cwlBtn.classList.add('bg-[#2A2410]', 'border-[#6B5A1E]', 'text-[#D4A72C]');
+            warBtn.classList.remove('bg-[#2A2410]', 'border-[#6B5A1E]', 'text-[#D4A72C]');
+            warBtn.classList.add('border-[#3A3A3A]', 'text-[#6B7280]');
+            renderCwl();
+        }
+    }
 
     // Settings is a page, not a tab: the nav keeps highlighting the tab we came from
     if (target === 'settings') {
@@ -57,6 +83,8 @@ function bindTabs() {
     document.addEventListener('click', (e) => {
         if (e.target.closest('#settingsBtn')) switchView('settings');
         else if (e.target.closest('[data-settings-back]')) switchView(lastTab);
+        else if (e.target.closest('#tab-battle-war')) { warMode = 'war'; switchView('battle'); }
+        else if (e.target.closest('#tab-battle-cwl')) { warMode = 'cwl'; switchView('battle'); }
     });
     VIEWS.filter((view) => view !== 'settings').forEach((view) => {
         document.getElementById('tab-' + view)?.addEventListener('click', () => switchView(view));

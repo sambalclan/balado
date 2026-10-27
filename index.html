@@ -16,7 +16,14 @@
         <header id="clanHeader" class="w-full pt-3"></header>
         <section id="section-about" class="w-full"></section>
         <section id="section-members" class="w-full hidden-section"></section>
-        <section id="section-war" class="w-full hidden-section py-3 pb-28 text-gray-300 text-sm"></section>
+        <section id="section-battle" class="w-full hidden-section py-3 pb-28 text-gray-300 text-sm">
+            <div class="flex gap-2 mb-3">
+                <button id="tab-battle-war" class="px-3 py-1.5 text-xs font-semibold rounded-lg bg-[#2A2410] border border-[#6B5A1E] text-[#D4A72C] active">War</button>
+                <button id="tab-battle-cwl" class="px-3 py-1.5 text-xs font-semibold rounded-lg border border-[#3A3A3A] text-[#6B7280]">CWL</button>
+            </div>
+            <div id="section-war" class="w-full"></div>
+            <div id="section-cwl" class="w-full hidden"></div>
+        </section>
         <section id="section-raid" class="w-full hidden-section"></section>
         <section id="section-settings" class="w-full hidden-section"></section>
     </main>
@@ -27,7 +34,7 @@
         <button id="tab-members">
             <span class="material-symbols-outlined nav-icon">groups</span><span class="nav-label">Member</span>
         </button>
-        <button id="tab-war">
+        <button id="tab-battle">
             <span class="material-symbols-outlined nav-icon">swords</span><span class="nav-label">Battle</span>
         </button>
         <button id="tab-raid">

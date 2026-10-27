@@ -257,3 +257,48 @@ export function renderWar(wars) {
     };
     container.querySelector('#warRefresh').onclick = () => window.syncData?.();
 }
+
+export function renderCwl() {
+    const container = document.getElementById('section-cwl');
+    if (!container) return;
+
+    if (!state.cwl) {
+        container.innerHTML = `
+            <div class="bg-[#1E1E1E] border border-[#3A3A3A] p-4 rounded-xl text-center text-gray-400">
+                CWL data is not available yet.
+            </div>
+        `;
+        return;
+    }
+
+    const cwl = state.cwl;
+    const rounds = cwl.rounds || [];
+    const members = cwl.clan?.members || [];
+
+    const renderCwlMember = (m, i) => {
+        const stars = rounds.reduce((sum, r) => sum + (r.attacks?.find((a) => a.attackerTag === m.tag)?.stars || 0), 0);
+        const attacks = rounds.filter((r) => r.attacks?.some((a) => a.attackerTag === m.tag)).length;
+        return `
+        <div class="flex items-center gap-3 px-3 py-2 ${i > 0 ? 'border-t border-[#2A2A2A]' : ''}">
+            <img src="${getTHImage(m.townHallLevel)}" class="w-9 h-9 shrink-0 object-contain" alt="TH${m.townHallLevel}" onerror="this.style.visibility='hidden'">
+            <div class="min-w-0 flex-1 leading-tight">
+                <p class="text-[12px] font-bold text-white truncate">${escapeHtml(m.name)}</p>
+                <p class="text-[9px] text-[#8B8F98]">TH${m.townHallLevel}</p>
+            </div>
+            <span class="shrink-0 text-[10px] font-bold text-[#D4A72C]">${stars}★ · ${attacks}/${rounds.length}</span>
+        </div>`;
+    };
+
+    container.innerHTML = `
+        <div class="w-full bg-[#1a1a1a] border border-[#2A2A2A] rounded-xl p-3">
+            <div class="flex items-center gap-3 mb-3">
+                <h2 class="medieval text-lg font-bold text-white uppercase">CWL</h2>
+                <span class="text-[11px] text-[#8B8F98] font-mono">${cwl.season || '-'}</span>
+            </div>
+            <div class="rounded-xl overflow-hidden border border-[#2A2A2A] mb-4">
+                ${members.map(renderCwlMember).join('')}
+            </div>
+            <p class="text-[10px] text-[#8B8F98]">${rounds.length} rounds</p>
+        </div>
+    `;
+}
