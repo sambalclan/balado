@@ -3,27 +3,7 @@ import { state } from './state.js';
 import { fmt, dayLabel, renderAreaChart } from './chart.js';
 import { MEMBER_SORTS } from './members.js';
 
-// ── 1. Theme (dark / light) ──
-const THEME_KEY = 'clanTheme';
-let currentTheme = 'dark';
-try { currentTheme = localStorage.getItem(THEME_KEY) === 'light' ? 'light' : 'dark'; } catch { /* ignore */ }
-document.documentElement.classList.toggle('light', currentTheme === 'light');
-
-// The icon shows the target mode: sun while dark, moon while light
-const themeIcon = () => (currentTheme === 'light' ? 'dark_mode' : 'light_mode');
-
-function toggleTheme() {
-    currentTheme = currentTheme === 'light' ? 'dark' : 'light';
-    document.documentElement.classList.toggle('light', currentTheme === 'light');
-    try { localStorage.setItem(THEME_KEY, currentTheme); } catch { /* ignore */ }
-    const icon = document.querySelector('#themeBtn span');
-    if (icon) icon.textContent = themeIcon();
-}
-
-// One global listener: keeps working even when the header is re-rendered
-document.addEventListener('click', (e) => {
-    if (e.target.closest('#themeBtn')) toggleTheme();
-});
+// Theme mode: dark only
 
 // ── 3. Report config ──
 const BASE_STYLE = {
@@ -459,18 +439,7 @@ const renderSettingsButton = () => `
     </button>
 `;
 
-const renderThemeButton = () => `
-    <button
-        id="themeBtn"
-        type="button"
-        aria-label="Toggle theme"
-        class="flex items-center justify-center
-               w-9 h-9 rounded-full bg-white/10 hover:bg-white/20
-               text-gray-200 transition-all duration-300 active:scale-95"
-    >
-        <span class="material-symbols-outlined text-[20px]">${themeIcon()}</span>
-    </button>
-`;
+
 
 function renderClanHeader(clan) {
     const el = document.getElementById('clanHeader');
@@ -488,7 +457,6 @@ function renderClanHeader(clan) {
                 </div>
             </div>
             <div class="shrink-0 flex items-center gap-1.5">
-                ${renderThemeButton()}
                 ${renderSettingsButton()}
             </div>
         </div>
