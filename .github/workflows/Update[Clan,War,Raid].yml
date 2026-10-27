@@ -1,0 +1,64 @@
+name: Update Clan, War & Raid Stats
+
+on:
+  schedule:
+    - cron: '*/15 * * * *' # War and raid: every 15 minutes (UTC)
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: update-clan-stats
+  cancel-in-progress: false
+
+jobs:
+  update-stats:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.10'
+
+      - name: Install dependencies
+        run: python -m pip install requests python-dotenv
+
+      - name: Update war and raid data
+        env:
+          COC_API_TOKEN: ${{ secrets.COC_API_TOKEN }}
+          CLAN_TAG: ${{ secrets.CLAN_TAG }}
+          PYTHONPATH: ${{ github.workspace }}/scrapers
+        run: |
+          python scrapers/war_scraper.py
+          python scrapers/raid_scraper.py
+
+      - name: Update clan data daily at 16:00 WIB (09:00 UTC)
+        if: github.event_name == 'workflow_dispatch' || (github.event.schedule == '*/15 * * * *' && github.event_name == 'schedule')
+        env:
+          COC_API_TOKEN: ${{ secrets.COC_API_TOKEN }}
+          CLAN_TAG: ${{ secrets.CLAN_TAG }}
+          PYTHONPATH: ${{ github.workspace }}/scrapers
+        run: |
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ] || [ "$(date -u +%H:%M)" = "09:00" ]; then
+            python scrapers/clan_scraper.py
+          else
+            echo 'Skipping daily clan update.'
+          fi
+
+      - name: Commit and push data
+        run: |
+          git config user.name "Stats Bot"
+          git config user.email "bot@github.com"
+          git add data/
+          if git diff --cached --quiet; then
+            echo 'No data changes to commit.'
+            exit 0
+          fi
+          git commit -m "Auto-update clan, war and raid stats"
+          git push
