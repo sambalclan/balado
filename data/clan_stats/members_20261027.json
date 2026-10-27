@@ -17,7 +17,7 @@
     },
     "clanLevel": 10,
     "clanPoints": 33050,
-    "clanBuilderBasePoints": 22004,
+    "clanBuilderBasePoints": 22010,
     "clanCapitalPoints": 1289,
     "capitalLeague": {
         "id": 85000006,
@@ -164,7 +164,7 @@
                     "large": "https://api-assets.clashofclans.com/leaguetiers/326/vxV7LI0votsz0_n-8lW-Lag96D5HwKsEgEk_7247zC4.png"
                 }
             },
-            "trophies": 17,
+            "trophies": 124,
             "builderBaseTrophies": 2608,
             "clanRank": 3,
             "previousClanRank": 3,
@@ -536,11 +536,11 @@
                 }
             },
             "trophies": 0,
-            "builderBaseTrophies": 2174,
+            "builderBaseTrophies": 2190,
             "clanRank": 10,
             "previousClanRank": 10,
             "donations": 669,
-            "donationsReceived": 6699,
+            "donationsReceived": 6776,
             "playerHouse": {
                 "elements": [
                     {
@@ -592,7 +592,7 @@
             "builderBaseTrophies": 2861,
             "clanRank": 11,
             "previousClanRank": 11,
-            "donations": 4094,
+            "donations": 4171,
             "donationsReceived": 863,
             "playerHouse": {
                 "elements": [
@@ -832,6 +832,59 @@
             }
         },
         {
+            "tag": "#R0UYQ88YQ",
+            "name": "mpruy",
+            "role": "admin",
+            "townHallLevel": 10,
+            "expLevel": 86,
+            "league": {
+                "id": 29000000,
+                "name": "Unranked",
+                "iconUrls": {
+                    "small": "https://api-assets.clashofclans.com/leagues/72/e--YMyIexEQQhE4imLoJcwhYn6Uy8KqlgyY3_kFV6t4.png",
+                    "tiny": "https://api-assets.clashofclans.com/leagues/36/e--YMyIexEQQhE4imLoJcwhYn6Uy8KqlgyY3_kFV6t4.png"
+                }
+            },
+            "leagueTier": {
+                "id": 105000009,
+                "name": "Archer League 9",
+                "iconUrls": {
+                    "small": "https://api-assets.clashofclans.com/leaguetiers/125/ieEdz9Mqbo7g9iJfXwTnIh7Iwz-37aPEmWma1ENEwXE.png",
+                    "large": "https://api-assets.clashofclans.com/leaguetiers/326/ieEdz9Mqbo7g9iJfXwTnIh7Iwz-37aPEmWma1ENEwXE.png"
+                }
+            },
+            "trophies": 110,
+            "builderBaseTrophies": 2154,
+            "clanRank": 16,
+            "previousClanRank": 18,
+            "donations": 0,
+            "donationsReceived": 0,
+            "playerHouse": {
+                "elements": [
+                    {
+                        "type": "ground",
+                        "id": 82000002
+                    },
+                    {
+                        "type": "walls",
+                        "id": 82000049
+                    },
+                    {
+                        "type": "roof",
+                        "id": 82000016
+                    },
+                    {
+                        "type": "decoration",
+                        "id": 82000058
+                    }
+                ]
+            },
+            "builderBaseLeague": {
+                "id": 44000020,
+                "name": "Brass League III"
+            }
+        },
+        {
             "tag": "#QR98PU0QJ",
             "name": "Skyzo",
             "role": "admin",
@@ -853,10 +906,10 @@
                     "large": "https://api-assets.clashofclans.com/leaguetiers/326/ieEdz9Mqbo7g9iJfXwTnIh7Iwz-37aPEmWma1ENEwXE.png"
                 }
             },
-            "trophies": 23,
+            "trophies": 52,
             "builderBaseTrophies": 2153,
-            "clanRank": 16,
-            "previousClanRank": 18,
+            "clanRank": 17,
+            "previousClanRank": 16,
             "donations": 107,
             "donationsReceived": 473,
             "playerHouse": {
@@ -908,8 +961,8 @@
             },
             "trophies": 0,
             "builderBaseTrophies": 2220,
-            "clanRank": 17,
-            "previousClanRank": 16,
+            "clanRank": 18,
+            "previousClanRank": 17,
             "donations": 0,
             "donationsReceived": 0,
             "playerHouse": {
@@ -938,59 +991,6 @@
             }
         },
         {
-            "tag": "#R0UYQ88YQ",
-            "name": "mpruy",
-            "role": "admin",
-            "townHallLevel": 10,
-            "expLevel": 86,
-            "league": {
-                "id": 29000000,
-                "name": "Unranked",
-                "iconUrls": {
-                    "small": "https://api-assets.clashofclans.com/leagues/72/e--YMyIexEQQhE4imLoJcwhYn6Uy8KqlgyY3_kFV6t4.png",
-                    "tiny": "https://api-assets.clashofclans.com/leagues/36/e--YMyIexEQQhE4imLoJcwhYn6Uy8KqlgyY3_kFV6t4.png"
-                }
-            },
-            "leagueTier": {
-                "id": 105000009,
-                "name": "Archer League 9",
-                "iconUrls": {
-                    "small": "https://api-assets.clashofclans.com/leaguetiers/125/ieEdz9Mqbo7g9iJfXwTnIh7Iwz-37aPEmWma1ENEwXE.png",
-                    "large": "https://api-assets.clashofclans.com/leaguetiers/326/ieEdz9Mqbo7g9iJfXwTnIh7Iwz-37aPEmWma1ENEwXE.png"
-                }
-            },
-            "trophies": 0,
-            "builderBaseTrophies": 2146,
-            "clanRank": 18,
-            "previousClanRank": 17,
-            "donations": 0,
-            "donationsReceived": 0,
-            "playerHouse": {
-                "elements": [
-                    {
-                        "type": "ground",
-                        "id": 82000002
-                    },
-                    {
-                        "type": "walls",
-                        "id": 82000049
-                    },
-                    {
-                        "type": "roof",
-                        "id": 82000016
-                    },
-                    {
-                        "type": "decoration",
-                        "id": 82000058
-                    }
-                ]
-            },
-            "builderBaseLeague": {
-                "id": 44000020,
-                "name": "Brass League III"
-            }
-        },
-        {
             "tag": "#GCYQLQLPY",
             "name": "Miyuki",
             "role": "admin",
@@ -1012,7 +1012,7 @@
                     "large": "https://api-assets.clashofclans.com/leaguetiers/326/x1c7byHQmOHQVKGxAn1sqOW2XOCzTYW-e6OKjq-FBco.png"
                 }
             },
-            "trophies": 28,
+            "trophies": 56,
             "builderBaseTrophies": 1357,
             "clanRank": 19,
             "previousClanRank": 19,
@@ -1048,7 +1048,7 @@
             "name": "snowy",
             "role": "admin",
             "townHallLevel": 11,
-            "expLevel": 84,
+            "expLevel": 85,
             "league": {
                 "id": 29000000,
                 "name": "Unranked",
@@ -1121,7 +1121,7 @@
             "trophies": 105,
             "builderBaseTrophies": 966,
             "clanRank": 21,
-            "previousClanRank": 22,
+            "previousClanRank": 21,
             "donations": 0,
             "donationsReceived": 531,
             "playerHouse": {
@@ -1174,7 +1174,7 @@
             "trophies": 0,
             "builderBaseTrophies": 623,
             "clanRank": 22,
-            "previousClanRank": 21,
+            "previousClanRank": 22,
             "donations": 0,
             "donationsReceived": 0,
             "playerHouse": {

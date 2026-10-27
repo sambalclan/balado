@@ -84,7 +84,15 @@
                 "name": "not4ppl",
                 "townhallLevel": 15,
                 "mapPosition": 3,
-                "opponentAttacks": 0
+                "opponentAttacks": 1,
+                "bestOpponentAttack": {
+                    "attackerTag": "#YRL2JV8CV",
+                    "defenderTag": "#GLJR89GYC",
+                    "stars": 2,
+                    "destructionPercentage": 83,
+                    "order": 8,
+                    "duration": 86
+                }
             },
             {
                 "tag": "#QYU9CCQ28",
@@ -128,7 +136,15 @@
                 "name": "Zysss ur clown",
                 "townhallLevel": 15,
                 "mapPosition": 4,
-                "opponentAttacks": 0
+                "opponentAttacks": 1,
+                "bestOpponentAttack": {
+                    "attackerTag": "#YRL2JV8CV",
+                    "defenderTag": "#QJUYL2L9V",
+                    "stars": 2,
+                    "destructionPercentage": 86,
+                    "order": 7,
+                    "duration": 99
+                }
             },
             {
                 "tag": "#GQJGU808G",
@@ -148,15 +164,33 @@
             "medium": "https://api-assets.clashofclans.com/badges/200/1M9AgLDPMr24ikHRTXIJ9g3LQgAHebetLkEHwGmPB5g.png"
         },
         "clanLevel": 18,
-        "attacks": 6,
-        "stars": 16,
-        "destructionPercentage": 58.7,
+        "attacks": 8,
+        "stars": 20,
+        "destructionPercentage": 75.6,
         "members": [
             {
                 "tag": "#YRL2JV8CV",
                 "name": "Acong",
                 "townhallLevel": 15,
                 "mapPosition": 3,
+                "attacks": [
+                    {
+                        "attackerTag": "#YRL2JV8CV",
+                        "defenderTag": "#QJUYL2L9V",
+                        "stars": 2,
+                        "destructionPercentage": 86,
+                        "order": 7,
+                        "duration": 99
+                    },
+                    {
+                        "attackerTag": "#YRL2JV8CV",
+                        "defenderTag": "#GLJR89GYC",
+                        "stars": 2,
+                        "destructionPercentage": 83,
+                        "order": 8,
+                        "duration": 86
+                    }
+                ],
                 "opponentAttacks": 0
             },
             {
