@@ -46,3 +46,14 @@ export async function fetchLatestRaid() {
 // All capital raid weekends (index is newest first)
 export const fetchRaidIndex = () => fetchData('data/raid_stats_index.json');
 export const fetchRaidData = (filename) => fetchData(`data/raid_stats/${filename}`);
+
+// Latest Clan War League season (index is newest first); null while there is no CWL data yet
+export async function fetchLatestCwl() {
+    try {
+        const index = await fetchData('data/cwl_stats_index.json');
+        for (const filename of index || []) {
+            try { return await fetchData(`data/cwl_stats/${filename}`); } catch { /* try next file */ }
+        }
+    } catch { /* no CWL index yet */ }
+    return null;
+}

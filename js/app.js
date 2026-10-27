@@ -1,5 +1,5 @@
-import { fetchClanData, fetchClanHistory, fetchLatestRaid, fetchWarIndex, fetchWarData, fetchRaidIndex, fetchRaidData } from './api.js';
-import { setWarData, setClanHistory, setRaidData, setRaids } from './state.js';
+import { fetchClanData, fetchClanHistory, fetchLatestRaid, fetchLatestCwl, fetchWarIndex, fetchWarData, fetchRaidIndex, fetchRaidData } from './api.js';
+import { setWarData, setClanHistory, setRaidData, setRaids, setCwlData } from './state.js';
 import { renderAbout, renderSettings } from './render.js';
 import { renderRaid } from './raid.js';
 import { renderMembers } from './members.js';
@@ -79,7 +79,7 @@ async function loadWarData() {
             });
 
         if (wars.length === 0) return renderWar(null);
-        setWarData(wars[0]); // Sekarang ambil yang terbaru
+        setWarData(wars[0]); // Latest war
         renderWar(wars);
     } catch {
         renderWar(null);
@@ -104,15 +104,17 @@ async function init() {
         renderMembers(latestClanData);
         switchView(currentView);
 
-        // Load membership history and capital gold in the background, then re-render About
-        Promise.allSettled([fetchClanHistory(), fetchLatestRaid()]).then(([history, raid]) => {
+        // Load membership history, capital gold and CWL in the background, then re-render About
+        Promise.allSettled([fetchClanHistory(), fetchLatestRaid(), fetchLatestCwl()]).then(([history, raid, cwl]) => {
             if (history.status === 'fulfilled') setClanHistory(history.value);
             if (raid.status === 'fulfilled') setRaidData(raid.value);
+            if (cwl.status === 'fulfilled') setCwlData(cwl.value);
             renderAbout(latestClanData);
         });
-        loadRaidWeeks();
+        loadRaidWeeks().then(() => renderAbout(latestClanData));
 
         await loadWarData();
+        renderAbout(latestClanData);
     } catch { /* clan data unavailable */ }
 }
 
