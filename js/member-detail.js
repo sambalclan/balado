@@ -101,7 +101,7 @@ export function buildMemberDetailHtml(member, { wars = [], raid = null } = {}) {
     const trophies = `${league ? `<img src="${league}" class="inline w-4 h-4 mr-1 object-contain" alt="">` : ''}${fmt(member.trophies)}`;
 
     return `
-    <div class="w-full bg-[#1a1a1a] border border-[#3A2F17] rounded-xl p-4">
+    <div class="w-full bg-[#1a1a1a] border border-[#2A2A2A] rounded-xl p-4">
         <div class="flex items-center gap-3 mb-4">
             <button type="button" data-back aria-label="Back"
                     class="shrink-0 w-9 h-9 rounded-full bg-white/10 hover:bg-white/20 text-white

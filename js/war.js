@@ -24,6 +24,7 @@ function warResult(w) {
     if (!['warEnded', 'ended'].includes(w.state)) return { key: 'ongoing', label: 'IN WAR', color: 'text-[#D4A72C]' };
 
     const cs = w.clan?.stars || 0, os = w.opponent?.stars || 0;
+    
     const cd = w.clan?.destructionPercentage || 0, od = w.opponent?.destructionPercentage || 0;
     if (cs > os || (cs === os && cd > od)) return { key: 'victory', label: 'VICTORY', color: 'text-green-500' };
     if (cs < os || (cs === os && cd < od)) return { key: 'defeat', label: 'LOSS', color: 'text-red-500' };
@@ -183,7 +184,7 @@ function renderWarDetail(w) {
     const idle = members.filter((m) => !(m.attacks || []).length);
 
     return `
-    <div class="w-full bg-[#1a1a1a] border border-[#3A2F17] rounded-xl p-3">
+    <div class="w-full bg-[#1a1a1a] border border-[#2A2A2A] rounded-xl p-3">
         <div class="flex items-center gap-3 mb-3">
             <button type="button" data-war-back aria-label="Back"
                     class="shrink-0 w-9 h-9 rounded-full bg-white/10 hover:bg-white/20 text-white
@@ -229,7 +230,7 @@ export function renderWar(wars) {
     }
 
     container.innerHTML = `
-        <div class="w-full bg-[#1a1a1a] border border-[#3A2F17] rounded-xl p-3">
+        <div class="w-full bg-[#1a1a1a] border border-[#2A2A2A] rounded-xl p-3">
             <div class="flex items-center gap-3 mb-3">
                 <h2 class="medieval text-lg font-bold text-white uppercase">Wars</h2>
                 <span id="warCount" class="text-[11px] text-[#8B8F98] font-mono">${state.wars.length} / ${state.wars.length}</span>
