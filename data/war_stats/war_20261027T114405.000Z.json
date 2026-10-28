@@ -15,15 +15,33 @@
             "medium": "https://api-assets.clashofclans.com/badges/200/kMzbLtABCLcdaaEsZGiLn2Tvnv-nXvhq8z008z-gGz4.png"
         },
         "clanLevel": 10,
-        "attacks": 6,
-        "stars": 16,
-        "destructionPercentage": 56.2,
+        "attacks": 8,
+        "stars": 18,
+        "destructionPercentage": 68.1,
         "members": [
             {
                 "tag": "#GPCYQG89Y",
                 "name": "kutur18",
                 "townhallLevel": 16,
                 "mapPosition": 6,
+                "attacks": [
+                    {
+                        "attackerTag": "#GPCYQG89Y",
+                        "defenderTag": "#9YJQ2C9VJ",
+                        "stars": 1,
+                        "destructionPercentage": 66,
+                        "order": 15,
+                        "duration": 180
+                    },
+                    {
+                        "attackerTag": "#GPCYQG89Y",
+                        "defenderTag": "#LVJUQGJVG",
+                        "stars": 1,
+                        "destructionPercentage": 53,
+                        "order": 16,
+                        "duration": 118
+                    }
+                ],
                 "opponentAttacks": 1,
                 "bestOpponentAttack": {
                     "attackerTag": "#QQ80GQ8P0",
@@ -267,7 +285,15 @@
                 "name": "Qing Amay",
                 "townhallLevel": 14,
                 "mapPosition": 7,
-                "opponentAttacks": 0
+                "opponentAttacks": 1,
+                "bestOpponentAttack": {
+                    "attackerTag": "#GPCYQG89Y",
+                    "defenderTag": "#LVJUQGJVG",
+                    "stars": 1,
+                    "destructionPercentage": 53,
+                    "order": 16,
+                    "duration": 118
+                }
             },
             {
                 "tag": "#QR0JL8QUY",
@@ -314,7 +340,15 @@
                 "name": "algi kingdom",
                 "townhallLevel": 15,
                 "mapPosition": 6,
-                "opponentAttacks": 0
+                "opponentAttacks": 1,
+                "bestOpponentAttack": {
+                    "attackerTag": "#GPCYQG89Y",
+                    "defenderTag": "#9YJQ2C9VJ",
+                    "stars": 1,
+                    "destructionPercentage": 66,
+                    "order": 15,
+                    "duration": 180
+                }
             },
             {
                 "tag": "#QQ80GQ8P0",
