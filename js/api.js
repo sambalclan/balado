@@ -1,7 +1,7 @@
 import { dateFrom } from './constants.js';
 
 // Alamat Worker proxy. Kosongkan ('') untuk memakai file JSON saja.
-export const LIVE_API_URL = 'https://baladoo.augustasophia1338.workers.dev';
+   export const LIVE_API_URL = 'https://coc-proxy-sambal.augustasophia1338.workers.dev';
 const LIVE_TIMEOUT_MS = 8000;
 
 const liveLog = [];
