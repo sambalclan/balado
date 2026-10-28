@@ -1,0 +1,179 @@
+{
+    "state": "preparation",
+    "teamSize": 10,
+    "attacksPerMember": 2,
+    "battleModifier": "none",
+    "preparationStartTime": "20261028T122444.000Z",
+    "startTime": "20261029T112444.000Z",
+    "endTime": "20261030T112444.000Z",
+    "clan": {
+        "tag": "#2RVRP900V",
+        "name": "Sambal balado",
+        "badgeUrls": {
+            "small": "https://api-assets.clashofclans.com/badges/70/SduuUQLqAXUP6SALWXozMv9RIY-mBQkDPxECOZkap2s.png",
+            "large": "https://api-assets.clashofclans.com/badges/512/SduuUQLqAXUP6SALWXozMv9RIY-mBQkDPxECOZkap2s.png",
+            "medium": "https://api-assets.clashofclans.com/badges/200/SduuUQLqAXUP6SALWXozMv9RIY-mBQkDPxECOZkap2s.png"
+        },
+        "clanLevel": 11,
+        "attacks": 0,
+        "stars": 0,
+        "destructionPercentage": 0.0,
+        "members": [
+            {
+                "tag": "#GPCYQG89Y",
+                "name": "kutur18",
+                "townhallLevel": 16,
+                "mapPosition": 6,
+                "opponentAttacks": 0
+            },
+            {
+                "tag": "#GVL2QP9JV",
+                "name": "kaco",
+                "townhallLevel": 13,
+                "mapPosition": 7,
+                "opponentAttacks": 0
+            },
+            {
+                "tag": "#R0UYQ88YQ",
+                "name": "mpruy",
+                "townhallLevel": 11,
+                "mapPosition": 10,
+                "opponentAttacks": 0
+            },
+            {
+                "tag": "#GLJR89GYC",
+                "name": "not4ppl",
+                "townhallLevel": 15,
+                "mapPosition": 4,
+                "opponentAttacks": 0
+            },
+            {
+                "tag": "#QYVQR80PU",
+                "name": "pinduwangga",
+                "townhallLevel": 16,
+                "mapPosition": 3,
+                "opponentAttacks": 0
+            },
+            {
+                "tag": "#R9LY8QJC",
+                "name": "OKI LOTUS 22",
+                "townhallLevel": 17,
+                "mapPosition": 1,
+                "opponentAttacks": 0
+            },
+            {
+                "tag": "#G989PRQJL",
+                "name": "Nanzi",
+                "townhallLevel": 13,
+                "mapPosition": 8,
+                "opponentAttacks": 0
+            },
+            {
+                "tag": "#QJUYL2L9V",
+                "name": "Zysss ur clown",
+                "townhallLevel": 15,
+                "mapPosition": 5,
+                "opponentAttacks": 0
+            },
+            {
+                "tag": "#QR98PU0QJ",
+                "name": "Skyzo",
+                "townhallLevel": 11,
+                "mapPosition": 9,
+                "opponentAttacks": 0
+            },
+            {
+                "tag": "#GQJGU808G",
+                "name": "Kodok",
+                "townhallLevel": 16,
+                "mapPosition": 2,
+                "opponentAttacks": 0
+            }
+        ]
+    },
+    "opponent": {
+        "tag": "#PYC9VUJY",
+        "name": "wong bingung",
+        "badgeUrls": {
+            "small": "https://api-assets.clashofclans.com/badges/70/3cPTaxGyF0Q7QezveMcMpShHxGOJohI_fzjZ2ENBPqk.png",
+            "large": "https://api-assets.clashofclans.com/badges/512/3cPTaxGyF0Q7QezveMcMpShHxGOJohI_fzjZ2ENBPqk.png",
+            "medium": "https://api-assets.clashofclans.com/badges/200/3cPTaxGyF0Q7QezveMcMpShHxGOJohI_fzjZ2ENBPqk.png"
+        },
+        "clanLevel": 21,
+        "attacks": 0,
+        "stars": 0,
+        "destructionPercentage": 0.0,
+        "members": [
+            {
+                "tag": "#Q2P2Q8UJL",
+                "name": "Saskeh kun",
+                "townhallLevel": 11,
+                "mapPosition": 9,
+                "opponentAttacks": 0
+            },
+            {
+                "tag": "#29VCPLJR8",
+                "name": "Doom_beast",
+                "townhallLevel": 16,
+                "mapPosition": 2,
+                "opponentAttacks": 0
+            },
+            {
+                "tag": "#2U0GCU9R8",
+                "name": "Mugiwara",
+                "townhallLevel": 15,
+                "mapPosition": 3,
+                "opponentAttacks": 0
+            },
+            {
+                "tag": "#YLUGJ29P",
+                "name": "king ampoe_",
+                "townhallLevel": 13,
+                "mapPosition": 7,
+                "opponentAttacks": 0
+            },
+            {
+                "tag": "#QPLUUY8PC",
+                "name": "Dora",
+                "townhallLevel": 16,
+                "mapPosition": 4,
+                "opponentAttacks": 0
+            },
+            {
+                "tag": "#UL22G08",
+                "name": "Salamun Fajri",
+                "townhallLevel": 16,
+                "mapPosition": 5,
+                "opponentAttacks": 0
+            },
+            {
+                "tag": "#9JYJ22UQ",
+                "name": "ampoe_",
+                "townhallLevel": 13,
+                "mapPosition": 8,
+                "opponentAttacks": 0
+            },
+            {
+                "tag": "#YP9J200C2",
+                "name": "zio",
+                "townhallLevel": 18,
+                "mapPosition": 1,
+                "opponentAttacks": 0
+            },
+            {
+                "tag": "#R8QPRCUY0",
+                "name": "Portgas D Ace",
+                "townhallLevel": 10,
+                "mapPosition": 10,
+                "opponentAttacks": 0
+            },
+            {
+                "tag": "#QRJ0CCVUP",
+                "name": "Demon Lord",
+                "townhallLevel": 14,
+                "mapPosition": 6,
+                "opponentAttacks": 0
+            }
+        ]
+    }
+}
