@@ -15,9 +15,9 @@
             "medium": "https://api-assets.clashofclans.com/badges/200/kMzbLtABCLcdaaEsZGiLn2Tvnv-nXvhq8z008z-gGz4.png"
         },
         "clanLevel": 10,
-        "attacks": 8,
-        "stars": 18,
-        "destructionPercentage": 68.1,
+        "attacks": 9,
+        "stars": 21,
+        "destructionPercentage": 78.1,
         "members": [
             {
                 "tag": "#GPCYQG89Y",
@@ -72,6 +72,16 @@
                 "name": "kaco",
                 "townhallLevel": 13,
                 "mapPosition": 8,
+                "attacks": [
+                    {
+                        "attackerTag": "#GVL2QP9JV",
+                        "defenderTag": "#QR0JL8QUY",
+                        "stars": 3,
+                        "destructionPercentage": 100,
+                        "order": 17,
+                        "duration": 102
+                    }
+                ],
                 "opponentAttacks": 1,
                 "bestOpponentAttack": {
                     "attackerTag": "#QR0JL8QUY",
@@ -318,7 +328,15 @@
                         "duration": 77
                     }
                 ],
-                "opponentAttacks": 0
+                "opponentAttacks": 1,
+                "bestOpponentAttack": {
+                    "attackerTag": "#GVL2QP9JV",
+                    "defenderTag": "#QR0JL8QUY",
+                    "stars": 3,
+                    "destructionPercentage": 100,
+                    "order": 17,
+                    "duration": 102
+                }
             },
             {
                 "tag": "#GJUPU8GYP",
