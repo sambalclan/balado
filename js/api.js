@@ -4,6 +4,19 @@ import { dateFrom } from './constants.js';
 export const LIVE_API_URL = 'https://baladoo.augustasophia1338.workers.dev';
 const LIVE_TIMEOUT_MS = 8000;
 
+function showLiveStatus(text) {
+    try {
+        let el = document.getElementById('liveStatus');
+        if (!el) {
+            el = document.createElement('div');
+            el.id = 'liveStatus';
+            el.style.cssText = 'position:fixed;top:0;left:0;right:0;z-index:9999;background:#000;color:#0f0;font:11px monospace;padding:2px 6px;';
+            document.body.appendChild(el);
+        }
+        el.textContent = text;
+    } catch { /* abaikan */ }
+}
+
 const liveCache = new Map();
 function fetchLive(path) {
     if (!LIVE_API_URL) return Promise.resolve(null);
@@ -13,8 +26,10 @@ function fetchLive(path) {
             const timer = setTimeout(() => ctl.abort(), LIVE_TIMEOUT_MS);
             try {
                 const res = await fetch(`${LIVE_API_URL.replace(/\/+$/, '')}${path}`, { signal: ctl.signal });
+                showLiveStatus(`LIVE ${path}: HTTP ${res.status}`);
                 return res.ok ? await res.json() : null;
-            } catch {
+            } catch (e) {
+                showLiveStatus(`LIVE ${path} GAGAL: ${e.name} ${e.message}`);
                 return null;
             } finally {
                 clearTimeout(timer);
