@@ -4,18 +4,30 @@ import { dateFrom } from './constants.js';
 export const LIVE_API_URL = 'https://baladoo.augustasophia1338.workers.dev';
 const LIVE_TIMEOUT_MS = 8000;
 
+<<<<<<< HEAD
 const liveLog = [];
 function showLiveStatus(text) {
     try {
         liveLog.push(text);
+=======
+function showLiveStatus(text) {
+    try {
+>>>>>>> a4ff4d4abed010bf078e54489706cfb670c917c8
         let el = document.getElementById('liveStatus');
         if (!el) {
             el = document.createElement('div');
             el.id = 'liveStatus';
+<<<<<<< HEAD
             el.style.cssText = 'position:fixed;top:0;left:0;right:0;z-index:9999;background:#000;color:#0f0;font:11px monospace;padding:2px 6px;word-break:break-all;';
             document.body.appendChild(el);
         }
         el.textContent = liveLog.join(' | ');
+=======
+            el.style.cssText = 'position:fixed;top:0;left:0;right:0;z-index:9999;background:#000;color:#0f0;font:11px monospace;padding:2px 6px;';
+            document.body.appendChild(el);
+        }
+        el.textContent = text;
+>>>>>>> a4ff4d4abed010bf078e54489706cfb670c917c8
     } catch { /* abaikan */ }
 }
 
@@ -28,6 +40,7 @@ function fetchLive(path) {
             const timer = setTimeout(() => ctl.abort(), LIVE_TIMEOUT_MS);
             try {
                 const res = await fetch(`${LIVE_API_URL.replace(/\/+$/, '')}${path}`, { signal: ctl.signal });
+<<<<<<< HEAD
                 if (!res.ok) {
                     const body = await res.text().catch(() => '');
                     showLiveStatus(`${path}: HTTP ${res.status} ${body.slice(0, 90)}`);
@@ -37,6 +50,12 @@ function fetchLive(path) {
                 return await res.json();
             } catch (e) {
                 showLiveStatus(`${path} GAGAL: ${e.name} ${e.message}`);
+=======
+                showLiveStatus(`LIVE ${path}: HTTP ${res.status}`);
+                return res.ok ? await res.json() : null;
+            } catch (e) {
+                showLiveStatus(`LIVE ${path} GAGAL: ${e.name} ${e.message}`);
+>>>>>>> a4ff4d4abed010bf078e54489706cfb670c917c8
                 return null;
             } finally {
                 clearTimeout(timer);
