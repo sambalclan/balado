@@ -45,23 +45,23 @@ const renderMemberRow = (m, index) => {
     const league = m.leagueTier?.iconUrls?.small || m.league?.iconUrls?.small || '';
 
     return `
-    <div class="flex items-center gap-3 px-3 py-1.5 ${rowBorder(index)}">
-        <img src="${getTHImage(m.townHallLevel)}" class="w-8 h-8 shrink-0 object-contain"
+    <div class="flex items-center gap-3 px-3 py-2 ${rowBorder(index)}">
+        <img src="${getTHImage(m.townHallLevel)}" class="w-9 h-9 shrink-0 object-contain"
              alt="TH${m.townHallLevel}" onerror="this.style.visibility='hidden'">
         <div class="min-w-0 flex-1 leading-tight">
-            <p class="text-[11px] font-bold text-white truncate">
+            <p class="text-[12px] font-bold text-white truncate">
                 ${escapeHtml(m.name)}
-                <span class="ml-1 text-[8px] font-mono font-normal tracking-wide text-[#6B7280]">XP ${m.expLevel ?? '-'}</span>
+                <span class="ml-1 text-[9px] font-mono font-normal tracking-wide text-[#6B7280]">XP ${m.expLevel ?? '-'}</span>
             </p>
-            <div class="mt-0.5 flex gap-5 text-[8px] tracking-wide uppercase text-[#8B8F98]">
-                <span>Donated <b class="block text-[8px] text-green-500">${m.donations}</b></span>
-                <span>Received <b class="block text-[8px] text-red-400">${m.donationsReceived}</b></span>
+            <div class="mt-0.5 flex gap-5 text-[9px] tracking-wide uppercase text-[#8B8F98]">
+                <span>Donated <b class="block text-[10px] text-green-500">${m.donations}</b></span>
+                <span>Received <b class="block text-[10px] text-red-400">${m.donationsReceived}</b></span>
             </div>
         </div>
         <div class="shrink-0 w-14 flex flex-col items-center leading-tight">
-            ${league ? `<img src="${league}" class="w-5 h-5 object-contain" alt="" onerror="this.style.display='none'">` : ''}
-            <span class="text-[10px] font-bold text-[#D4A72C]">${m.trophies}</span>
-            <span class="text-[7px] tracking-wide uppercase text-[#6B7280]">Trophies</span>
+            ${league ? `<img src="${league}" class="w-6 h-6 object-contain" alt="" onerror="this.style.display='none'">` : ''}
+            <span class="text-[11px] font-bold text-[#D4A72C]">${m.trophies}</span>
+            <span class="text-[8px] tracking-wide uppercase text-[#6B7280]">Trophies</span>
         </div>
     </div>`;
 };

@@ -385,7 +385,7 @@ const reportButtonHtml = ({ type, icon, title, desc }) => `
     </button>
 `;
 
-// Log koneksi ke Worker proxy (diisi saat halaman dimuat)
+// Log Developers
 const liveLogHtml = () => {
     const rows = getLiveLog();
     const body = !LIVE_API_URL
@@ -400,11 +400,9 @@ const liveLogHtml = () => {
                 </div>`).join('');
     return `
         <div class="mt-4">
-            <h3 class="text-[11px] font-bold text-[#D4A72C] uppercase mb-1">Koneksi Live</h3>
-            <p class="text-[10px] text-[#8B8F98] break-all mb-2">${escapeHtml(LIVE_API_URL || '-')}</p>
+            <h3 class="text-[11px] font-bold text-[#D4A72C] uppercase mb-1">Log Developer</h3>
             <div class="rounded-xl border border-[#2A2A2A] px-2 py-1">${body}</div>
         </div>`;
-};
 
 export function renderSettings() {
     const page = document.getElementById('section-settings');
