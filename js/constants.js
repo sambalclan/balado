@@ -66,6 +66,26 @@ export const backButton = (attr) => `
 export const FILTER_ON = 'bg-[#2A2410] border-[#6B5A1E] text-[#D4A72C]';
 export const FILTER_OFF = 'border-transparent text-[#6B7280]';
 
+// Tabs with a sliding pill (Members sub-tabs, role filter, War filter).
+// `attr` is the data attribute on each button; items: [{ id, label }]
+export const renderPillTabs = (attr, items, activeId) => `
+    <div class="pill-tabs" style="--tabs:${items.length};--tab-index:${Math.max(items.findIndex((t) => t.id === activeId), 0)}">
+        <div class="tab-pill" aria-hidden="true"></div>
+        ${items.map(({ id, label }) => `<button type="button" ${attr}="${id}" class="${id === activeId ? 'active' : ''}" aria-pressed="${id === activeId}">${label}</button>`).join('')}
+    </div>`;
+
+// Slide the pill to a tab without re-rendering the tabs (keeps the CSS transition)
+export function setPillActive(tabs, attr, id) {
+    if (!tabs) return;
+    const buttons = [...tabs.querySelectorAll(`[${attr}]`)];
+    tabs.style.setProperty('--tab-index', Math.max(buttons.findIndex((b) => b.getAttribute(attr) === id), 0));
+    buttons.forEach((b) => {
+        const active = b.getAttribute(attr) === id;
+        b.classList.toggle('active', active);
+        b.setAttribute('aria-pressed', String(active));
+    });
+}
+
 // ═══ Shared: Charts ════════════════════════════════════════════════════
 const STAT_COLS = { 3: 'grid-cols-3', 4: 'grid-cols-4' };
 
