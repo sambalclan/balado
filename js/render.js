@@ -1,10 +1,9 @@
-import { roleMap, roleName, getTHImage, escapeHtml } from './constants.js';
+import { roleMap, roleName, getTHImage, escapeHtml, fmt, dayLabel, renderAreaChart } from './constants.js';
 import { state } from './state.js';
-import { fmt, dayLabel, renderAreaChart } from './chart.js';
 import { MEMBER_SORTS } from './members.js';
 import { renderWarChartCard } from './war.js';
 
-// ── Report config ──
+// ═══ Reports · Config ══════════════════════════════════════════════════
 const BASE_STYLE = {
     Footer: '',
     Accent: '#d4a017',
@@ -30,7 +29,7 @@ const REPORT_CONFIG = {
     },
 };
 
-// ── Table columns ──
+// ═══ Reports · Table Columns ═══════════════════════════════════════════
 // Columns not listed in a report's Cols (e.g. "tag") can be switched on from the config
 const MEMBER_COLS = [
     { id: 'no',        label: 'No',       get: (m, i) => i + 1 },
@@ -67,7 +66,7 @@ const WAR_COLS = [
     { id: 'defense',     label: 'Defense',     get: bestDefense },
 ];
 
-// ── Report content ──
+// ═══ Reports · Content ═════════════════════════════════════════════════
 function clanLabel() {
     if (!state.clan?.name) return '';
     return state.clan.tag ? `${state.clan.name} (${state.clan.tag})` : state.clan.name;
@@ -145,7 +144,7 @@ const REPORTS = {
     war: makeWarReport,
 };
 
-// ── Drawing the report as an image ──
+// ═══ Reports · Image Drawing ═══════════════════════════════════════════
 const FONT = 'Arial, Helvetica, sans-serif';
 
 const LAYOUT = {
@@ -350,7 +349,7 @@ async function createReportImage(type) {
     return { dataUrl: canvas.toDataURL(mime, 0.92), mime, title: report.title };
 }
 
-// ── Settings page (back button is handled in app.js) ──
+// ═══ Settings Page (back button is handled in app.js) ══════════════════
 function makeFileName(title) {
     const slug = title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
     return slug || 'report';
@@ -411,7 +410,7 @@ export function renderSettings() {
     };
 }
 
-// ── About page ──
+// ═══ About Page ════════════════════════════════════════════════════════
 const renderLabel = (label) => `
     <div class="flex items-center gap-1 bg-[#252525] px-2 py-1 rounded-lg">
         <img src="${label.iconUrls?.small || ''}" class="w-4 h-4" alt="">

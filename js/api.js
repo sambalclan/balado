@@ -1,9 +1,11 @@
-export async function fetchData(path) {
+// ═══ Core ══════════════════════════════════════════════════════════════
+async function fetchData(path) {
     const res = await fetch(`${path}?t=${Date.now()}`);
     if (!res.ok) throw new Error(`Failed to fetch ${path}`);
     return res.json();
 }
 
+// ═══ Clan ══════════════════════════════════════════════════════════════
 // Newest-first indexes: return the first file that loads
 export async function fetchClanData() {
     const index = await fetchData('data/clan_stats_index.json');
@@ -13,9 +15,6 @@ export async function fetchClanData() {
     }
     throw new Error('No available clan data files found in index.');
 }
-
-export const fetchWarIndex = () => fetchData('data/war_stats_index.json');
-export const fetchWarData = (filename) => fetchData(`data/war_stats/${filename}`);
 
 // Member count per day (latest snapshot of each day; index is newest first)
 export async function fetchClanHistory(days = 7) {
@@ -34,6 +33,11 @@ export async function fetchClanHistory(days = 7) {
     return [...perDay].map(([date, v]) => ({ date, ...v })).reverse();
 }
 
+// ═══ War ═══════════════════════════════════════════════════════════════
+export const fetchWarIndex = () => fetchData('data/war_stats_index.json');
+export const fetchWarData = (filename) => fetchData(`data/war_stats/${filename}`);
+
+// ═══ Raid ══════════════════════════════════════════════════════════════
 // Latest capital raid weekend (index is newest first)
 export async function fetchLatestRaid() {
     const index = await fetchData('data/raid_stats_index.json');
@@ -47,6 +51,7 @@ export async function fetchLatestRaid() {
 export const fetchRaidIndex = () => fetchData('data/raid_stats_index.json');
 export const fetchRaidData = (filename) => fetchData(`data/raid_stats/${filename}`);
 
+// ═══ CWL ═══════════════════════════════════════════════════════════════
 // Latest Clan War League season (index is newest first); null while there is no CWL data yet
 export async function fetchLatestCwl() {
     try {

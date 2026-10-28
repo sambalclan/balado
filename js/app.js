@@ -5,12 +5,14 @@ import { renderRaid } from './raid.js';
 import { renderMembers } from './members.js';
 import { renderWar, renderCwl } from './war.js';
 
+// ═══ State ═════════════════════════════════════════════════════════════
 const VIEWS = ['about', 'members', 'battle', 'raid', 'settings'];
 let latestClanData = null;
 let currentView = 'about';
 let lastTab = 'about'; // tab to return to when Settings is closed
 let warMode = 'war'; // 'war' atau 'cwl'
 
+// ═══ Navigation & Views ════════════════════════════════════════════════
 // Retrigger the light fade/slide animation on an element
 function animateIn(el) {
     if (!el) return;
@@ -56,8 +58,8 @@ function switchView(view = 'about') {
         const warBtn = document.getElementById('tab-battle-war');
         const cwlBtn = document.getElementById('tab-battle-cwl');
         
-        const ON = ['text-[#D4A72C]'];
-        const OFF = ['text-[#6B7280]'];
+        const ON = ['bg-[#2A2410]', 'border-[#6B5A1E]', 'text-[#D4A72C]'];
+        const OFF = ['border-transparent', 'text-[#6B7280]'];
         const setBtn = (btn, active) => {
             btn.classList.remove(...ON, ...OFF);
             btn.classList.add(...(active ? ON : OFF));
@@ -67,8 +69,6 @@ function switchView(view = 'about') {
         cwlSection.classList.toggle('hidden', isWar);
         setBtn(warBtn, isWar);
         setBtn(cwlBtn, !isWar);
-        const pill = document.getElementById('battlePill');
-        if (pill) pill.style.transform = `translateX(calc(${isWar ? 0 : 1} * (100% + 0.25rem)))`;
         if (!isWar) renderCwl();
         animateIn(isWar ? warSection : cwlSection);
     }
@@ -99,6 +99,7 @@ function bindTabs() {
     });
 }
 
+// ═══ Data Loading ══════════════════════════════════════════════════════
 async function loadWarData() {
     try {
         const index = await fetchWarIndex();
@@ -133,6 +134,7 @@ async function loadRaidWeeks() {
     renderRaid();
 }
 
+// ═══ Init ══════════════════════════════════════════════════════════════
 async function init() {
     try {
         latestClanData = await fetchClanData();

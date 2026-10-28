@@ -1,8 +1,7 @@
-import { roleName, getTHImage, escapeHtml, warDate } from './constants.js';
+import { roleName, getTHImage, escapeHtml, warDate, fmt } from './constants.js';
 import { state } from './state.js';
-import { fmt } from './chart.js';
 
-// ── Raid tab: one card per raid weekend, click it to see every member ──
+// ═══ Raid (one card per weekend, click it to see every member) ═════════
 let raidSelected = null; // index of the opened weekend, or null for the list
 
 const raidDate = (w) => warDate({ endTime: w.endTime, startTime: w.startTime, __file: w.__file });
