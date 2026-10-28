@@ -1,7 +1,7 @@
 import { dateFrom } from './constants.js';
 
 // Alamat Worker proxy. Kosongkan ('') untuk memakai file JSON saja.
-export const LIVE_API_URL = 'https://coc-proxy-sambal.balado.sambalclash.workers.dev';
+export const LIVE_API_URL = 'https://coc-proxy-sambal.sambalclash.workers.dev';
 const LIVE_TIMEOUT_MS = 8000;
 
 // Catatan setiap panggilan live; ditampilkan di halaman Settings
