@@ -12,6 +12,8 @@ const logLive = (path, status, note = '') => {
 export const getLiveLog = () => [...liveLog];
 
 const liveCache = new Map();
+// Forget cached live responses so the next fetch hits the Worker again (used by Refresh)
+export const clearLiveCache = () => liveCache.clear();
 function fetchLive(path) {
     if (!LIVE_API_URL) return Promise.resolve(null);
     if (!liveCache.has(path)) {

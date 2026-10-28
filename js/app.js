@@ -1,4 +1,4 @@
-import { fetchClanData, fetchClanHistory, fetchLatestRaid, fetchLatestCwl, fetchWarIndex, fetchWarData, fetchRaidIndex, fetchRaidData } from './api.js';
+import { fetchClanData, fetchClanHistory, fetchLatestRaid, fetchLatestCwl, fetchWarIndex, fetchWarData, fetchRaidIndex, fetchRaidData, clearLiveCache } from './api.js';
 import { setWarData, setClanHistory, setRaidData, setRaids, setCwlData } from './state.js';
 import { FILTER_ON, FILTER_OFF } from './constants.js';
 import { renderAbout, renderSettings } from './render.js';
@@ -88,7 +88,8 @@ function switchView(view = 'about') {
 function bindTabs() {
     // The header is re-rendered, so listen on the document
     document.addEventListener('click', (e) => {
-        if (e.target.closest('#settingsBtn')) switchView('settings');
+        if (e.target.closest('#refreshBtn')) refreshAll();
+        else if (e.target.closest('#settingsBtn')) switchView('settings');
         else if (e.target.closest('[data-settings-back]')) switchView(lastTab);
         else if (e.target.closest('#tab-battle-war')) { warMode = 'war'; switchView('battle'); }
         else if (e.target.closest('#tab-battle-cwl')) { warMode = 'cwl'; switchView('battle'); }
@@ -137,6 +138,41 @@ const renderClanViews = () => {
     renderAbout(latestClanData);
     renderMembers(latestClanData);
 };
+
+// ═══ Refresh (clan, war, CWL and raid) ═════════════════════════════════
+let refreshing = false;
+
+function setRefreshing(on) {
+    const btn = document.getElementById('refreshBtn');
+    if (!btn) return;
+    btn.disabled = on;
+    btn.querySelector('.material-symbols-outlined')?.classList.toggle('animate-spin', on);
+}
+
+async function refreshAll() {
+    if (refreshing) return;
+    refreshing = true;
+    setRefreshing(true);
+    clearLiveCache();
+
+    try {
+        const [clan, history, raid, cwl] = await Promise.allSettled([
+            fetchClanData(), fetchClanHistory(), fetchLatestRaid(), fetchLatestCwl(),
+            loadRaidWeeks(), loadWarData(), // these render their own pages
+        ]);
+        // Keep the old data when a request fails
+        if (clan.status === 'fulfilled' && clan.value) latestClanData = clan.value;
+        if (history.status === 'fulfilled') setClanHistory(history.value);
+        if (raid.status === 'fulfilled') setRaidData(raid.value);
+        if (cwl.status === 'fulfilled') setCwlData(cwl.value);
+
+        renderClanViews();
+        if (warMode === 'cwl') renderCwl();
+    } finally {
+        refreshing = false;
+        setRefreshing(false); // the header was re-rendered, so look the button up again
+    }
+}
 
 async function init() {
     try {

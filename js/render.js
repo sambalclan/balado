@@ -432,6 +432,20 @@ const renderLabel = (label) => `
     </div>
 `;
 
+const renderRefreshButton = () => `
+    <button
+        id="refreshBtn"
+        type="button"
+        aria-label="Refresh data"
+        class="flex items-center justify-center
+               w-9 h-9 rounded-full bg-white/10 hover:bg-white/20
+               text-gray-200 transition-all duration-300
+               active:scale-95 disabled:opacity-60"
+    >
+        <span class="material-symbols-outlined text-[22px]">refresh</span>
+    </button>
+`;
+
 const renderSettingsButton = () => `
     <button
         id="settingsBtn"
@@ -462,6 +476,7 @@ function renderClanHeader(clan) {
                 </div>
             </div>
             <div class="shrink-0 flex items-center gap-1.5">
+                ${renderRefreshButton()}
                 ${renderSettingsButton()}
             </div>
         </div>
