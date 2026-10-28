@@ -116,8 +116,8 @@ function warSummary(done) {
     ];
 }
 
-// "Stars per war" chart, shown at the top of the War tab
-const renderWarChartCard = () => {
+// "Stars per war" chart, shown on the dashboard (About)
+export const renderWarChartCard = () => {
     const done = state.wars
         .filter((w) => ['warEnded', 'ended'].includes(w.state) && warDate(w))
         .reverse(); // index is newest first -> flip to oldest first
@@ -125,7 +125,6 @@ const renderWarChartCard = () => {
     return renderAreaChart({
         title: 'War',
         subtitle: 'Stars per war (last 7)',
-        extraClass: 'mt-3',
         points: done.slice(-7).map((w) => ({ label: dayLabel(warDate(w)), value: w.clan?.stars || 0 })),
         stats: done.length ? warSummary(done) : [],
         note: done.length ? `Summary of ${done.length} finished wars` : '',
@@ -246,7 +245,6 @@ export function renderWar(wars) {
 
             <div id="warList" class="flex flex-col gap-2">${renderWarList()}</div>
         </div>
-        ${renderWarChartCard()}
     `;
 
     container.onclick = (e) => {

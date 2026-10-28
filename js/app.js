@@ -11,6 +11,14 @@ let currentView = 'about';
 let lastTab = 'about'; // tab to return to when Settings is closed
 let warMode = 'war'; // 'war' atau 'cwl'
 
+// Retrigger the light fade/slide animation on an element
+function animateIn(el) {
+    if (!el) return;
+    el.classList.remove('view-anim');
+    void el.offsetWidth; // force reflow so the animation restarts
+    el.classList.add('view-anim');
+}
+
 function moveNavIndicator(instant = false) {
     const nav = document.getElementById('bottomToolbar');
     const active = nav?.querySelector('button.active');
@@ -38,6 +46,7 @@ function switchView(view = 'about') {
         const isTarget = section.id === 'section-' + target;
         section.classList.toggle('hidden-section', !isTarget);
         section.style.display = isTarget ? '' : 'none';
+        if (isTarget && section.id !== 'section-battle') animateIn(section);
     });
 
     // Handle battle mode (War vs CWL)
@@ -47,22 +56,19 @@ function switchView(view = 'about') {
         const warBtn = document.getElementById('tab-battle-war');
         const cwlBtn = document.getElementById('tab-battle-cwl');
         
-        if (warMode === 'war') {
-            warSection.classList.remove('hidden');
-            cwlSection.classList.add('hidden');
-            warBtn.classList.remove('border-[#3A3A3A]', 'text-[#6B7280]');
-            warBtn.classList.add('bg-[#2A2410]', 'border-[#6B5A1E]', 'text-[#D4A72C]');
-            cwlBtn.classList.remove('bg-[#2A2410]', 'border-[#6B5A1E]', 'text-[#D4A72C]');
-            cwlBtn.classList.add('border-[#3A3A3A]', 'text-[#6B7280]');
-        } else {
-            warSection.classList.add('hidden');
-            cwlSection.classList.remove('hidden');
-            cwlBtn.classList.remove('border-[#3A3A3A]', 'text-[#6B7280]');
-            cwlBtn.classList.add('bg-[#2A2410]', 'border-[#6B5A1E]', 'text-[#D4A72C]');
-            warBtn.classList.remove('bg-[#2A2410]', 'border-[#6B5A1E]', 'text-[#D4A72C]');
-            warBtn.classList.add('border-[#3A3A3A]', 'text-[#6B7280]');
-            renderCwl();
-        }
+        const ON = ['bg-[#2A2410]', 'border-[#6B5A1E]', 'text-[#D4A72C]'];
+        const OFF = ['border-transparent', 'text-[#6B7280]'];
+        const setBtn = (btn, active) => {
+            btn.classList.remove(...ON, ...OFF);
+            btn.classList.add(...(active ? ON : OFF));
+        };
+        const isWar = warMode === 'war';
+        warSection.classList.toggle('hidden', !isWar);
+        cwlSection.classList.toggle('hidden', isWar);
+        setBtn(warBtn, isWar);
+        setBtn(cwlBtn, !isWar);
+        if (!isWar) renderCwl();
+        animateIn(isWar ? warSection : cwlSection);
     }
 
     // Settings is a page, not a tab: the nav keeps highlighting the tab we came from

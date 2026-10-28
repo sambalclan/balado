@@ -164,3 +164,11 @@ main {
 
 
 /* Dark mode only */
+
+/* Light view transition */
+@keyframes view-in {
+    from { opacity: 0; transform: translateY(6px); }
+    to   { opacity: 1; transform: none; }
+}
+.view-anim { animation: view-in 180ms ease-out both; }
+@media (prefers-reduced-motion: reduce) { .view-anim { animation: none; } }

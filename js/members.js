@@ -147,14 +147,20 @@ export function renderMembers(clan) {
         <div class="px-0 py-3 pb-28 w-full">
             <div class="w-full bg-[#1a1a1a] border border-[#2A2A2A] rounded-xl p-3">
                 ${header}
-                ${membersView === 'list' ? body : (body || emptyNote)}
+                <div id="membersBody">${membersView === 'list' ? body : (body || emptyNote)}</div>
             </div>
         </div>
     `;
 
     container.onclick = (e) => {
         const view = e.target.closest('[data-view]');
-        if (view) { membersView = view.dataset.view; renderMembers(clan); return; }
+        if (view) {
+            membersView = view.dataset.view;
+            renderMembers(clan);
+            const bodyEl = container.querySelector('#membersBody');
+            bodyEl.classList.add('view-anim'); // light fade on sub-tab change
+            return;
+        }
         const btn = e.target.closest('[data-role]');
         if (btn) { membersRole = btn.dataset.role; renderMembers(clan); }
     };

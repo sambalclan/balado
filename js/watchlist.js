@@ -1,7 +1,6 @@
 import { state } from './state.js';
-import { roleName, getTHImage, escapeHtml } from './constants.js';
-import { dayLabel } from './chart.js';
-import { endedWars, raidWeeks, seasonDate } from './promotion.js';
+import { getTHImage, escapeHtml } from './constants.js';
+import { endedWars, raidWeeks } from './promotion.js';
 
 const TOP_COUNT = 5;       // how many members to show
 const LOW_DONATION = 200;  // donations below this count as a (minor) flag
@@ -32,8 +31,8 @@ function scoreWatchlist() {
             const score = missedWar * 2 + skippedRaid * 3 + (lowDonation ? 1 : 0);
 
             const reasons = [];
-            if (wars.length && missedWar) reasons.push(`${missedWar} serangan war terlewat`);
-            if (raids.length && skippedRaid) reasons.push(`${skippedRaid}/${raids.length} raid tidak ikut`);
+            if (wars.length && missedWar) reasons.push(`${missedWar} war terlewat`);
+            if (raids.length && skippedRaid) reasons.push(`${skippedRaid}/${raids.length} raid skip`);
             if (lowDonation) reasons.push(`Donasi ${m.donations || 0}`);
 
             return { member: m, score, reasons };
@@ -46,14 +45,12 @@ function scoreWatchlist() {
 }
 
 const renderRow = ({ member: m, reasons }, i) => `
-    <div class="flex items-center gap-3 px-3 py-2 ${i > 0 ? 'border-t border-[#2A2A2A]' : ''}">
-        <span class="w-3 text-[10px] font-mono text-[#6B7280]">${i + 1}</span>
+    <div class="flex items-center gap-3 px-3.5 py-3 ${i > 0 ? 'border-t border-[#2A2A2A]' : ''}">
         <img src="${getTHImage(m.townHallLevel)}" class="w-9 h-9 shrink-0 object-contain"
              alt="TH${m.townHallLevel}" onerror="this.style.visibility='hidden'">
-        <div class="min-w-0 flex-1 leading-tight">
-            <p class="text-[13px] font-bold text-white truncate">${escapeHtml(m.name)}</p>
-            <p class="text-[9px] font-semibold tracking-wide uppercase text-[#D4A72C]">${roleName(m.role)} · TH${m.townHallLevel}</p>
-            <p class="text-[9px] text-red-400 mt-0.5">${reasons.join(' · ')}</p>
+        <div class="min-w-0 flex-1 flex flex-col gap-0.5">
+            <p class="text-[13px] font-bold leading-tight text-white truncate">${escapeHtml(m.name)}</p>
+            <p class="text-[9px] leading-tight text-red-400 truncate">${reasons.join(' · ')}</p>
         </div>
     </div>`;
 
@@ -63,12 +60,7 @@ export function renderWatchlistCard() {
     if (!wars && !raids) return ''; // no war/raid data yet, nothing meaningful to judge
 
     const top = rows.slice(0, TOP_COUNT);
-    return `
-        <div class="w-full bg-[#1a1a1a] border border-[#2A2A2A] rounded-xl p-3">
-            <h4 class="medieval text-[11px] font-bold text-[#D4A72C] uppercase tracking-wide mb-2">Watchlist</h4>
-            ${top.length
-                ? `<div class="rounded-xl overflow-hidden border border-[#2A2A2A]">${top.map(renderRow).join('')}</div>`
-                : '<p class="text-xs text-[#8B8F98] text-center py-3">Semua anggota aktif musim ini.</p>'}
-            <p class="text-[8px] text-[#6B7280] mt-1.5">Season sejak ${dayLabel(seasonDate())} · ${wars} war · ${raids} raid · Leader &amp; CoLead tidak dihitung</p>
-        </div>`;
+    return top.length
+        ? `<div class="rounded-xl overflow-hidden border border-[#2A2A2A]">${top.map(renderRow).join('')}</div>`
+        : '<p class="text-xs text-[#8B8F98] text-center py-3">Semua anggota aktif musim ini.</p>';
 }

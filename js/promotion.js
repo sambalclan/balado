@@ -95,21 +95,19 @@ function scoreMembers() {
     return { cats, rows };
 }
 
-// One category: icon + label + %, progress bar, value/target
-const renderPart = (p, compact) => {
+// One category: icon + %, progress bar, value/target (icon only, no label)
+const renderPart = (p) => {
     const done = p.pct >= 1;
     return `
         <div class="min-w-0">
             <div class="flex items-center justify-between gap-1">
-                <span class="flex items-center gap-0.5 text-[8px] font-semibold tracking-wide uppercase text-[#8B8F98]">
-                    ${compact ? '' : `<span class="material-symbols-outlined text-[11px]">${p.icon}</span>`}${p.label}
-                </span>
-                <span class="text-[9px] font-bold text-[#AFE1AF]">${Math.floor(p.pct * 100)}%</span>
+                <span class="material-symbols-outlined text-[12px] text-[#8B8F98]">${p.icon}</span>
+                <span class="text-[8px] font-bold text-[#AFE1AF]">${Math.floor(p.pct * 100)}%</span>
             </div>
             <div class="h-1 mt-1 rounded-full bg-[#2A2A2A] overflow-hidden">
                 <div class="h-full rounded-full ${done ? 'bg-[#AFE1AF]' : 'bg-[#D4A72C]'}" style="width:${p.pct * 100}%"></div>
             </div>
-            <p class="mt-1 text-[9px] font-bold text-white truncate">${fmt(p.value)}<span class="font-normal text-[#6B7280]">/${fmt(p.target)}</span></p>
+            <p class="mt-1 text-[8px] font-bold text-white truncate">${fmt(p.value)}<span class="font-normal text-[#6B7280]">/${fmt(p.target)}</span></p>
         </div>`;
 };
 
@@ -133,10 +131,10 @@ const renderCandidate = ({ member: m, parts, score, joined }, i) => `
                 <p class="text-[7px] tracking-wide uppercase text-[#6B7280]">Score</p>
             </div>
         </div>
-        <div class="grid ${parts.length > 3 ? 'grid-cols-4 gap-2' : 'grid-cols-3 gap-3'} mt-2.5">${parts.map((p) => renderPart(p, parts.length > 3)).join('')}</div>
+        <div class="grid ${parts.length > 3 ? 'grid-cols-4 gap-2' : 'grid-cols-3 gap-3'} mt-2.5">${parts.map(renderPart).join('')}</div>
     </div>`;
 
-// "Promotion" card for the About page: the members closest to every target
+// "Promotion" card: the members closest to every target
 export function renderPromotionCard() {
     const { cats, rows } = scoreMembers();
     if (!cats.length) return '';
@@ -146,7 +144,6 @@ export function renderPromotionCard() {
 
     return `
         <div class="w-full bg-[#1a1a1a] border border-[#2A2A2A] rounded-xl p-3">
-            <h4 class="medieval text-[11px] font-bold text-[#D4A72C] uppercase tracking-wide mb-2">Promotion</h4>
             ${top.length
                 ? `<div class="rounded-xl overflow-hidden border border-[#2A2A2A]">${top.map(renderCandidate).join('')}</div>`
                 : '<p class="text-xs text-[#8B8F98] text-center py-3">Tidak ada kandidat.</p>'}

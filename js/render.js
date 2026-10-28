@@ -2,6 +2,7 @@ import { roleMap, roleName, getTHImage, escapeHtml } from './constants.js';
 import { state } from './state.js';
 import { fmt, dayLabel, renderAreaChart } from './chart.js';
 import { MEMBER_SORTS } from './members.js';
+import { renderWarChartCard } from './war.js';
 
 // ── Report config ──
 const BASE_STYLE = {
@@ -552,6 +553,7 @@ export function renderAbout(clan) {
                 ${renderLeadSection('Ranking', rankingHtml)}
             </div>
             ${renderMembershipCard()}
+            ${renderWarChartCard()}
         </div>
     `;
 
