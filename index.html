@@ -17,9 +17,11 @@
         <section id="section-about" class="w-full"></section>
         <section id="section-members" class="w-full hidden-section"></section>
         <section id="section-battle" class="w-full hidden-section py-3 pb-28 text-gray-300 text-sm">
-            <div class="grid grid-cols-2 gap-1 p-1 mb-3 rounded-xl bg-[#141414] border border-[#2A2A2A]">
-                <button id="tab-battle-war" type="button" class="py-1.5 rounded-lg border text-[9px] font-semibold tracking-wide uppercase active:scale-95 transition-all">War</button>
-                <button id="tab-battle-cwl" type="button" class="py-1.5 rounded-lg border text-[9px] font-semibold tracking-wide uppercase active:scale-95 transition-all">CWL</button>
+            <div class="relative grid grid-cols-2 gap-1 p-1 mb-3 rounded-xl bg-[#141414] border border-[#2A2A2A]">
+                <span id="battlePill" class="absolute top-1 bottom-1 left-1 rounded-lg bg-[#2A2410] border border-[#6B5A1E]"
+                      style="width:calc((100% - 0.75rem) / 2); transition:transform 220ms cubic-bezier(.4,0,.2,1)"></span>
+                <button id="tab-battle-war" type="button" class="relative z-10 py-1.5 rounded-lg text-[9px] font-semibold tracking-wide uppercase active:scale-95 transition-all">War</button>
+                <button id="tab-battle-cwl" type="button" class="relative z-10 py-1.5 rounded-lg text-[9px] font-semibold tracking-wide uppercase active:scale-95 transition-all">CWL</button>
             </div>
             <div id="section-war" class="w-full"></div>
             <div id="section-cwl" class="w-full hidden"></div>

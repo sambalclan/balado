@@ -1,4 +1,4 @@
-import { parseCoCDate, escapeHtml, warDate, getTHImage } from './constants.js';
+import { parseCoCDate, escapeHtml, warDate, getTHImage, pillHtml, slidePill } from './constants.js';
 import { state } from './state.js';
 import { renderAreaChart, dayLabel } from './chart.js';
 
@@ -132,12 +132,10 @@ export const renderWarChartCard = () => {
 };
 
 const renderWarFilterButton = ({ id, label }) => {
-    const style = id === warFilter
-        ? 'bg-[#2A2410] border-[#6B5A1E] text-[#D4A72C]'
-        : 'border-transparent text-[#6B7280]';
+    const style = id === warFilter ? 'text-[#D4A72C]' : 'text-[#6B7280]';
     return `
         <button type="button" data-war="${id}"
-                class="py-1.5 rounded-lg border text-[9px] font-semibold tracking-wide uppercase ${style}
+                class="relative z-10 py-1.5 rounded-lg text-[9px] font-semibold tracking-wide uppercase ${style}
                        active:scale-95 transition-all">${label}</button>
     `;
 };
@@ -239,13 +237,16 @@ export function renderWar(wars) {
                 </button>
             </div>
 
-            <div class="grid grid-cols-4 gap-1 p-1 mb-3 rounded-xl bg-[#141414] border border-[#2A2A2A]">
+            <div class="relative grid grid-cols-4 gap-1 p-1 mb-3 rounded-xl bg-[#141414] border border-[#2A2A2A]">
+                ${pillHtml('warPill', WAR_FILTERS.length, WAR_FILTERS.findIndex((f) => f.id === warFilter))}
                 ${WAR_FILTERS.map(renderWarFilterButton).join('')}
             </div>
 
             <div id="warList" class="flex flex-col gap-2">${renderWarList()}</div>
         </div>
     `;
+
+    slidePill(container, 'warPill', WAR_FILTERS.findIndex((f) => f.id === warFilter));
 
     container.onclick = (e) => {
         const btn = e.target.closest('[data-war]');

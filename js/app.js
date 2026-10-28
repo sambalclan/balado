@@ -56,8 +56,8 @@ function switchView(view = 'about') {
         const warBtn = document.getElementById('tab-battle-war');
         const cwlBtn = document.getElementById('tab-battle-cwl');
         
-        const ON = ['bg-[#2A2410]', 'border-[#6B5A1E]', 'text-[#D4A72C]'];
-        const OFF = ['border-transparent', 'text-[#6B7280]'];
+        const ON = ['text-[#D4A72C]'];
+        const OFF = ['text-[#6B7280]'];
         const setBtn = (btn, active) => {
             btn.classList.remove(...ON, ...OFF);
             btn.classList.add(...(active ? ON : OFF));
@@ -67,6 +67,8 @@ function switchView(view = 'about') {
         cwlSection.classList.toggle('hidden', isWar);
         setBtn(warBtn, isWar);
         setBtn(cwlBtn, !isWar);
+        const pill = document.getElementById('battlePill');
+        if (pill) pill.style.transform = `translateX(calc(${isWar ? 0 : 1} * (100% + 0.25rem)))`;
         if (!isWar) renderCwl();
         animateIn(isWar ? warSection : cwlSection);
     }
