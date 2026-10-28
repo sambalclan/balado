@@ -1,23 +1,15 @@
 import { dateFrom } from './constants.js';
 
 // Alamat Worker proxy. Kosongkan ('') untuk memakai file JSON saja.
-   export const LIVE_API_URL = 'https://coc-proxy-sambal.augustasophia1338.workers.dev';
+export const LIVE_API_URL = 'https://coc-proxy-sambal.augustasophia1338.workers.dev';
 const LIVE_TIMEOUT_MS = 8000;
 
+// Catatan setiap panggilan live; ditampilkan di halaman Settings
 const liveLog = [];
-function showLiveStatus(text) {
-    try {
-        liveLog.push(text);
-        let el = document.getElementById('liveStatus');
-        if (!el) {
-            el = document.createElement('div');
-            el.id = 'liveStatus';
-            el.style.cssText = 'position:fixed;top:0;left:0;right:0;z-index:9999;background:#000;color:#0f0;font:11px monospace;padding:2px 6px;word-break:break-all;';
-            document.body.appendChild(el);
-        }
-        el.textContent = liveLog.join(' | ');
-    } catch { /* abaikan */ }
-}
+const logLive = (path, status, note = '') => {
+    liveLog.push({ time: new Date().toLocaleTimeString('id-ID'), path, status, note });
+};
+export const getLiveLog = () => [...liveLog];
 
 const liveCache = new Map();
 function fetchLive(path) {
@@ -30,13 +22,13 @@ function fetchLive(path) {
                 const res = await fetch(`${LIVE_API_URL.replace(/\/+$/, '')}${path}`, { signal: ctl.signal });
                 if (!res.ok) {
                     const body = await res.text().catch(() => '');
-                    showLiveStatus(`${path}: HTTP ${res.status} ${body.slice(0, 90)}`);
+                    logLive(path, `HTTP ${res.status}`, body.slice(0, 90));
                     return null;
                 }
-                showLiveStatus(`${path}: OK`);
+                logLive(path, 'OK');
                 return await res.json();
             } catch (e) {
-                showLiveStatus(`${path} GAGAL: ${e.name} ${e.message}`);
+                logLive(path, 'GAGAL', `${e.name} ${e.message}`);
                 return null;
             } finally {
                 clearTimeout(timer);

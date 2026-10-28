@@ -1,5 +1,6 @@
 import { roleMap, roleName, getTHImage, escapeHtml, fmt, dayLabel, renderAreaChart, warStars, pagePanel, backButton } from './constants.js';
 import { state } from './state.js';
+import { getLiveLog, LIVE_API_URL } from './api.js';
 import { MEMBER_SORTS } from './members.js';
 import { renderWarChartCard } from './war.js';
 
@@ -384,6 +385,27 @@ const reportButtonHtml = ({ type, icon, title, desc }) => `
     </button>
 `;
 
+// Log koneksi ke Worker proxy (diisi saat halaman dimuat)
+const liveLogHtml = () => {
+    const rows = getLiveLog();
+    const body = !LIVE_API_URL
+        ? '<p class="text-[11px] text-[#8B8F98] py-1">Live API nonaktif (LIVE_API_URL kosong).</p>'
+        : rows.length === 0
+            ? '<p class="text-[11px] text-[#8B8F98] py-1">Belum ada panggilan.</p>'
+            : rows.map((row) => `
+                <div class="flex items-start gap-2 text-[11px] font-mono py-1 border-t border-[#2A2A2A] first:border-t-0">
+                    <span class="text-[#8B8F98] shrink-0">${escapeHtml(row.time)}</span>
+                    <span class="text-white shrink-0">${escapeHtml(row.path)}</span>
+                    <span class="${row.status === 'OK' ? 'text-green-400' : 'text-red-400'} break-all">${escapeHtml(row.status)}${row.note ? ' ' + escapeHtml(row.note) : ''}</span>
+                </div>`).join('');
+    return `
+        <div class="mt-4">
+            <h3 class="text-[11px] font-bold text-[#D4A72C] uppercase mb-1">Koneksi Live</h3>
+            <p class="text-[10px] text-[#8B8F98] break-all mb-2">${escapeHtml(LIVE_API_URL || '-')}</p>
+            <div class="rounded-xl border border-[#2A2A2A] px-2 py-1">${body}</div>
+        </div>`;
+};
+
 export function renderSettings() {
     const page = document.getElementById('section-settings');
     if (!page) return;
@@ -394,6 +416,7 @@ export function renderSettings() {
             <h2 class="medieval text-lg font-bold text-white uppercase">Settings</h2>
         </div>
         <div class="flex flex-col gap-2">${SETTINGS_REPORTS.map(reportButtonHtml).join('')}</div>
+        ${liveLogHtml()}
     `);
 
     page.onclick = (e) => {
