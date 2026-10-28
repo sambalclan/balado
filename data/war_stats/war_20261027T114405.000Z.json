@@ -15,9 +15,9 @@
             "medium": "https://api-assets.clashofclans.com/badges/200/kMzbLtABCLcdaaEsZGiLn2Tvnv-nXvhq8z008z-gGz4.png"
         },
         "clanLevel": 10,
-        "attacks": 4,
-        "stars": 11,
-        "destructionPercentage": 37.3,
+        "attacks": 6,
+        "stars": 16,
+        "destructionPercentage": 56.2,
         "members": [
             {
                 "tag": "#GPCYQG89Y",
@@ -187,6 +187,24 @@
                 "name": "Kodok",
                 "townhallLevel": 16,
                 "mapPosition": 1,
+                "attacks": [
+                    {
+                        "attackerTag": "#GQJGU808G",
+                        "defenderTag": "#QC2QL2Q02",
+                        "stars": 2,
+                        "destructionPercentage": 89,
+                        "order": 13,
+                        "duration": 113
+                    },
+                    {
+                        "attackerTag": "#GQJGU808G",
+                        "defenderTag": "#L0282LCPR",
+                        "stars": 3,
+                        "destructionPercentage": 100,
+                        "order": 14,
+                        "duration": 134
+                    }
+                ],
                 "opponentAttacks": 0
             }
         ]
@@ -234,7 +252,15 @@
                 "name": "azroil",
                 "townhallLevel": 16,
                 "mapPosition": 2,
-                "opponentAttacks": 0
+                "opponentAttacks": 1,
+                "bestOpponentAttack": {
+                    "attackerTag": "#GQJGU808G",
+                    "defenderTag": "#L0282LCPR",
+                    "stars": 3,
+                    "destructionPercentage": 100,
+                    "order": 14,
+                    "duration": 134
+                }
             },
             {
                 "tag": "#LVJUQGJVG",
@@ -343,7 +369,15 @@
                 "name": "CHAINKILLER",
                 "townhallLevel": 16,
                 "mapPosition": 1,
-                "opponentAttacks": 0
+                "opponentAttacks": 1,
+                "bestOpponentAttack": {
+                    "attackerTag": "#GQJGU808G",
+                    "defenderTag": "#QC2QL2Q02",
+                    "stars": 2,
+                    "destructionPercentage": 89,
+                    "order": 13,
+                    "duration": 113
+                }
             },
             {
                 "tag": "#8UY9JLRU0",
