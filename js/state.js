@@ -14,3 +14,6 @@ export const setRaidData = (raid) => { state.raid = raid || null; };
 export const setRaids = (raids) => { state.raids = raids || []; };
 export const setCwlData = (cwl) => { state.cwl = cwl || null; };
 export const setClanHistory = (history) => { state.history = history || []; };
+
+// All raid weekends; falls back to the latest one while the full list is still loading
+export const getRaidWeeks = () => (state.raids.length ? state.raids : (state.raid ? [state.raid] : []));

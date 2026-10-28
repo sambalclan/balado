@@ -1,4 +1,4 @@
-import { roleMap, roleName, getTHImage, escapeHtml, fmt, dayLabel, renderAreaChart } from './constants.js';
+import { roleMap, roleName, getTHImage, escapeHtml, fmt, dayLabel, renderAreaChart, warStars, pagePanel, backButton } from './constants.js';
 import { state } from './state.js';
 import { MEMBER_SORTS } from './members.js';
 import { renderWarChartCard } from './war.js';
@@ -31,9 +31,12 @@ const REPORT_CONFIG = {
 
 // ═══ Reports · Table Columns ═══════════════════════════════════════════
 // Columns not listed in a report's Cols (e.g. "tag") can be switched on from the config
+const COL_NO = { id: 'no', label: 'No', get: (m, i) => i + 1 };
+const COL_NAME = { id: 'name', label: 'Name', get: (m) => m.name };
+
 const MEMBER_COLS = [
-    { id: 'no',        label: 'No',       get: (m, i) => i + 1 },
-    { id: 'name',      label: 'Name',     get: (m) => m.name },
+    COL_NO,
+    COL_NAME,
     { id: 'tag',       label: 'Tag',      get: (m) => m.tag },
     { id: 'role',      label: 'Role',     get: (m) => roleMap[m.role] || m.role || '-' },
     { id: 'th',        label: 'TH',       get: (m) => m.townHallLevel ?? '-' },
@@ -41,10 +44,6 @@ const MEMBER_COLS = [
     { id: 'donations', label: 'Donated',  get: (m) => m.donations ?? '-' },
     { id: 'received',  label: 'Received', get: (m) => m.donationsReceived ?? '-' },
 ];
-
-function totalStars(member) {
-    return (member.attacks || []).reduce((sum, a) => sum + (a.stars || 0), 0);
-}
 
 function averageDestruction(member) {
     const attacks = member.attacks || [];
@@ -57,11 +56,11 @@ const attacksUsed = (member) => `${member.attacks?.length || 0}/${state.war?.att
 const bestDefense = (member) => member.bestOpponentAttack ? member.bestOpponentAttack.stars : '-';
 
 const WAR_COLS = [
-    { id: 'no',          label: 'No',          get: (m, i) => i + 1 },
-    { id: 'name',        label: 'Name',        get: (m) => m.name },
+    COL_NO,
+    COL_NAME,
     { id: 'th',          label: 'TH',          get: (m) => m.townhallLevel ?? '-' },
     { id: 'attacks',     label: 'Attacks',     get: attacksUsed },
-    { id: 'stars',       label: 'Stars',       get: totalStars },
+    { id: 'stars',       label: 'Stars',       get: warStars },
     { id: 'destruction', label: 'Destruction', get: averageDestruction },
     { id: 'defense',     label: 'Defense',     get: bestDefense },
 ];
@@ -103,7 +102,7 @@ function makeReport({ config, allCols, items, groups, subtitle, emptyNote }) {
 function makeWarReport() {
     const members = [...(state.war?.clan?.members || [])].sort((a, b) =>
         (b.attacks?.length || 0) - (a.attacks?.length || 0)
-        || totalStars(b) - totalStars(a)
+        || warStars(b) - warStars(a)
         || (a.mapPosition || 0) - (b.mapPosition || 0));
 
     const clanName = state.war?.clan?.name || state.clan?.name || '';
@@ -349,7 +348,7 @@ async function createReportImage(type) {
     return { dataUrl: canvas.toDataURL(mime, 0.92), mime, title: report.title };
 }
 
-// ═══ Settings Page (back button is handled in app.js) ══════════════════
+// ═══ Reports · Download ════════════════════════════════════════════════
 function makeFileName(title) {
     const slug = title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
     return slug || 'report';
@@ -372,6 +371,7 @@ const SETTINGS_REPORTS = [
     { type: 'war',     icon: 'swords', title: 'War Report',     desc: 'Creation Pdf War' },
 ];
 
+// ═══ Settings Page (back button is handled in app.js) ══════════════════
 const reportButtonHtml = ({ type, icon, title, desc }) => `
     <button type="button" data-report="${type}"
             class="w-full flex items-center gap-3 px-3 py-3 bg-[#1E1E1E] border border-[#3A3A3A] rounded-xl
@@ -388,21 +388,13 @@ export function renderSettings() {
     const page = document.getElementById('section-settings');
     if (!page) return;
 
-    page.innerHTML = `
-        <div class="px-0 py-3 pb-28 w-full">
-            <div class="w-full bg-[#1a1a1a] border border-[#2A2A2A] rounded-2xl p-3">
-                <div class="flex items-center gap-3 mb-3">
-                    <button type="button" data-settings-back aria-label="Back"
-                            class="shrink-0 w-9 h-9 rounded-full bg-white/10 hover:bg-white/20 text-white
-                                   flex items-center justify-center active:scale-90 transition-all">
-                        <span class="material-symbols-outlined text-[20px]">arrow_back</span>
-                    </button>
-                    <h2 class="medieval text-lg font-bold text-white uppercase">Settings</h2>
-                </div>
-                <div class="flex flex-col gap-2">${SETTINGS_REPORTS.map(reportButtonHtml).join('')}</div>
-            </div>
+    page.innerHTML = pagePanel(`
+        <div class="flex items-center gap-3 mb-3">
+            ${backButton('data-settings-back')}
+            <h2 class="medieval text-lg font-bold text-white uppercase">Settings</h2>
         </div>
-    `;
+        <div class="flex flex-col gap-2">${SETTINGS_REPORTS.map(reportButtonHtml).join('')}</div>
+    `);
 
     page.onclick = (e) => {
         const button = e.target.closest('[data-report]');
@@ -555,5 +547,4 @@ export function renderAbout(clan) {
             ${renderWarChartCard()}
         </div>
     `;
-
 }

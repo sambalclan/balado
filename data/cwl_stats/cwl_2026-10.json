@@ -1,0 +1,29 @@
+{
+  "season": "2026-10",
+  "clan": {
+    "members": [
+      { "tag": "#AAA111", "name": "Budi", "townHallLevel": 16 },
+      { "tag": "#BBB222", "name": "Sari", "townHallLevel": 15 },
+      { "tag": "#CCC333", "name": "Andi", "townHallLevel": 14 }
+    ]
+  },
+  "rounds": [
+    {
+      "attacks": [
+        { "attackerTag": "#AAA111", "stars": 3 },
+        { "attackerTag": "#BBB222", "stars": 2 }
+      ]
+    },
+    {
+      "attacks": [
+        { "attackerTag": "#AAA111", "stars": 2 },
+        { "attackerTag": "#CCC333", "stars": 1 }
+      ]
+    }
+  ],
+  "members": [
+    { "tag": "#AAA111", "stars": 5 },
+    { "tag": "#BBB222", "stars": 2 },
+    { "tag": "#CCC333", "stars": 1 }
+  ]
+}

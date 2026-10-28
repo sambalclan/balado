@@ -1,4 +1,4 @@
-import { parseCoCDate, escapeHtml, warDate, getTHImage, renderAreaChart, dayLabel } from './constants.js';
+import { parseCoCDate, escapeHtml, warDate, getTHImage, renderAreaChart, dayLabel, isEndedWar, warStars, pageCard, emptyCard, backButton, renderPillTabs, setPillActive } from './constants.js';
 import { state } from './state.js';
 
 // ═══ War · List ════════════════════════════════════════════════════════
@@ -20,10 +20,9 @@ function formatWarStartTime(w) {
 
 function warResult(w) {
     if (w.state === 'preparation') return { key: 'ongoing', label: 'PREPARATION', color: 'text-[#D4A72C]' };
-    if (!['warEnded', 'ended'].includes(w.state)) return { key: 'ongoing', label: 'IN WAR', color: 'text-[#D4A72C]' };
+    if (!isEndedWar(w)) return { key: 'ongoing', label: 'IN WAR', color: 'text-[#D4A72C]' };
 
     const cs = w.clan?.stars || 0, os = w.opponent?.stars || 0;
-    
     const cd = w.clan?.destructionPercentage || 0, od = w.opponent?.destructionPercentage || 0;
     if (cs > os || (cs === os && cd > od)) return { key: 'victory', label: 'VICTORY', color: 'text-green-500' };
     if (cs < os || (cs === os && cd < od)) return { key: 'defeat', label: 'LOSS', color: 'text-red-500' };
@@ -76,18 +75,11 @@ const renderWarCard = (w) => {
     </div>`;
 };
 
-// Running wars first (preparation and in war), then finished wars in their original order
+// Running wars first (preparation and in war), then finished wars newest first
 const isRunning = (w) => warResult(w).key === 'ongoing';
+const warTime = (w) => parseCoCDate(w.endTime || w.startTime || w.preparationStartTime)?.getTime() || 0;
 const filterWars = () => [...state.wars]
-    .sort((a, b) => {
-        // Running wars first
-        const aRunning = isRunning(a), bRunning = isRunning(b);
-        if (aRunning !== bRunning) return bRunning - aRunning;
-        // Then finished wars: newest first
-        const aDate = parseCoCDate(a.endTime || a.startTime || a.preparationStartTime)?.getTime() || 0;
-        const bDate = parseCoCDate(b.endTime || b.startTime || b.preparationStartTime)?.getTime() || 0;
-        return bDate - aDate;
-    })
+    .sort((a, b) => (isRunning(b) - isRunning(a)) || (warTime(b) - warTime(a)))
     .filter((w) => warFilter === 'all' || warResult(w).key === warFilter);
 
 const renderWarList = () => {
@@ -103,11 +95,10 @@ const renderWarList = () => {
 // Summary of all finished wars, shown under the chart
 function warSummary(done) {
     const count = (key) => done.filter((w) => warResult(w).key === key).length;
-    const sum = (fn) => done.reduce((n, w) => n + fn(w), 0);
     const avg = (v) => (done.length ? v / done.length : 0);
 
     const won = count('victory'), lost = count('defeat'), drawn = count('draw');
-    const stars = sum((w) => w.clan?.stars || 0);
+    const stars = done.reduce((n, w) => n + (w.clan?.stars || 0), 0);
 
     return [
         { label: 'Record (W-L-D)', value: `${won}-${lost}-${drawn}`, color: 'text-[#D4A72C]' },
@@ -119,7 +110,7 @@ function warSummary(done) {
 // "Stars per war" chart, shown on the dashboard (About)
 export const renderWarChartCard = () => {
     const done = state.wars
-        .filter((w) => ['warEnded', 'ended'].includes(w.state) && warDate(w))
+        .filter((w) => isEndedWar(w) && warDate(w))
         .reverse(); // index is newest first -> flip to oldest first
 
     return renderAreaChart({
@@ -129,17 +120,6 @@ export const renderWarChartCard = () => {
         stats: done.length ? warSummary(done) : [],
         note: done.length ? `Summary of ${done.length} finished wars` : '',
     });
-};
-
-const renderWarFilterButton = ({ id, label }) => {
-    const style = id === warFilter
-        ? 'bg-[#2A2410] border-[#6B5A1E] text-[#D4A72C]'
-        : 'border-transparent text-[#6B7280]';
-    return `
-        <button type="button" data-war="${id}"
-                class="py-1.5 rounded-lg border text-[9px] font-semibold tracking-wide uppercase ${style}
-                       active:scale-95 transition-all">${label}</button>
-    `;
 };
 
 // ═══ War · Detail (who attacked and who did not) ═══════════════════════
@@ -176,20 +156,14 @@ function renderWarDetail(w) {
     const max = w.attacksPerMember || 2;
     const members = (w.clan?.members || []).map((m) => ({ ...m, __max: max }))
         .sort((a, b) => (a.mapPosition || 0) - (b.mapPosition || 0));
-    const stars = (m) => (m.attacks || []).reduce((n, a) => n + (a.stars || 0), 0);
 
     const attacked = members.filter((m) => (m.attacks || []).length > 0)
-        .sort((a, b) => stars(b) - stars(a) || (a.mapPosition || 0) - (b.mapPosition || 0));
+        .sort((a, b) => warStars(b) - warStars(a) || (a.mapPosition || 0) - (b.mapPosition || 0));
     const idle = members.filter((m) => !(m.attacks || []).length);
 
-    return `
-    <div class="w-full bg-[#1a1a1a] border border-[#2A2A2A] rounded-xl p-3">
+    return pageCard(`
         <div class="flex items-center gap-3 mb-3">
-            <button type="button" data-war-back aria-label="Back"
-                    class="shrink-0 w-9 h-9 rounded-full bg-white/10 hover:bg-white/20 text-white
-                           flex items-center justify-center active:scale-90 transition-all">
-                <span class="material-symbols-outlined text-[20px]">arrow_back</span>
-            </button>
+            ${backButton('data-war-back')}
             <div class="leading-tight min-w-0">
                 <h2 class="medieval text-lg font-bold text-white uppercase truncate">vs ${escapeHtml(w.opponent?.name || 'Opponent')}</h2>
                 <p class="text-[10px] text-[#8B8F98]">${warDate(w) || '-'} · <span class="${r.color}">${r.label}</span> · ${w.clan?.stars || 0} - ${w.opponent?.stars || 0}</p>
@@ -197,7 +171,7 @@ function renderWarDetail(w) {
         </div>
         ${renderWarMemberGroup('Attacked', attacked, ended)}
         ${renderWarMemberGroup('Not attacked', idle, ended)}
-    </div>`;
+    `);
 }
 
 // ═══ War · Page ════════════════════════════════════════════════════════
@@ -209,11 +183,7 @@ export function renderWar(wars) {
         .filter((w) => w && w.state !== 'notInWar' && (w.clan || w.opponent || w.state));
 
     if (state.wars.length === 0) {
-        container.innerHTML = `
-            <div class="bg-[#1E1E1E] border border-[#3A3A3A] p-4 rounded-xl text-center text-gray-400">
-                War data is not available yet.
-            </div>
-        `;
+        container.innerHTML = emptyCard('War data is not available yet.');
         return;
     }
 
@@ -229,24 +199,25 @@ export function renderWar(wars) {
         return;
     }
 
-    container.innerHTML = `
-        <div class="w-full bg-[#1a1a1a] border border-[#2A2A2A] rounded-xl p-3">
-            <div class="flex items-center gap-3 mb-3">
-                <h2 class="medieval text-lg font-bold text-white uppercase">Wars</h2>
-                <span id="warCount" class="text-[11px] text-[#8B8F98] font-mono">${state.wars.length} / ${state.wars.length}</span>
-            </div>
-
-            <div class="grid grid-cols-4 gap-1 p-1 mb-3 rounded-xl bg-[#141414] border border-[#2A2A2A]">
-                ${WAR_FILTERS.map(renderWarFilterButton).join('')}
-            </div>
-
-            <div class="flex flex-col gap-2">${renderWarList()}</div>
+    container.innerHTML = pageCard(`
+        <div class="flex items-center gap-3 mb-3">
+            <h2 class="medieval text-lg font-bold text-white uppercase">Wars</h2>
+            <span id="warCount" class="text-[11px] text-[#8B8F98] font-mono">${state.wars.length} / ${state.wars.length}</span>
         </div>
-    `;
+
+        ${renderPillTabs('data-war', WAR_FILTERS, warFilter)}
+
+        <div id="warList" class="flex flex-col gap-2">${renderWarList()}</div>
+    `);
 
     container.onclick = (e) => {
         const btn = e.target.closest('[data-war]');
-        if (btn) { warFilter = btn.dataset.war; renderWar(state.wars); return; }
+        if (btn) {
+            warFilter = btn.dataset.war;
+            setPillActive(btn.closest('.pill-tabs'), 'data-war', warFilter);
+            container.querySelector('#warList').innerHTML = renderWarList();
+            return;
+        }
         const card = e.target.closest('[data-war-open]');
         if (card) { warSelected = Number(card.dataset.warOpen); renderWar(state.wars); }
     };
@@ -258,11 +229,7 @@ export function renderCwl() {
     if (!container) return;
 
     if (!state.cwl) {
-        container.innerHTML = `
-            <div class="bg-[#1E1E1E] border border-[#3A3A3A] p-4 rounded-xl text-center text-gray-400">
-                CWL data is not available yet.
-            </div>
-        `;
+        container.innerHTML = emptyCard('CWL data is not available yet.');
         return;
     }
 
@@ -284,16 +251,14 @@ export function renderCwl() {
         </div>`;
     };
 
-    container.innerHTML = `
-        <div class="w-full bg-[#1a1a1a] border border-[#2A2A2A] rounded-xl p-3">
-            <div class="flex items-center gap-3 mb-3">
-                <h2 class="medieval text-lg font-bold text-white uppercase">CWL</h2>
-                <span class="text-[11px] text-[#8B8F98] font-mono">${cwl.season || '-'}</span>
-            </div>
-            <div class="rounded-xl overflow-hidden border border-[#2A2A2A] mb-4">
-                ${members.map(renderCwlMember).join('')}
-            </div>
-            <p class="text-[10px] text-[#8B8F98]">${rounds.length} rounds</p>
+    container.innerHTML = pageCard(`
+        <div class="flex items-center gap-3 mb-3">
+            <h2 class="medieval text-lg font-bold text-white uppercase">CWL</h2>
+            <span class="text-[11px] text-[#8B8F98] font-mono">${cwl.season || '-'}</span>
         </div>
-    `;
+        <div class="rounded-xl overflow-hidden border border-[#2A2A2A] mb-4">
+            ${members.map(renderCwlMember).join('')}
+        </div>
+        <p class="text-[10px] text-[#8B8F98]">${rounds.length} rounds</p>
+    `);
 }

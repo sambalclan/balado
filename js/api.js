@@ -1,3 +1,5 @@
+import { dateFrom } from './constants.js';
+
 // ═══ Core ══════════════════════════════════════════════════════════════
 async function fetchData(path) {
     const res = await fetch(`${path}?t=${Date.now()}`);
@@ -5,27 +7,35 @@ async function fetchData(path) {
     return res.json();
 }
 
-// ═══ Clan ══════════════════════════════════════════════════════════════
-// Newest-first indexes: return the first file that loads
-export async function fetchClanData() {
-    const index = await fetchData('data/clan_stats_index.json');
-    if (!index || index.length === 0) throw new Error('Clan index is empty');
-    for (const filename of index) {
-        try { return await fetchData(`data/clan_stats/${filename}`); } catch { /* try next file */ }
+// Every kind (clan, war, raid, cwl) has data/<kind>_stats_index.json (newest first)
+// and its files in data/<kind>_stats/
+const fetchIndex = (kind) => fetchData(`data/${kind}_stats_index.json`);
+const fetchStats = (kind, filename) => fetchData(`data/${kind}_stats/${filename}`);
+
+// First file of the index that loads, or null
+async function fetchLatest(kind) {
+    for (const filename of (await fetchIndex(kind)) || []) {
+        try { return await fetchStats(kind, filename); } catch { /* try next file */ }
     }
-    throw new Error('No available clan data files found in index.');
+    return null;
+}
+
+// ═══ Clan ══════════════════════════════════════════════════════════════
+export async function fetchClanData() {
+    const clan = await fetchLatest('clan');
+    if (!clan) throw new Error('No available clan data files found in index.');
+    return clan;
 }
 
 // Member count per day (latest snapshot of each day; index is newest first)
 export async function fetchClanHistory(days = 7) {
-    const index = await fetchData('data/clan_stats_index.json');
     const perDay = new Map();
 
-    for (const filename of index || []) {
-        const day = (String(filename).match(/(\d{4})-?(\d{2})-?(\d{2})/) || []).slice(1, 4).join('-');
-        if (day.length !== 10 || perDay.has(day)) continue;
+    for (const filename of (await fetchIndex('clan')) || []) {
+        const day = dateFrom(filename);
+        if (!day || perDay.has(day)) continue;
         try {
-            const d = await fetchData(`data/clan_stats/${filename}`);
+            const d = await fetchStats('clan', filename);
             perDay.set(day, { members: d.members ?? d.memberList?.length ?? 0 });
         } catch { /* skip broken snapshot */ }
         if (perDay.size >= days) break;
@@ -34,31 +44,14 @@ export async function fetchClanHistory(days = 7) {
 }
 
 // ═══ War ═══════════════════════════════════════════════════════════════
-export const fetchWarIndex = () => fetchData('data/war_stats_index.json');
-export const fetchWarData = (filename) => fetchData(`data/war_stats/${filename}`);
+export const fetchWarIndex = () => fetchIndex('war');
+export const fetchWarData = (filename) => fetchStats('war', filename);
 
 // ═══ Raid ══════════════════════════════════════════════════════════════
-// Latest capital raid weekend (index is newest first)
-export async function fetchLatestRaid() {
-    const index = await fetchData('data/raid_stats_index.json');
-    for (const filename of index || []) {
-        try { return await fetchData(`data/raid_stats/${filename}`); } catch { /* try next file */ }
-    }
-    return null;
-}
-
-// All capital raid weekends (index is newest first)
-export const fetchRaidIndex = () => fetchData('data/raid_stats_index.json');
-export const fetchRaidData = (filename) => fetchData(`data/raid_stats/${filename}`);
+export const fetchLatestRaid = () => fetchLatest('raid');
+export const fetchRaidIndex = () => fetchIndex('raid');
+export const fetchRaidData = (filename) => fetchStats('raid', filename);
 
 // ═══ CWL ═══════════════════════════════════════════════════════════════
-// Latest Clan War League season (index is newest first); null while there is no CWL data yet
-export async function fetchLatestCwl() {
-    try {
-        const index = await fetchData('data/cwl_stats_index.json');
-        for (const filename of index || []) {
-            try { return await fetchData(`data/cwl_stats/${filename}`); } catch { /* try next file */ }
-        }
-    } catch { /* no CWL index yet */ }
-    return null;
-}
+// Latest Clan War League season; null while there is no CWL data yet
+export const fetchLatestCwl = () => fetchLatest('cwl').catch(() => null);

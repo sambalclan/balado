@@ -1,5 +1,6 @@
 import { fetchClanData, fetchClanHistory, fetchLatestRaid, fetchLatestCwl, fetchWarIndex, fetchWarData, fetchRaidIndex, fetchRaidData } from './api.js';
 import { setWarData, setClanHistory, setRaidData, setRaids, setCwlData } from './state.js';
+import { FILTER_ON, FILTER_OFF } from './constants.js';
 import { renderAbout, renderSettings } from './render.js';
 import { renderRaid } from './raid.js';
 import { renderMembers } from './members.js';
@@ -10,7 +11,7 @@ const VIEWS = ['about', 'members', 'battle', 'raid', 'settings'];
 let latestClanData = null;
 let currentView = 'about';
 let lastTab = 'about'; // tab to return to when Settings is closed
-let warMode = 'war'; // 'war' atau 'cwl'
+let warMode = 'war'; // 'war' or 'cwl'
 
 // ═══ Navigation & Views ════════════════════════════════════════════════
 // Retrigger the light fade/slide animation on an element
@@ -40,6 +41,25 @@ function moveNavIndicator(instant = false) {
     if (instant) { void indicator.offsetWidth; indicator.style.transition = ''; }
 }
 
+// Highlight a War/CWL switch button
+function setBattleButton(btn, active) {
+    FILTER_ON.split(' ').forEach((c) => btn.classList.toggle(c, active));
+    FILTER_OFF.split(' ').forEach((c) => btn.classList.toggle(c, !active));
+}
+
+function showBattleMode() {
+    const isWar = warMode === 'war';
+    const warSection = document.getElementById('section-war');
+    const cwlSection = document.getElementById('section-cwl');
+
+    warSection.classList.toggle('hidden', !isWar);
+    cwlSection.classList.toggle('hidden', isWar);
+    setBattleButton(document.getElementById('tab-battle-war'), isWar);
+    setBattleButton(document.getElementById('tab-battle-cwl'), !isWar);
+    if (!isWar) renderCwl();
+    animateIn(isWar ? warSection : cwlSection);
+}
+
 function switchView(view = 'about') {
     const target = VIEWS.includes(view) && document.getElementById('section-' + view) ? view : 'about';
     currentView = target;
@@ -47,31 +67,10 @@ function switchView(view = 'about') {
     document.querySelectorAll('main > section').forEach((section) => {
         const isTarget = section.id === 'section-' + target;
         section.classList.toggle('hidden-section', !isTarget);
-        section.style.display = isTarget ? '' : 'none';
         if (isTarget && section.id !== 'section-battle') animateIn(section);
     });
 
-    // Handle battle mode (War vs CWL)
-    if (target === 'battle') {
-        const warSection = document.getElementById('section-war');
-        const cwlSection = document.getElementById('section-cwl');
-        const warBtn = document.getElementById('tab-battle-war');
-        const cwlBtn = document.getElementById('tab-battle-cwl');
-        
-        const ON = ['bg-[#2A2410]', 'border-[#6B5A1E]', 'text-[#D4A72C]'];
-        const OFF = ['border-transparent', 'text-[#6B7280]'];
-        const setBtn = (btn, active) => {
-            btn.classList.remove(...ON, ...OFF);
-            btn.classList.add(...(active ? ON : OFF));
-        };
-        const isWar = warMode === 'war';
-        warSection.classList.toggle('hidden', !isWar);
-        cwlSection.classList.toggle('hidden', isWar);
-        setBtn(warBtn, isWar);
-        setBtn(cwlBtn, !isWar);
-        if (!isWar) renderCwl();
-        animateIn(isWar ? warSection : cwlSection);
-    }
+    if (target === 'battle') showBattleMode();
 
     // Settings is a page, not a tab: the nav keeps highlighting the tab we came from
     if (target === 'settings') {
@@ -100,20 +99,22 @@ function bindTabs() {
 }
 
 // ═══ Data Loading ══════════════════════════════════════════════════════
+// Load every file of an index; each result keeps its file name in __file
+async function loadAll(index, fetchFile) {
+    const results = await Promise.allSettled((index || []).map((filename) => fetchFile(filename)));
+    return results
+        .map((r, i) => (r.status === 'fulfilled' && r.value ? { ...r.value, __file: index[i] } : null))
+        .filter(Boolean);
+}
+
 async function loadWarData() {
     try {
         const index = await fetchWarIndex();
-        if (!index || index.length === 0) return renderWar(null);
-
-        const results = await Promise.allSettled(index.map(fetchWarData));
-        const wars = results
-            .map((r, i) => (r.status === 'fulfilled' && r.value ? { ...r.value, __file: index[i] } : null))
-            .filter(Boolean)
-            .sort((a, b) => {
-                const aDate = (a.preparationStartTime || a.startTime || '').slice(0, 10);
-                const bDate = (b.preparationStartTime || b.startTime || '').slice(0, 10);
-                return bDate.localeCompare(aDate); // Newest first
-            });
+        const wars = (await loadAll(index, fetchWarData)).sort((a, b) => {
+            const aDate = (a.preparationStartTime || a.startTime || '').slice(0, 10);
+            const bDate = (b.preparationStartTime || b.startTime || '').slice(0, 10);
+            return bDate.localeCompare(aDate); // Newest first
+        });
 
         if (wars.length === 0) return renderWar(null);
         setWarData(wars[0]); // Latest war
@@ -125,36 +126,35 @@ async function loadWarData() {
 
 async function loadRaidWeeks() {
     try {
-        const index = await fetchRaidIndex();
-        const results = await Promise.allSettled((index || []).map(fetchRaidData));
-        setRaids(results
-            .map((r, i) => (r.status === 'fulfilled' && r.value ? { ...r.value, __file: index[i] } : null))
-            .filter(Boolean));
+        setRaids(await loadAll(await fetchRaidIndex(), fetchRaidData));
     } catch { setRaids([]); }
     renderRaid();
 }
 
 // ═══ Init ══════════════════════════════════════════════════════════════
+// About and Members both show data that loads in the background
+const renderClanViews = () => {
+    renderAbout(latestClanData);
+    renderMembers(latestClanData);
+};
+
 async function init() {
     try {
         latestClanData = await fetchClanData();
-        renderAbout(latestClanData);
-        renderMembers(latestClanData);
+        renderClanViews();
         switchView(currentView);
 
-        // Load membership history, capital gold and CWL in the background, then re-render About
+        // Load membership history, capital gold and CWL in the background, then re-render
         Promise.allSettled([fetchClanHistory(), fetchLatestRaid(), fetchLatestCwl()]).then(([history, raid, cwl]) => {
             if (history.status === 'fulfilled') setClanHistory(history.value);
             if (raid.status === 'fulfilled') setRaidData(raid.value);
             if (cwl.status === 'fulfilled') setCwlData(cwl.value);
-            renderAbout(latestClanData);
-            renderMembers(latestClanData);
+            renderClanViews();
         });
-        loadRaidWeeks().then(() => { renderAbout(latestClanData); renderMembers(latestClanData); });
+        loadRaidWeeks().then(renderClanViews);
 
         await loadWarData();
-        renderAbout(latestClanData);
-        renderMembers(latestClanData);
+        renderClanViews();
     } catch { /* clan data unavailable */ }
 }
 
