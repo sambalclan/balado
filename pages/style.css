@@ -213,10 +213,40 @@ img, video, iframe, svg {
 .pill-tabs button:active { transform: scale(.96); }
 .pill-tabs button:focus-visible { outline: 2px solid #d4a72c; outline-offset: -2px; }
 
+/* Detail page (war member list): slides up, rows follow one by one */
+@keyframes detail-in {
+  from { opacity: 0; transform: translateY(18px) scale(.985); }
+  to   { opacity: 1; transform: none; }
+}
+@keyframes row-in {
+  from { opacity: 0; transform: translateX(-10px); }
+  to   { opacity: 1; transform: none; }
+}
+.detail-in { animation: detail-in 320ms cubic-bezier(.22,1,.36,1) both; }
+.row-in { animation: row-in 280ms cubic-bezier(.22,1,.36,1) both; animation-delay: calc(var(--i, 0) * 25ms + 120ms); }
+
 @media (prefers-reduced-motion: reduce) {
+  .detail-in, .row-in { animation: none; }
   .view-anim, .view-slide { animation: none; }
   .pill-tabs .tab-pill, .pill-tabs button { transition: none; }
 }
 
 /* Grid lines of the SVG area charts */
 .chart-grid { stroke: #2A2A2A; stroke-width: 1; }
+
+/* Long lists: skip layout and paint for rows that are off screen */
+#warList > *, #membersList > * {
+  content-visibility: auto;
+  contain-intrinsic-size: auto 64px;
+}
+
+/* Lite mode (set in index.html on low-end devices): no animations, filters or shadows */
+.lite *, .lite *::before, .lite *::after {
+  animation: none !important;
+  transition: none !important;
+  box-shadow: none !important;
+  text-shadow: none !important;
+}
+.lite img, .lite svg { filter: none !important; }
+.lite .animate-spin { animation: spin 1s linear infinite !important; } /* refresh still shows it is working */
+.lite .pill-tabs .tab-pill { transition: none !important; }

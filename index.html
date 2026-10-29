@@ -17,14 +17,11 @@
         <section id="section-about" class="w-full"></section>
         <section id="section-members" class="w-full hidden-section"></section>
         <section id="section-battle" class="w-full hidden-section py-3 pb-28 text-gray-300 text-sm">
-            <div class="grid grid-cols-2 gap-1 p-1 mb-3 rounded-xl bg-[#141414] border border-[#2A2A2A]">
-                <button id="tab-battle-war" type="button" class="py-1.5 rounded-lg border text-[9px] font-semibold tracking-wide uppercase bg-[#2A2410] border-[#6B5A1E] text-[#D4A72C] active:scale-95 transition-all">War</button>
-                <button id="tab-battle-cwl" type="button" class="py-1.5 rounded-lg border text-[9px] font-semibold tracking-wide uppercase border-transparent text-[#6B7280] active:scale-95 transition-all">CWL</button>
-            </div>
+            <div id="battleTabs"></div>
             <div id="section-war" class="w-full"></div>
             <div id="section-cwl" class="w-full hidden"></div>
+            <div id="section-raid" class="w-full hidden"></div>
         </section>
-        <section id="section-raid" class="w-full hidden-section"></section>
         <section id="section-settings" class="w-full hidden-section"></section>
     </main>
     <nav id="bottomToolbar" aria-label="Main Navigation">
@@ -36,9 +33,6 @@
         </button>
         <button id="tab-battle">
             <span class="material-symbols-outlined nav-icon">swords</span><span class="nav-label">Battle</span>
-        </button>
-        <button id="tab-raid">
-            <span class="material-symbols-outlined nav-icon">savings</span><span class="nav-label">Raid</span>
         </button>
     </nav>
     <script type="module" src="js/app.js"></script>

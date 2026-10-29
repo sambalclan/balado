@@ -46,7 +46,7 @@ const renderMemberRow = (m, index) => {
 
     return `
     <div class="flex items-center gap-3 px-3 py-1.5 ${rowBorder(index)}">
-        <img src="${getTHImage(m.townHallLevel)}" class="w-9 h-9 shrink-0 object-contain"
+        <img loading="lazy" decoding="async" src="${getTHImage(m.townHallLevel)}" class="w-9 h-9 shrink-0 object-contain"
              alt="TH${m.townHallLevel}" onerror="this.style.visibility='hidden'">
         <div class="min-w-0 flex-1 leading-tight">
             <p class="text-[11px] font-bold text-white truncate">
@@ -59,7 +59,7 @@ const renderMemberRow = (m, index) => {
             </div>
         </div>
         <div class="shrink-0 w-14 flex flex-col items-center leading-tight">
-            ${league ? `<img src="${league}" class="w-5 h-5 object-contain" alt="" onerror="this.style.display='none'">` : ''}
+            ${league ? `<img loading="lazy" decoding="async" src="${league}" class="w-5 h-5 object-contain" alt="" onerror="this.style.display='none'">` : ''}
             <span class="text-[10px] font-bold text-[#D4A72C]">${m.trophies}</span>
             <span class="text-[7px] tracking-wide uppercase text-[#6B7280]">Trophies</span>
         </div>
@@ -133,6 +133,8 @@ function updateMembersBody(container, clan, direction = 0) {
     }
 }
 
+let searchTimer = null;
+
 export function renderMembers(clan) {
     const container = document.getElementById('section-members');
     if (!container || !clan) return;
@@ -198,7 +200,8 @@ export function renderMembers(clan) {
     container.oninput = (e) => {
         if (e.target.id !== 'memberSearch') return;
         membersSearch = e.target.value;
-        refreshList();
+        clearTimeout(searchTimer);
+        searchTimer = setTimeout(refreshList, 150);
     };
 }
 
@@ -297,7 +300,7 @@ const renderCandidate = ({ member: m, parts, score, joined }, i) => `
     <div class="px-3 py-2.5 ${rowBorder(i)}">
         <div class="flex items-center gap-3">
             <span class="w-3 text-[10px] font-mono text-[#6B7280]">${i + 1}</span>
-            <img src="${getTHImage(m.townHallLevel)}" class="w-9 h-9 shrink-0 object-contain"
+            <img loading="lazy" decoding="async" src="${getTHImage(m.townHallLevel)}" class="w-9 h-9 shrink-0 object-contain"
                  alt="TH${m.townHallLevel}" onerror="this.style.visibility='hidden'">
             <div class="min-w-0 flex-1 leading-tight">
                 <p class="text-[13px] font-bold text-white truncate">
@@ -372,7 +375,7 @@ function scoreWatchlist() {
 
 const renderWatchlistRow = ({ member: m, reasons }, i) => `
     <div class="flex items-center gap-3 px-3.5 py-3 ${rowBorder(i)}">
-        <img src="${getTHImage(m.townHallLevel)}" class="w-9 h-9 shrink-0 object-contain"
+        <img loading="lazy" decoding="async" src="${getTHImage(m.townHallLevel)}" class="w-9 h-9 shrink-0 object-contain"
              alt="TH${m.townHallLevel}" onerror="this.style.visibility='hidden'">
         <div class="min-w-0 flex-1 flex flex-col gap-0.5">
             <p class="text-[13px] font-bold leading-tight text-white truncate">${escapeHtml(m.name)}</p>

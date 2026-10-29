@@ -1,17 +1,16 @@
 import { fetchClanData, fetchClanHistory, fetchLatestRaid, fetchLatestCwl, fetchWarIndex, fetchWarData, fetchRaidIndex, fetchRaidData, clearLiveCache } from './api.js';
 import { setWarData, setClanHistory, setRaidData, setRaids, setCwlData } from './state.js';
-import { FILTER_ON, FILTER_OFF } from './constants.js';
+import { renderPillTabs, setPillActive } from './constants.js';
 import { renderAbout, renderSettings } from './render.js';
-import { renderRaid } from './raid.js';
 import { renderMembers } from './members.js';
-import { renderWar, renderCwl } from './war.js';
+import { renderWar, renderCwl, renderRaid } from './war.js';
 
 // ═══ State ═════════════════════════════════════════════════════════════
-const VIEWS = ['about', 'members', 'battle', 'raid', 'settings'];
+const VIEWS = ['about', 'members', 'battle', 'settings'];
 let latestClanData = null;
 let currentView = 'about';
 let lastTab = 'about'; // tab to return to when Settings is closed
-let warMode = 'war'; // 'war' or 'cwl'
+let warMode = 'war'; // 'war', 'cwl' or 'raid'
 
 // ═══ Navigation & Views ════════════════════════════════════════════════
 // Retrigger the light fade/slide animation on an element
@@ -41,23 +40,24 @@ function moveNavIndicator(instant = false) {
     if (instant) { void indicator.offsetWidth; indicator.style.transition = ''; }
 }
 
-// Highlight a War/CWL switch button
-function setBattleButton(btn, active) {
-    FILTER_ON.split(' ').forEach((c) => btn.classList.toggle(c, active));
-    FILTER_OFF.split(' ').forEach((c) => btn.classList.toggle(c, !active));
-}
+const BATTLE_MODES = [
+    { id: 'war', label: 'War' },
+    { id: 'cwl', label: 'CWL' },
+    { id: 'raid', label: 'Raid' },
+];
 
 function showBattleMode() {
-    const isWar = warMode === 'war';
-    const warSection = document.getElementById('section-war');
-    const cwlSection = document.getElementById('section-cwl');
+    // The War / CWL / Raid switch is built here, not hardcoded in index.html
+    const tabs = document.getElementById('battleTabs');
+    if (tabs && !tabs.firstElementChild) tabs.innerHTML = renderPillTabs('data-battle', BATTLE_MODES, warMode);
+    setPillActive(tabs?.querySelector('.pill-tabs'), 'data-battle', warMode);
 
-    warSection.classList.toggle('hidden', !isWar);
-    cwlSection.classList.toggle('hidden', isWar);
-    setBattleButton(document.getElementById('tab-battle-war'), isWar);
-    setBattleButton(document.getElementById('tab-battle-cwl'), !isWar);
-    if (!isWar) renderCwl();
-    animateIn(isWar ? warSection : cwlSection);
+    BATTLE_MODES.forEach(({ id }) => {
+        document.getElementById('section-' + id).classList.toggle('hidden', id !== warMode);
+    });
+    if (warMode === 'cwl') renderCwl();
+    if (warMode === 'raid') renderRaid();
+    animateIn(document.getElementById('section-' + warMode));
 }
 
 function switchView(view = 'about') {
@@ -91,8 +91,10 @@ function bindTabs() {
         if (e.target.closest('#refreshBtn')) refreshAll();
         else if (e.target.closest('#settingsBtn')) switchView('settings');
         else if (e.target.closest('[data-settings-back]')) switchView(lastTab);
-        else if (e.target.closest('#tab-battle-war')) { warMode = 'war'; switchView('battle'); }
-        else if (e.target.closest('#tab-battle-cwl')) { warMode = 'cwl'; switchView('battle'); }
+        else {
+            const tab = e.target.closest('[data-battle]');
+            if (tab && tab.dataset.battle !== warMode) { warMode = tab.dataset.battle; switchView('battle'); }
+        }
     });
     VIEWS.filter((view) => view !== 'settings').forEach((view) => {
         document.getElementById('tab-' + view)?.addEventListener('click', () => switchView(view));
@@ -134,7 +136,7 @@ async function loadRaidWeeks() {
 
 // ═══ Init ══════════════════════════════════════════════════════════════
 // About and Members both show data that loads in the background
-const renderClanViews = () => {
+const renderClanViewsNow = () => {
     renderAbout(latestClanData);
     renderMembers(latestClanData);
 };
@@ -174,10 +176,16 @@ async function refreshAll() {
     }
 }
 
+let renderTimer = null;
+const renderClanViews = () => {
+    clearTimeout(renderTimer);
+    renderTimer = setTimeout(renderClanViewsNow, 60);
+};
+
 async function init() {
     try {
         latestClanData = await fetchClanData();
-        renderClanViews();
+        renderClanViewsNow();
         switchView(currentView);
 
         // Load membership history, capital gold and CWL in the background, then re-render
@@ -198,5 +206,9 @@ document.addEventListener('DOMContentLoaded', () => {
     switchView();
     init();
     bindTabs();
-    window.addEventListener('resize', () => moveNavIndicator(true));
+    let resizeFrame = 0;
+    window.addEventListener('resize', () => {
+        cancelAnimationFrame(resizeFrame);
+        resizeFrame = requestAnimationFrame(() => moveNavIndicator(true));
+    });
 });

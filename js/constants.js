@@ -62,10 +62,6 @@ export const backButton = (attr) => `
         <span class="material-symbols-outlined text-[20px]">arrow_back</span>
     </button>`;
 
-// Battle War/CWL switch colors
-export const FILTER_ON = 'bg-[#2A2410] border-[#6B5A1E] text-[#D4A72C]';
-export const FILTER_OFF = 'border-transparent text-[#6B7280]';
-
 // Tabs with a sliding pill (Members sub-tabs, role filter, War filter).
 // `attr` is the data attribute on each button; items: [{ id, label }]
 export const renderPillTabs = (attr, items, activeId) => `
