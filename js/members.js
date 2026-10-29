@@ -41,28 +41,63 @@ const TOP_COUNT = 5;
 const rowBorder = (i) => (i > 0 ? 'border-t border-[#2A2A2A]' : '');
 
 // ═══ MembersList ════════════════════════════════════════════════════
+const ROLE_STYLE = {
+    leader:   { bar: 'bg-[#D4A72C]',  chip: 'text-[#D4A72C] bg-[#2A2410] border-[#6B5A1E]' },
+    coLeader: { bar: 'bg-orange-400', chip: 'text-orange-300 bg-[#2A1C10] border-[#6B4A1E]' },
+    admin:    { bar: 'bg-sky-400',    chip: 'text-sky-300 bg-[#10202A] border-[#1E4A6B]' },
+    member:   { bar: 'bg-[#3A3A3A]',  chip: 'text-[#8B8F98] bg-[#252525] border-[#3A3A3A]' },
+};
+
 const renderMemberRow = (m, index) => {
     const league = m.leagueTier?.iconUrls?.small || m.league?.iconUrls?.small || '';
+    const role = ROLE_STYLE[m.role] || ROLE_STYLE.member;
+    const given = m.donations || 0, got = m.donationsReceived || 0;
+    const givenPct = given + got ? Math.round((given / (given + got)) * 100) : 50;
 
     return `
-    <div class="flex items-center gap-3 px-3 py-1.5 ${rowBorder(index)}">
-        <img loading="lazy" decoding="async" src="${getTHImage(m.townHallLevel)}" class="w-9 h-9 shrink-0 object-contain"
-             alt="TH${m.townHallLevel}" onerror="this.style.visibility='hidden'">
+    <div class="relative flex items-center gap-3 pl-4 pr-3 py-2 ${rowBorder(index)}">
+        <span class="absolute left-0 top-2 bottom-2 w-[3px] rounded-r ${role.bar}"></span>
+        <div class="relative shrink-0">
+            <img src="${getTHImage(m.townHallLevel)}" class="w-10 h-10 object-contain"
+                 alt="TH${m.townHallLevel}" onerror="this.style.visibility='hidden'">
+            <span class="absolute -bottom-1 -right-1 min-w-[16px] px-1 rounded-full bg-[#141414] border border-[#3A3A3A] text-[8px] font-bold text-[#8B8F98] text-center leading-[14px]">${m.clanRank ?? index + 1}</span>
+        </div>
         <div class="min-w-0 flex-1 leading-tight">
-            <p class="text-[11px] font-bold text-white truncate">
-                ${escapeHtml(m.name)}
-                <span class="ml-1 text-[8px] font-mono font-normal tracking-wide text-[#6B7280]">XP ${m.expLevel ?? '-'}</span>
-            </p>
-            <div class="mt-0.5 flex gap-5 text-[8px] tracking-wide uppercase text-[#8B8F98]">
-                <span>Donated <b class="block text-[10px] text-green-500">${m.donations}</b></span>
-                <span>Received <b class="block text-[10px] text-red-400">${m.donationsReceived}</b></span>
+            <div class="flex items-center gap-1.5 min-w-0">
+                <p class="text-[12px] font-bold text-white truncate">${escapeHtml(m.name)}</p>
+                <span class="shrink-0 px-1.5 py-px rounded-full border text-[7px] font-bold uppercase tracking-wide ${role.chip}">${roleName(m.role)}</span>
+            </div>
+            <div class="mt-1.5 flex h-1 rounded-full overflow-hidden bg-[#2A2A2A]">
+                <div class="bg-green-500" style="width:${givenPct}%"></div>
+                <div class="bg-red-400/80" style="width:${100 - givenPct}%"></div>
+            </div>
+            <div class="mt-1 flex items-center justify-between text-[8px] tracking-wide uppercase text-[#8B8F98]">
+                <span>Donated <b class="text-[10px] text-green-500">${given}</b></span>
+                <span class="font-mono normal-case text-[#6B7280]">XP ${m.expLevel ?? '-'}</span>
+                <span>Received <b class="text-[10px] text-red-400">${got}</b></span>
             </div>
         </div>
-        <div class="shrink-0 w-14 flex flex-col items-center leading-tight">
-            ${league ? `<img loading="lazy" decoding="async" src="${league}" class="w-5 h-5 object-contain" alt="" onerror="this.style.display='none'">` : ''}
-            <span class="text-[10px] font-bold text-[#D4A72C]">${m.trophies}</span>
+        <div class="shrink-0 w-14 flex flex-col items-center leading-tight rounded-lg bg-[#252525] border border-[#2F2F2F] py-1">
+            ${league ? `<img src="${league}" class="w-5 h-5 object-contain" alt="" onerror="this.style.display='none'">` : ''}
+            <span class="text-[11px] font-bold text-[#D4A72C]">${m.trophies}</span>
             <span class="text-[7px] tracking-wide uppercase text-[#6B7280]">Trophies</span>
         </div>
+    </div>`;
+};
+
+const renderMemberSummary = (clan) => {
+    const list = clan.memberList || [];
+    const total = (key) => list.reduce((n, m) => n + (m[key] || 0), 0);
+    const avgTrophies = list.length ? Math.round(total('trophies') / list.length) : 0;
+    const tile = (label, value, color) => `
+        <div class="rounded-lg bg-[#141414] border border-[#2A2A2A] px-2 py-1.5 text-center leading-tight">
+            <p class="text-[13px] font-bold ${color}">${value}</p>
+            <p class="text-[7px] tracking-wide uppercase text-[#6B7280] mt-0.5">${label}</p>
+        </div>`;
+    return `<div class="grid grid-cols-3 gap-1.5 mb-3">
+        ${tile('Donated', fmt(total('donations')), 'text-green-500')}
+        ${tile('Received', fmt(total('donationsReceived')), 'text-red-400')}
+        ${tile('Avg trophies', fmt(avgTrophies), 'text-[#D4A72C]')}
     </div>`;
 };
 
@@ -86,6 +121,8 @@ function renderListBody(clan) {
         .join('');
 
     return `
+        ${renderMemberSummary(clan)}
+
         ${renderPillTabs('data-role', MEMBER_ROLE_FILTERS, membersRole)}
 
         <div class="flex gap-2 mb-2">
@@ -132,8 +169,6 @@ function updateMembersBody(container, clan, direction = 0) {
         body.classList.add('view-slide');
     }
 }
-
-let searchTimer = null;
 
 export function renderMembers(clan) {
     const container = document.getElementById('section-members');
@@ -200,8 +235,7 @@ export function renderMembers(clan) {
     container.oninput = (e) => {
         if (e.target.id !== 'memberSearch') return;
         membersSearch = e.target.value;
-        clearTimeout(searchTimer);
-        searchTimer = setTimeout(refreshList, 150);
+        refreshList();
     };
 }
 
@@ -300,7 +334,7 @@ const renderCandidate = ({ member: m, parts, score, joined }, i) => `
     <div class="px-3 py-2.5 ${rowBorder(i)}">
         <div class="flex items-center gap-3">
             <span class="w-3 text-[10px] font-mono text-[#6B7280]">${i + 1}</span>
-            <img loading="lazy" decoding="async" src="${getTHImage(m.townHallLevel)}" class="w-9 h-9 shrink-0 object-contain"
+            <img src="${getTHImage(m.townHallLevel)}" class="w-9 h-9 shrink-0 object-contain"
                  alt="TH${m.townHallLevel}" onerror="this.style.visibility='hidden'">
             <div class="min-w-0 flex-1 leading-tight">
                 <p class="text-[13px] font-bold text-white truncate">
@@ -375,7 +409,7 @@ function scoreWatchlist() {
 
 const renderWatchlistRow = ({ member: m, reasons }, i) => `
     <div class="flex items-center gap-3 px-3.5 py-3 ${rowBorder(i)}">
-        <img loading="lazy" decoding="async" src="${getTHImage(m.townHallLevel)}" class="w-9 h-9 shrink-0 object-contain"
+        <img src="${getTHImage(m.townHallLevel)}" class="w-9 h-9 shrink-0 object-contain"
              alt="TH${m.townHallLevel}" onerror="this.style.visibility='hidden'">
         <div class="min-w-0 flex-1 flex flex-col gap-0.5">
             <p class="text-[13px] font-bold leading-tight text-white truncate">${escapeHtml(m.name)}</p>

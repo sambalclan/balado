@@ -57,7 +57,7 @@ img, video, iframe, svg {
 
   /* Size follows the screen width, so it looks the same on different DPI */
   font-size: clamp(0.8rem, 3.4vw, 1.05rem);
-  width: min(92vw, 34rem); /* wider so 4-5 tabs still fit */
+  width: min(72vw, 34rem); /* wider so 4-5 tabs still fit */
   box-sizing: border-box;
 
   display: flex;
@@ -233,20 +233,3 @@ img, video, iframe, svg {
 
 /* Grid lines of the SVG area charts */
 .chart-grid { stroke: #2A2A2A; stroke-width: 1; }
-
-/* Long lists: skip layout and paint for rows that are off screen */
-#warList > *, #membersList > * {
-  content-visibility: auto;
-  contain-intrinsic-size: auto 64px;
-}
-
-/* Lite mode (set in index.html on low-end devices): no animations, filters or shadows */
-.lite *, .lite *::before, .lite *::after {
-  animation: none !important;
-  transition: none !important;
-  box-shadow: none !important;
-  text-shadow: none !important;
-}
-.lite img, .lite svg { filter: none !important; }
-.lite .animate-spin { animation: spin 1s linear infinite !important; } /* refresh still shows it is working */
-.lite .pill-tabs .tab-pill { transition: none !important; }

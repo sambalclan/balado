@@ -35,6 +35,13 @@ const warAttacksUsed = (side) =>
 const warAttacksMax = (w) =>
     (w.teamSize || w.clan?.members?.length || 0) * (w.attacksPerMember || 2);
 
+const WAR_ACCENT = { victory: 'bg-green-500', defeat: 'bg-red-500', draw: 'bg-gray-400', ongoing: 'bg-[#D4A72C]' };
+
+const attackBar = (used, max) => `
+    <div class="h-1 rounded-full bg-[#2A2A2A] overflow-hidden">
+        <div class="h-full rounded-full bg-[#D4A72C]" style="width:${max ? Math.min(100, Math.round((used / max) * 100)) : 0}%"></div>
+    </div>`;
+
 const renderWarCard = (w) => {
     const c = w.clan || {}, o = w.opponent || {};
     const r = warResult(w);
@@ -46,7 +53,8 @@ const renderWarCard = (w) => {
         : '';
 
     return `
-    <div data-war-open="${state.wars.indexOf(w)}" class="bg-[#1E1E1E] border border-[#3A3A3A] rounded-xl px-3 py-2 cursor-pointer active:scale-[0.99] transition-transform">
+    <div data-war-open="${state.wars.indexOf(w)}" class="relative overflow-hidden bg-[#1E1E1E] border border-[#3A3A3A] rounded-xl pl-4 pr-3 py-2.5 cursor-pointer active:scale-[0.99] transition-transform">
+        <span class="absolute left-0 top-0 bottom-0 w-1 ${WAR_ACCENT[r.key]}"></span>
         <div class="flex items-center justify-between text-[9px] font-mono tracking-wide text-[#8B8F98] mb-1">
             <span>${warDate(w) || '-'}</span>
             ${startTimeHtml}
@@ -54,14 +62,14 @@ const renderWarCard = (w) => {
         </div>
         <div class="grid grid-cols-[1fr_auto_1fr] items-center gap-2">
             <div class="flex items-center gap-2 min-w-0">
-                <img loading="lazy" decoding="async" src="${c.badgeUrls?.small || ''}" class="w-8 h-8 shrink-0 object-contain" alt="" onerror="this.style.visibility='hidden'">
+                <img src="${c.badgeUrls?.small || ''}" class="w-8 h-8 shrink-0 object-contain" alt="" onerror="this.style.visibility='hidden'">
                 <div class="min-w-0 leading-tight">
                     <p class="text-xs font-bold text-white truncate">${escapeHtml(c.name || '')}</p>
                     <p class="text-[9px] text-[#6B7280]">${warAttacksUsed(c)}/${max} Atks</p>
                 </div>
             </div>
             <div class="text-center leading-tight">
-                <p class="text-[9px] font-semibold tracking-widest ${r.color}">${r.label}</p>
+                <p class="inline-block px-2 py-0.5 rounded-full bg-white/5 border border-white/10 text-[8px] font-bold tracking-widest ${r.color}">${r.label}</p>
                 <p class="medieval text-lg font-bold ${r.color}">${c.stars || 0} - ${o.stars || 0}</p>
                 <p class="text-[8px] text-[#6B7280]">${pct(c.destructionPercentage)} vs ${pct(o.destructionPercentage)}</p>
             </div>
@@ -70,8 +78,12 @@ const renderWarCard = (w) => {
                     <p class="text-xs font-bold text-white truncate">${escapeHtml(o.name || 'Opponent')}</p>
                     <p class="text-[9px] text-[#6B7280]">${warAttacksUsed(o)}/${max} Atks</p>
                 </div>
-                <img loading="lazy" decoding="async" src="${o.badgeUrls?.small || ''}" class="w-8 h-8 shrink-0 object-contain" alt="" onerror="this.style.visibility='hidden'">
+                <img src="${o.badgeUrls?.small || ''}" class="w-8 h-8 shrink-0 object-contain" alt="" onerror="this.style.visibility='hidden'">
             </div>
+        </div>
+        <div class="mt-2 grid grid-cols-2 gap-4">
+            ${attackBar(warAttacksUsed(c), max)}
+            ${attackBar(warAttacksUsed(o), max)}
         </div>
     </div>`;
 };
@@ -153,7 +165,7 @@ const renderWarMemberRow = (m, i, ended) => {
     return `
     <div class="row-in flex items-center gap-3 px-3 py-2.5 ${i > 0 ? 'border-t border-[#2A2A2A]' : ''}" style="--i:${Math.min(i, 14)}">
         <span class="shrink-0 w-6 h-6 rounded-md bg-[#252525] border border-[#2F2F2F] flex items-center justify-center text-[10px] font-mono font-bold text-[#8B8F98]">${m.mapPosition ?? i + 1}</span>
-        ${th ? `<img loading="lazy" decoding="async" src="${getTHImage(th)}" class="w-9 h-9 shrink-0 object-contain" alt="TH${th}" onerror="this.style.visibility='hidden'">` : ''}
+        ${th ? `<img src="${getTHImage(th)}" class="w-9 h-9 shrink-0 object-contain" alt="TH${th}" onerror="this.style.visibility='hidden'">` : ''}
         <div class="min-w-0 flex-1 leading-tight">
             <p class="text-[12px] font-bold text-white truncate">${escapeHtml(m.name)}</p>
             <p class="text-[9px] text-[#8B8F98]">${th ? `TH${th} · ` : ''}${attacks.length}/${m.__max} attacks${attacks.length ? ` · <span class="text-[#D4A72C] font-semibold">${stars}★</span>` : ''}</p>
@@ -183,7 +195,7 @@ const renderWarScoreboard = (w, r) => {
     const pct = (v) => (v || 0).toFixed(1) + '%';
     const side = (s, name, align) => `
         <div class="flex flex-col items-center gap-1 min-w-0 ${align}">
-            <img loading="lazy" decoding="async" src="${s.badgeUrls?.medium || s.badgeUrls?.small || ''}" class="w-12 h-12 object-contain drop-shadow-[0_0_8px_rgba(212,167,44,0.25)]" alt="" onerror="this.style.visibility='hidden'">
+            <img src="${s.badgeUrls?.medium || s.badgeUrls?.small || ''}" class="w-12 h-12 object-contain drop-shadow-[0_0_8px_rgba(212,167,44,0.25)]" alt="" onerror="this.style.visibility='hidden'">
             <p class="text-[11px] font-bold text-white truncate max-w-full">${escapeHtml(name)}</p>
             <p class="text-[9px] font-mono text-[#8B8F98]">${pct(s.destructionPercentage)}</p>
         </div>`;
@@ -309,7 +321,7 @@ export function renderCwl() {
         const attacks = rounds.filter((r) => r.attacks?.some((a) => a.attackerTag === m.tag)).length;
         return `
         <div class="flex items-center gap-3 px-3 py-2 ${i > 0 ? 'border-t border-[#2A2A2A]' : ''}">
-            <img loading="lazy" decoding="async" src="${getTHImage(m.townHallLevel)}" class="w-9 h-9 shrink-0 object-contain" alt="TH${m.townHallLevel}" onerror="this.style.visibility='hidden'">
+            <img src="${getTHImage(m.townHallLevel)}" class="w-9 h-9 shrink-0 object-contain" alt="TH${m.townHallLevel}" onerror="this.style.visibility='hidden'">
             <div class="min-w-0 flex-1 leading-tight">
                 <p class="text-[12px] font-bold text-white truncate">${escapeHtml(m.name)}</p>
                 <p class="text-[9px] text-[#8B8F98]">TH${m.townHallLevel}</p>
@@ -344,21 +356,22 @@ const renderRaidCard = (w, i) => {
     const attackers = (w.members || []).filter((m) => (m.attacks || 0) > 0).length;
     const targets = raidTargets(w);
     return `
-    <div data-raid="${i}" class="bg-[#1E1E1E] border border-[#3A3A3A] rounded-xl px-3 py-2 cursor-pointer active:scale-[0.99] transition-transform">
+    <div data-raid="${i}" class="relative overflow-hidden bg-[#1E1E1E] border border-[#3A3A3A] rounded-xl pl-4 pr-3 py-2.5 cursor-pointer active:scale-[0.99] transition-transform">
+        <span class="absolute left-0 top-0 bottom-0 w-1 ${attackers < 15 ? 'bg-red-500' : 'bg-green-500'}"></span>
         <div class="flex items-center justify-between text-[9px] font-mono tracking-wide text-[#8B8F98] mb-1">
             <span>${warDate(w) || '-'}</span>
-            <span class="text-[8px] font-semibold ${attackers < 15 ? 'text-red-500' : 'text-green-500'}">${attackers} attacks</span>
+            <span class="px-2 py-0.5 rounded-full bg-white/5 border border-white/10 text-[8px] font-bold ${attackers < 15 ? 'text-red-500' : 'text-green-500'}">${attackers}/${(w.members || []).length} attacked</span>
         </div>
         <div class="grid grid-cols-[1fr_auto_1fr] items-center gap-2">
             <div class="flex items-center gap-2 min-w-0">
-                <img loading="lazy" decoding="async" src="${mine.badgeUrls?.small || ''}" class="w-8 h-8 shrink-0 object-contain" alt="" onerror="this.style.visibility='hidden'">
+                <img src="${mine.badgeUrls?.small || ''}" class="w-8 h-8 shrink-0 object-contain" alt="" onerror="this.style.visibility='hidden'">
                 <div class="min-w-0 leading-tight">
                     <p class="text-xs font-bold text-white truncate">${escapeHtml(mine.name || '')}</p>
                     <p class="text-[9px] text-[#6B7280]">${fmt(w.totalAttacks)} Atks</p>
                 </div>
             </div>
             <div class="text-center leading-tight">
-                <p class="text-[9px] font-semibold tracking-widest text-[#D4A72C]">RAID</p>
+                <p class="inline-block px-2 py-0.5 rounded-full bg-[#2A2410] border border-[#6B5A1E] text-[8px] font-bold tracking-widest text-[#D4A72C]">RAID</p>
                 <p class="medieval text-lg font-bold text-[#D4A72C]">${fmt(w.capitalTotalLoot)}</p>
                 <p class="text-[8px] text-[#6B7280]">Capital Gold</p>
             </div>
@@ -370,7 +383,7 @@ const renderRaidCard = (w, i) => {
         <div class="mt-2 pt-2 border-t border-[#2A2A2A] flex flex-wrap gap-1.5">
             ${targets.map((t) => `
             <span class="flex items-center gap-1 bg-[#252525] px-2 py-0.5 rounded-lg max-w-full">
-                ${t.badge ? `<img loading="lazy" decoding="async" src="${t.badge}" class="w-4 h-4 object-contain" alt="" onerror="this.style.display='none'">` : ''}
+                ${t.badge ? `<img src="${t.badge}" class="w-4 h-4 object-contain" alt="" onerror="this.style.display='none'">` : ''}
                 <span class="text-[10px] text-gray-400 truncate">${escapeHtml(t.name)}</span>
             </span>`).join('')}
         </div>` : ''}
@@ -386,7 +399,7 @@ const renderRaidMemberRow = (m, i) => {
     return `
     <div class="row-in flex items-center gap-3 px-3 py-2 ${i > 0 ? 'border-t border-[#2A2A2A]' : ''} ${idle ? 'opacity-50' : ''}" style="--i:${Math.min(i, 14)}">
         <span class="w-5 text-[10px] font-mono text-[#6B7280]">${i + 1}</span>
-        ${th ? `<img loading="lazy" decoding="async" src="${getTHImage(th)}" class="w-9 h-9 shrink-0 object-contain" alt="TH${th}"
+        ${th ? `<img src="${getTHImage(th)}" class="w-9 h-9 shrink-0 object-contain" alt="TH${th}"
                      onerror="this.style.visibility='hidden'">` : ''}
         <div class="min-w-0 flex-1 leading-tight">
             <p class="text-[12px] font-bold text-white truncate">${escapeHtml(m.name)}</p>

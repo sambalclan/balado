@@ -427,7 +427,7 @@ export function renderSettings() {
 // ═══ About Page ════════════════════════════════════════════════════════
 const renderLabel = (label) => `
     <div class="flex items-center gap-1 bg-[#252525] px-2 py-1 rounded-lg">
-        <img loading="lazy" decoding="async" src="${label.iconUrls?.small || ''}" class="w-4 h-4" alt="">
+        <img src="${label.iconUrls?.small || ''}" class="w-4 h-4" alt="">
         <span class="text-[10px] text-gray-400">${label.name}</span>
     </div>
 `;
@@ -466,7 +466,7 @@ function renderClanHeader(clan) {
     el.innerHTML = `
         <div class="flex items-center justify-between gap-3 mb-2">
             <div class="flex items-center gap-3 min-w-0">
-                <img loading="lazy" decoding="async" src="${clan.badgeUrls?.medium || ''}"
+                <img src="${clan.badgeUrls?.medium || ''}"
                      class="w-10 h-10 md:w-12 md:h-12 shrink-0 rounded-lg" style="filter: drop-shadow(0 0 12px rgba(212, 167, 44, 0.6));" alt="Clan Badge">
                 <div class="min-w-0">
                     <h1 class="text-lg md:text-2xl font-bold text-white leading-tight truncate">
@@ -493,7 +493,7 @@ const renderRecordTile = (label, value, color) => `
 
 const renderPersonRow = (m, index, value, label, color = 'text-[#D4A72C]') => `
     <div class="flex items-center gap-3 px-3 py-1.5 ${index > 0 ? 'border-t border-[#2A2A2A]' : ''}">
-        <img loading="lazy" decoding="async" src="${getTHImage(m.townHallLevel)}" class="w-9 h-9 shrink-0 object-contain"
+        <img src="${getTHImage(m.townHallLevel)}" class="w-9 h-9 shrink-0 object-contain"
              alt="TH${m.townHallLevel}" onerror="this.style.visibility='hidden'">
         <div class="min-w-0 flex-1 leading-tight">
             <p class="text-[13px] font-bold text-white truncate">${escapeHtml(m.name)}</p>
