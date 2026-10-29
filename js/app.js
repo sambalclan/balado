@@ -1,6 +1,6 @@
 import { fetchClanData, fetchClanHistory, fetchLatestRaid, fetchLatestCwl, fetchWarIndex, fetchWarData, fetchRaidIndex, fetchRaidData, clearLiveCache } from './api.js';
 import { setWarData, setClanHistory, setRaidData, setRaids, setCwlData } from './state.js';
-import { renderPillTabs, setPillActive, escapeHtml } from './constants.js';
+import { renderPillTabs, setPillActive } from './constants.js';
 import { renderAbout, renderSettings } from './render.js';
 import { renderMembers } from './members.js';
 import { renderWar, renderCwl, renderRaid } from './war.js';
@@ -139,81 +139,7 @@ async function loadRaidWeeks() {
 const renderClanViews = () => {
     renderAbout(latestClanData);
     renderMembers(latestClanData);
-    notifyNewMembers(latestClanData);
 };
-
-// ═══ New member notification ═══════════════════════════════════════════
-// Compares the member list with the one saved in this browser. The first visit only saves it.
-const KNOWN_KEY = 'coc_known_members';
-const POLL_MS = 60000;
-
-function loadKnownTags() {
-    try {
-        const tags = JSON.parse(localStorage.getItem(KNOWN_KEY));
-        return Array.isArray(tags) ? tags : null;
-    } catch { return null; }
-}
-function saveKnownTags(tags) {
-    try { localStorage.setItem(KNOWN_KEY, JSON.stringify(tags)); } catch { /* storage blocked */ }
-}
-
-function showToast(title, text, icon) {
-    let box = document.getElementById('toastBox');
-    if (!box) {
-        box = document.createElement('div');
-        box.id = 'toastBox';
-        box.className = 'fixed top-3 left-1/2 -translate-x-1/2 z-[1000] w-[min(92vw,26rem)] flex flex-col gap-2 pointer-events-none';
-        document.body.appendChild(box);
-    }
-    const toast = document.createElement('div');
-    toast.className = 'view-anim pointer-events-auto flex items-center gap-3 px-3 py-2.5 rounded-xl bg-[#1E1E1E] border border-[#6B5A1E] shadow-lg cursor-pointer';
-    toast.innerHTML = `
-        <span class="material-symbols-outlined text-[22px] text-[#D4A72C]">${icon}</span>
-        <div class="min-w-0 leading-tight">
-            <p class="text-[10px] font-bold uppercase tracking-wide text-[#D4A72C]">${escapeHtml(title)}</p>
-            <p class="text-[12px] text-white truncate">${escapeHtml(text)}</p>
-        </div>`;
-    const close = () => toast.remove();
-    toast.onclick = close;
-    box.appendChild(toast);
-    setTimeout(close, 8000);
-}
-
-function announceJoin(member, clan) {
-    const text = `${member.name}${member.townHallLevel ? ` (TH${member.townHallLevel})` : ''} bergabung`;
-    showToast('Anggota baru', text, 'person_add');
-    if (!('Notification' in window) || Notification.permission !== 'granted') return;
-    try {
-        new Notification('Anggota baru', { body: text, icon: clan.badgeUrls?.medium || undefined, tag: 'join-' + member.tag });
-    } catch { /* some mobile browsers only allow notifications through a service worker */ }
-}
-
-function notifyNewMembers(clan) {
-    const list = clan?.memberList || [];
-    if (!list.length) return;
-    const known = loadKnownTags();
-    saveKnownTags(list.map((m) => m.tag));
-    if (!known) return;
-    list.filter((m) => !known.includes(m.tag)).forEach((m) => announceJoin(m, clan));
-}
-
-// Browsers only allow the permission prompt after a tap, so ask on the first one
-function askNotificationPermission() {
-    if (!('Notification' in window) || Notification.permission !== 'default') return;
-    document.addEventListener('click', () => Notification.requestPermission().catch(() => {}), { once: true });
-}
-
-// Check for new members while the page stays open
-function pollMembers() {
-    setInterval(async () => {
-        if (refreshing) return;
-        try {
-            clearLiveCache();
-            const clan = await fetchClanData();
-            if (clan) { latestClanData = clan; renderClanViews(); }
-        } catch { /* try again on the next round */ }
-    }, POLL_MS);
-}
 
 // ═══ Refresh (clan, war, CWL and raid) ═════════════════════════════════
 let refreshing = false;
@@ -274,7 +200,5 @@ document.addEventListener('DOMContentLoaded', () => {
     switchView();
     init();
     bindTabs();
-    askNotificationPermission();
-    pollMembers();
     window.addEventListener('resize', () => moveNavIndicator(true));
 });

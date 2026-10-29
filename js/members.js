@@ -29,7 +29,7 @@ const MEMBER_SORT_OPTIONS = [
 const MEMBER_VIEWS = [
     { id: 'list', label: 'Anggota' },
     { id: 'promotion', label: 'Promosi' },
-    { id: 'watchlist', label: 'Watchlist' },
+    { id: 'inactive', label: 'Jarang On' },
 ];
 
 let membersSortKey = 'rank';
@@ -152,7 +152,7 @@ const emptyNote = '<p class="text-xs text-[#8B8F98] text-center py-3">Data belum
 const renderActiveBody = (clan) => {
     if (membersView === 'list') return renderListBody(clan);
     if (membersView === 'promotion') return renderPromotionCard() || emptyNote;
-    return renderWatchlistCard() || emptyNote;
+    return renderInactiveCard() || emptyNote;
 };
 
 // Re-render the body of the active sub-tab (direction slides it in from the side)
@@ -373,57 +373,89 @@ function renderPromotionCard() {
     `);
 }
 
-// ═══ Watchlist ═════════════════════════════════════════════════════════
-const LOW_DONATION = 200;
-const SKIP_ROLES = ['leader', 'coLeader'];
+// ═══ Jarang On (members who are rarely online) ════════════════════════
+// Clash of Clans does not give "last online", so activity is estimated from what changes:
+// donations given, trophies, XP level (daily snapshots) and war / raid attacks.
+const INACTIVE_DAYS = 3;
+const MAX_INACTIVE = 15;
 
-function scoreWatchlist() {
-    const wars = endedWars();
-    const raids = raidWeeks();
+const DAY_MS = 86400000;
+const dayNumber = (date) => Math.floor(new Date(date + 'T12:00:00').getTime() / DAY_MS);
+const todayKey = () => {
+    const d = new Date();
+    return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+};
+
+function scoreInactive() {
+    const today = todayKey();
+    const snaps = state.history.filter((h) => h.list?.length);
+    // Today's live list is the newest snapshot
+    const live = (state.clan?.memberList || []).map((m) => ({
+        tag: m.tag, donations: m.donations || 0, trophies: m.trophies || 0, expLevel: m.expLevel || 0,
+    }));
+    const all = [...snaps.filter((h) => h.date !== today), ...(live.length ? [{ date: today, list: live }] : [])];
+
+    const lastActive = new Map(); // tag -> newest date with a sign of activity
+    const mark = (tag, date) => { if (date && date > (lastActive.get(tag) || '')) lastActive.set(tag, date); };
+
+    for (let i = 1; i < all.length; i++) {
+        const before = new Map(all[i - 1].list.map((m) => [m.tag, m]));
+        all[i].list.forEach((m) => {
+            const prev = before.get(m.tag);
+            if (prev && (m.donations > prev.donations || m.trophies !== prev.trophies || m.expLevel !== prev.expLevel)) {
+                mark(m.tag, all[i].date);
+            }
+        });
+    }
+
+    state.wars.filter(isEndedWar).forEach((w) => (w.clan?.members || []).forEach((m) => {
+        if ((m.attacks || []).length) mark(m.tag, warDate(w));
+    }));
+    getRaidWeeks().forEach((w) => (w.members || []).forEach((m) => {
+        if (m.attacks > 0) mark(m.tag, warDate(w));
+    }));
+
+    // How far back we can see: the oldest snapshot / war / raid we have
+    const dates = [...all.map((h) => h.date), ...state.wars.map(warDate), ...getRaidWeeks().map(warDate)].filter(Boolean).sort();
+    const span = dates.length ? Math.max(dayNumber(today) - dayNumber(dates[0]), 1) : 0;
 
     const rows = (state.clan?.memberList || [])
-        .filter((m) => !SKIP_ROLES.includes(m.role))
         .map((m) => {
-            let missedWar = 0;
-            wars.forEach((w) => {
-                const me = (w.clan?.members || []).find((x) => x.tag === m.tag);
-                if (me) missedWar += Math.max((w.attacksPerMember || 2) - (me.attacks?.length || 0), 0);
-            });
-
-            const skippedRaid = raids.filter((r) => !((r.members || []).find((x) => x.tag === m.tag)?.attacks > 0)).length;
-            const lowDonation = (m.donations || 0) < LOW_DONATION;
-            const score = missedWar * 2 + skippedRaid * 3 + (lowDonation ? 1 : 0);
-
-            const reasons = [];
-            if (wars.length && missedWar) reasons.push(`${missedWar} war terlewat`);
-            if (raids.length && skippedRaid) reasons.push(`${skippedRaid}/${raids.length} raid skip`);
-            if (lowDonation) reasons.push(`Donasi ${m.donations || 0}`);
-
-            return { member: m, score, reasons };
+            const last = lastActive.get(m.tag);
+            const idle = last ? dayNumber(today) - dayNumber(last) : span;
+            return { member: m, idle, never: !last };
         })
-        .filter((r) => r.score > 1)
-        .sort((a, b) => b.score - a.score);
+        .filter((r) => r.idle >= INACTIVE_DAYS)
+        .sort((a, b) => b.idle - a.idle || (b.never - a.never));
 
-    return { rows, wars: wars.length, raids: raids.length };
+    return { rows, span, snapshots: all.length };
 }
 
-const renderWatchlistRow = ({ member: m, reasons }, i) => `
+const renderInactiveRow = ({ member: m, idle, never }, i) => `
     <div class="flex items-center gap-3 px-3.5 py-3 ${rowBorder(i)}">
         <img src="${getTHImage(m.townHallLevel)}" class="w-9 h-9 shrink-0 object-contain"
              alt="TH${m.townHallLevel}" onerror="this.style.visibility='hidden'">
-        <div class="min-w-0 flex-1 flex flex-col gap-0.5">
-            <p class="text-[13px] font-bold leading-tight text-white truncate">${escapeHtml(m.name)}</p>
-            <p class="text-[9px] leading-tight text-red-400 truncate">${reasons.join(' · ')}</p>
+        <div class="min-w-0 flex-1 leading-tight">
+            <p class="text-[13px] font-bold text-white truncate">${escapeHtml(m.name)}</p>
+            <p class="text-[9px] font-semibold tracking-wide uppercase text-[#D4A72C]">${roleName(m.role)}</p>
+        </div>
+        <div class="shrink-0 text-right leading-tight">
+            <p class="text-[12px] font-bold ${never ? 'text-red-400' : 'text-[#D4A72C]'}">${never ? '≥ ' : ''}${idle} hari</p>
+            <p class="text-[7px] tracking-wide uppercase text-[#6B7280]">${never ? 'Tidak terlihat aktif' : 'Terakhir aktif'}</p>
         </div>
     </div>`;
 
-function renderWatchlistCard() {
-    const { rows, wars, raids } = scoreWatchlist();
-    if (!wars && !raids) return '';
+function renderInactiveCard() {
+    const { rows, span, snapshots } = scoreInactive();
+    if (!snapshots && !state.wars.length && !getRaidWeeks().length) return '';
 
-    const top = rows.slice(0, TOP_COUNT);
-
-    return top.length
-        ? `<div class="rounded-xl overflow-hidden border border-[#2A2A2A]">${top.map(renderWatchlistRow).join('')}</div>`
-        : '<p class="text-xs text-[#8B8F98] text-center py-3">Semua anggota aktif musim ini.</p>';
+    const shown = rows.slice(0, MAX_INACTIVE);
+    return `
+        ${shown.length
+            ? `<div class="rounded-xl overflow-hidden border border-[#2A2A2A]">${shown.map(renderInactiveRow).join('')}</div>`
+            : `<p class="text-xs text-[#8B8F98] text-center py-3">Semua anggota aktif dalam ${INACTIVE_DAYS} hari terakhir.</p>`}
+        <p class="text-[8px] text-[#6B7280] mt-1.5">
+            ${rows.length > MAX_INACTIVE ? `${MAX_INACTIVE} dari ${rows.length} anggota · ` : ''}Tanpa aktivitas ≥ ${INACTIVE_DAYS} hari
+            (data ${span} hari terakhir). Diperkirakan dari donasi, trophy, XP, war dan raid.
+        </p>`;
 }

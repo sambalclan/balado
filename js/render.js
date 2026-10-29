@@ -1,7 +1,6 @@
-import { roleMap, roleName, getTHImage, escapeHtml, fmt, dayLabel, renderAreaChart, warStars, pagePanel, backButton } from './constants.js';
-import { state } from './state.js';
+import { roleName, getTHImage, escapeHtml, fmt, dayLabel, renderAreaChart, warStars, warDate, isEndedWar, pagePanel, backButton } from './constants.js';
+import { state, getRaidWeeks } from './state.js';
 import { getLiveLog, LIVE_API_URL } from './api.js';
-import { MEMBER_SORTS } from './members.js';
 import { renderWarChartCard } from './war.js';
 
 // ═══ Reports · Config ══════════════════════════════════════════════════
@@ -17,61 +16,27 @@ const BASE_STYLE = {
 };
 
 const REPORT_CONFIG = {
-    war: {
+    month: {
         ...BASE_STYLE,
-        Title: 'War Report',
-        Cols: ['no', 'name', 'th', 'attacks', 'stars', 'destruction', 'defense'],
-    },
-    members: {
-        ...BASE_STYLE,
-        Title: 'Clan Members List',
-        Sort: 'rank',
-        Cols: ['no', 'name', 'role', 'th', 'trophies', 'donations', 'received'],
+        Title: 'Monthly Statistics',
+        Cols: ['no', 'name', 'th', 'wars', 'attacks', 'stars', 'destruction', 'raidAttacks', 'raidGold'],
     },
 };
 
-// ═══ Reports · Table Columns ═══════════════════════════════════════════
-// Columns not listed in a report's Cols (e.g. "tag") can be switched on from the config
-const COL_NO = { id: 'no', label: 'No', get: (m, i) => i + 1 };
-const COL_NAME = { id: 'name', label: 'Name', get: (m) => m.name };
-
-const MEMBER_COLS = [
-    COL_NO,
-    COL_NAME,
-    { id: 'tag',       label: 'Tag',      get: (m) => m.tag },
-    { id: 'role',      label: 'Role',     get: (m) => roleMap[m.role] || m.role || '-' },
-    { id: 'th',        label: 'TH',       get: (m) => m.townHallLevel ?? '-' },
-    { id: 'trophies',  label: 'Trophies', get: (m) => m.trophies ?? '-' },
-    { id: 'donations', label: 'Donated',  get: (m) => m.donations ?? '-' },
-    { id: 'received',  label: 'Received', get: (m) => m.donationsReceived ?? '-' },
-];
-
-function averageDestruction(member) {
-    const attacks = member.attacks || [];
-    if (attacks.length === 0) return '-';
-    const total = attacks.reduce((sum, a) => sum + (a.destructionPercentage || 0), 0);
-    return Math.round(total / attacks.length) + '%';
-}
-
-const attacksUsed = (member) => `${member.attacks?.length || 0}/${state.war?.attacksPerMember || 2}`;
-const bestDefense = (member) => member.bestOpponentAttack ? member.bestOpponentAttack.stars : '-';
-
-const WAR_COLS = [
-    COL_NO,
-    COL_NAME,
-    { id: 'th',          label: 'TH',          get: (m) => m.townhallLevel ?? '-' },
-    { id: 'attacks',     label: 'Attacks',     get: attacksUsed },
-    { id: 'stars',       label: 'Stars',       get: warStars },
-    { id: 'destruction', label: 'Destruction', get: averageDestruction },
-    { id: 'defense',     label: 'Defense',     get: bestDefense },
+// ═══ Reports · Table Columns ══════════════════════════════════════════
+const MONTH_COLS = [
+    { id: 'no',          label: 'No',          get: (m, i) => i + 1 },
+    { id: 'name',        label: 'Name',        get: (m) => m.name },
+    { id: 'th',          label: 'TH',          get: (m) => m.th ?? '-' },
+    { id: 'wars',        label: 'Wars',        get: (m) => m.wars },
+    { id: 'attacks',     label: 'Attacks',     get: (m) => `${m.attacks}/${m.attackLimit}` },
+    { id: 'stars',       label: 'Stars',       get: (m) => m.stars },
+    { id: 'destruction', label: 'Destruction', get: (m) => (m.attacks ? Math.round(m.destruction / m.attacks) + '%' : '-') },
+    { id: 'raidAttacks', label: 'Raid Atks',   get: (m) => `${m.raidAttacks}/${m.raidLimit}` },
+    { id: 'raidGold',    label: 'Capital Gold', get: (m) => fmt(m.raidGold) },
 ];
 
 // ═══ Reports · Content ═════════════════════════════════════════════════
-function clanLabel() {
-    if (!state.clan?.name) return '';
-    return state.clan.tag ? `${state.clan.name} (${state.clan.tag})` : state.clan.name;
-}
-
 function safeColor(color) {
     return /^#[0-9a-f]{3,8}$/i.test(color) ? color : '#d4a017';
 }
@@ -100,49 +65,74 @@ function makeReport({ config, allCols, items, groups, subtitle, emptyNote }) {
     };
 }
 
-function makeWarReport() {
-    const members = [...(state.war?.clan?.members || [])].sort((a, b) =>
-        (b.attacks?.length || 0) - (a.attacks?.length || 0)
-        || warStars(b) - warStars(a)
-        || (a.mapPosition || 0) - (b.mapPosition || 0));
+// Last calendar month, e.g. on 2 Nov: 1 Sep .. 1 Oct (the end date is not included)
+function lastMonthRange(now = new Date()) {
+    const start = new Date(now.getFullYear(), now.getMonth() - 1, 1);
+    const end = new Date(now.getFullYear(), now.getMonth(), 1);
+    const iso = (d) => `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-01`;
+    const lastDay = new Date(end.getTime() - 86400000);
+    return {
+        from: iso(start),
+        to: iso(end),
+        label: start.toLocaleDateString('en-US', { month: 'long', year: 'numeric' }),
+        span: `${start.toLocaleDateString('en-US', { day: 'numeric', month: 'short' })} - ${lastDay.toLocaleDateString('en-US', { day: 'numeric', month: 'short' })}`,
+    };
+}
 
-    const clanName = state.war?.clan?.name || state.clan?.name || '';
-    const enemyName = state.war?.opponent?.name || '';
+// One row per member (all current members, plus anyone who played last month and has left since)
+function collectMonthStats(range) {
+    const inRange = (rec) => { const d = warDate(rec); return d >= range.from && d < range.to; };
+    const wars = state.wars.filter((w) => isEndedWar(w) && inRange(w));
+    const raids = getRaidWeeks().filter(inRange);
 
-    // Same split as the War page: who attacked, then who did not
-    const attacked = members.filter((m) => (m.attacks?.length || 0) > 0);
-    const idle = members.filter((m) => !(m.attacks?.length || 0))
-        .sort((a, b) => (a.mapPosition || 0) - (b.mapPosition || 0));
+    const rows = new Map();
+    const row = (tag, name, th) => {
+        if (!rows.has(tag)) {
+            rows.set(tag, { name, th, wars: 0, attacks: 0, attackLimit: 0, stars: 0, destruction: 0, raidAttacks: 0, raidLimit: 0, raidGold: 0 });
+        }
+        const r = rows.get(tag);
+        if (th && !r.th) r.th = th;
+        return r;
+    };
+
+    (state.clan?.memberList || []).forEach((m) => row(m.tag, m.name, m.townHallLevel));
+
+    wars.forEach((w) => (w.clan?.members || []).forEach((m) => {
+        const r = row(m.tag, m.name, m.townhallLevel ?? m.townHallLevel);
+        r.wars += 1;
+        r.attackLimit += w.attacksPerMember || 2;
+        r.attacks += (m.attacks || []).length;
+        r.stars += warStars(m);
+        r.destruction += (m.attacks || []).reduce((n, a) => n + (a.destructionPercentage || 0), 0);
+    }));
+
+    raids.forEach((w) => (w.members || []).forEach((m) => {
+        const r = row(m.tag, m.name);
+        r.raidAttacks += m.attacks || 0;
+        r.raidLimit += (m.attackLimit || 0) + (m.bonusAttackLimit || 0);
+        r.raidGold += m.capitalResourcesLooted || 0;
+    }));
+
+    const list = [...rows.values()].sort((a, b) =>
+        b.stars - a.stars || b.raidGold - a.raidGold || String(a.name).localeCompare(String(b.name)));
+    return { list, wars: wars.length, raids: raids.length };
+}
+
+function makeMonthReport() {
+    const range = lastMonthRange();
+    const { list, wars, raids } = collectMonthStats(range);
+    const empty = !wars && !raids;
 
     return makeReport({
-        config: REPORT_CONFIG.war,
-        allCols: WAR_COLS,
-        groups: [
-            { title: `Attacked (${attacked.length})`, items: attacked },
-            { title: `Not attacked (${idle.length})`, items: idle },
-        ],
-        subtitle: enemyName ? `${clanName} vs ${enemyName}` : clanName,
-        emptyNote: state.war ? 'No members in this war data.' : 'War data is not available yet.',
+        config: { ...REPORT_CONFIG.month, Title: `Statistics ${range.label}` },
+        allCols: MONTH_COLS,
+        items: empty ? [] : list,
+        subtitle: `${state.clan?.name || ''} · ${range.span} · ${wars} wars, ${raids} raids`,
+        emptyNote: `No war or raid data for ${range.label}.`,
     });
 }
 
-function makeMembersReport() {
-    const config = REPORT_CONFIG.members;
-    const members = [...(state.clan?.memberList || [])].sort(MEMBER_SORTS[config.Sort] || MEMBER_SORTS.rank);
-
-    return makeReport({
-        config,
-        allCols: MEMBER_COLS,
-        items: members,
-        subtitle: clanLabel(),
-        emptyNote: 'Member data is not available yet.',
-    });
-}
-
-const REPORTS = {
-    members: makeMembersReport,
-    war: makeWarReport,
-};
+const REPORTS = { month: makeMonthReport };
 
 // ═══ Reports · Image Drawing ═══════════════════════════════════════════
 const FONT = 'Arial, Helvetica, sans-serif';
@@ -298,7 +288,7 @@ function drawCenteredText(ctx, text, width, y, font, color) {
 }
 
 async function createReportImage(type) {
-    const report = (REPORTS[type] || makeMembersReport)();
+    const report = (REPORTS[type] || makeMonthReport)();
     const { config } = report;
     const theme = THEMES[config.Theme] || THEMES.light;
     const { pad, rowH, headH, headBlock, minWidth, titleH, gap } = LAYOUT;
@@ -367,9 +357,8 @@ async function generateReport(type) {
     }
 }
 
-const SETTINGS_REPORTS = [
-    { type: 'members', icon: 'groups', title: 'Members Report', desc: 'Creation Pdf War' },
-    { type: 'war',     icon: 'swords', title: 'War Report',     desc: 'Creation Pdf War' },
+const SETTINGS_REPORTS = () => [
+    { type: 'month', icon: 'calendar_month', title: 'Last Month Statistics', desc: `All members · ${lastMonthRange().label}` },
 ];
 
 // ═══ Settings Page (back button is handled in app.js) ══════════════════
@@ -414,7 +403,7 @@ export function renderSettings() {
             ${backButton('data-settings-back')}
             <h2 class="medieval text-lg font-bold text-white uppercase">Settings</h2>
         </div>
-        <div class="flex flex-col gap-2">${SETTINGS_REPORTS.map(reportButtonHtml).join('')}</div>
+        <div class="flex flex-col gap-2">${SETTINGS_REPORTS().map(reportButtonHtml).join('')}</div>
         ${liveLogHtml()}
     `);
 
@@ -463,6 +452,7 @@ const renderSettingsButton = () => `
 function renderClanHeader(clan) {
     const el = document.getElementById('clanHeader');
     if (!el || !clan) return;
+
     el.innerHTML = `
         <div class="flex items-center justify-between gap-3 mb-2">
             <div class="flex items-center gap-3 min-w-0">
@@ -470,9 +460,9 @@ function renderClanHeader(clan) {
                      class="w-10 h-10 md:w-12 md:h-12 shrink-0 rounded-lg" style="filter: drop-shadow(0 0 12px rgba(212, 167, 44, 0.6));" alt="Clan Badge">
                 <div class="min-w-0">
                     <h1 class="text-lg md:text-2xl font-bold text-white leading-tight truncate">
-                        ${clan.name || 'Unknown Clan'}
+                        ${escapeHtml(clan.name || 'Unknown Clan')}
                     </h1>
-                    <p class="text-xs text-gray-400 font-mono">${clan.tag || ''}</p>
+                    <p class="text-xs text-gray-400 font-mono">${escapeHtml(clan.tag || '')}</p>
                 </div>
             </div>
             <div class="shrink-0 flex items-center gap-1.5">
@@ -512,8 +502,8 @@ const renderPersonRow = (m, index, value, label, color = 'text-[#D4A72C]') => `
 const renderMembershipCard = () => renderAreaChart({
     title: 'Membership',
     subtitle: 'Members per day',
-    points: state.history.map((p) => ({ label: dayLabel(p.date), value: p.members })),
-    note: state.history.length > 1 ? `Last ${state.history.length} days` : '',
+    points: state.history.slice(-7).map((p) => ({ label: dayLabel(p.date), value: p.members })),
+    note: state.history.length > 1 ? `Last ${Math.min(state.history.length, 7)} days` : '',
 });
 
 const renderLeadSection = (title, rows) => rows ? `

@@ -63,19 +63,29 @@ export async function fetchClanData() {
     return clan;
 }
 
-export async function fetchClanHistory(days = 7) {
-    const perDay = new Map();
-
+export async function fetchClanHistory(days = 14) {
+    const files = new Map(); // one snapshot per day, newest first
     for (const filename of (await fetchIndex('clan')) || []) {
         const day = dateFrom(filename);
-        if (!day || perDay.has(day)) continue;
-        try {
-            const d = await fetchStats('clan', filename);
-            perDay.set(day, { members: d.members ?? d.memberList?.length ?? 0 });
-        } catch { /* skip broken snapshot */ }
-        if (perDay.size >= days) break;
+        if (day && !files.has(day)) files.set(day, filename);
+        if (files.size >= days) break;
     }
-    return [...perDay].map(([date, v]) => ({ date, ...v })).reverse();
+
+    const entries = [...files];
+    const results = await Promise.allSettled(entries.map(([, filename]) => fetchStats('clan', filename)));
+
+    return entries.map(([date], i) => {
+        if (results[i].status !== 'fulfilled') return null; // skip broken snapshot
+        const d = results[i].value;
+        return {
+            date,
+            members: d.members ?? d.memberList?.length ?? 0,
+            // only what the activity check needs
+            list: (d.memberList || []).map((m) => ({
+                tag: m.tag, donations: m.donations || 0, trophies: m.trophies || 0, expLevel: m.expLevel || 0,
+            })),
+        };
+    }).filter(Boolean).reverse();
 }
 
 // War
