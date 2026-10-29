@@ -1,7 +1,7 @@
 import { dateFrom } from './constants.js';
 
 // Worker proxy Clash of Clans
-export const LIVE_API_URL = `${window.location.origin}/api`;
+export const LIVE_API_URL = '/api';
 export const ACTIVITY_API_URL = LIVE_API_URL;
 const LIVE_TIMEOUT_MS = 15000;
 const ACTIVITY_CACHE_TTL_MS = 60_000;
