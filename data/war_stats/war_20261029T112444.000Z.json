@@ -138,7 +138,15 @@
                         "duration": 165
                     }
                 ],
-                "opponentAttacks": 0
+                "opponentAttacks": 1,
+                "bestOpponentAttack": {
+                    "attackerTag": "#YLUGJ29P",
+                    "defenderTag": "#G989PRQJL",
+                    "stars": 3,
+                    "destructionPercentage": 100,
+                    "order": 12,
+                    "duration": 156
+                }
             },
             {
                 "tag": "#QJUYL2L9V",
@@ -155,7 +163,15 @@
                         "duration": 122
                     }
                 ],
-                "opponentAttacks": 0
+                "opponentAttacks": 1,
+                "bestOpponentAttack": {
+                    "attackerTag": "#UL22G08",
+                    "defenderTag": "#QJUYL2L9V",
+                    "stars": 0,
+                    "destructionPercentage": 49,
+                    "order": 13,
+                    "duration": 86
+                }
             },
             {
                 "tag": "#QR98PU0QJ",
@@ -200,9 +216,9 @@
             "medium": "https://api-assets.clashofclans.com/badges/200/3cPTaxGyF0Q7QezveMcMpShHxGOJohI_fzjZ2ENBPqk.png"
         },
         "clanLevel": 21,
-        "attacks": 4,
-        "stars": 10,
-        "destructionPercentage": 31.6,
+        "attacks": 6,
+        "stars": 13,
+        "destructionPercentage": 46.5,
         "members": [
             {
                 "tag": "#Q2P2Q8UJL",
@@ -256,6 +272,14 @@
                         "destructionPercentage": 100,
                         "order": 11,
                         "duration": 137
+                    },
+                    {
+                        "attackerTag": "#YLUGJ29P",
+                        "defenderTag": "#G989PRQJL",
+                        "stars": 3,
+                        "destructionPercentage": 100,
+                        "order": 12,
+                        "duration": 156
                     }
                 ],
                 "opponentAttacks": 1,
@@ -306,6 +330,16 @@
                 "name": "Salamun Fajri",
                 "townhallLevel": 16,
                 "mapPosition": 5,
+                "attacks": [
+                    {
+                        "attackerTag": "#UL22G08",
+                        "defenderTag": "#QJUYL2L9V",
+                        "stars": 0,
+                        "destructionPercentage": 49,
+                        "order": 13,
+                        "duration": 86
+                    }
+                ],
                 "opponentAttacks": 1,
                 "bestOpponentAttack": {
                     "attackerTag": "#QJUYL2L9V",
