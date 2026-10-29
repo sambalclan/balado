@@ -35,13 +35,6 @@ const warAttacksUsed = (side) =>
 const warAttacksMax = (w) =>
     (w.teamSize || w.clan?.members?.length || 0) * (w.attacksPerMember || 2);
 
-const WAR_ACCENT = { victory: 'bg-green-500', defeat: 'bg-red-500', draw: 'bg-gray-400', ongoing: 'bg-[#D4A72C]' };
-
-const attackBar = (used, max) => `
-    <div class="h-1 rounded-full bg-[#2A2A2A] overflow-hidden">
-        <div class="h-full rounded-full bg-[#D4A72C]" style="width:${max ? Math.min(100, Math.round((used / max) * 100)) : 0}%"></div>
-    </div>`;
-
 const renderWarCard = (w) => {
     const c = w.clan || {}, o = w.opponent || {};
     const r = warResult(w);
@@ -49,12 +42,11 @@ const renderWarCard = (w) => {
     const pct = (v) => (v || 0).toFixed(1) + '%';
 
     const startTimeHtml = w.state === 'preparation'
-        ? `<span class="text-[#D4A72C] font-semibold">Start Time: ${formatWarStartTime(w)}</span>`
+        ? `<span class="text-gray-300 font-semibold">Start Time: ${formatWarStartTime(w)}</span>`
         : '';
 
     return `
-    <div data-war-open="${state.wars.indexOf(w)}" class="relative overflow-hidden bg-[#1E1E1E] border border-[#3A3A3A] rounded-xl pl-4 pr-3 py-2.5 cursor-pointer active:scale-[0.99] transition-transform">
-        <span class="absolute left-0 top-0 bottom-0 w-1 ${WAR_ACCENT[r.key]}"></span>
+    <div data-war-open="${state.wars.indexOf(w)}" class="bg-[#1E1E1E] border border-[#2A2A2A] rounded-xl px-3 py-2.5 cursor-pointer active:scale-[0.99] transition-transform">
         <div class="flex items-center justify-between text-[9px] font-mono tracking-wide text-[#8B8F98] mb-1">
             <span>${warDate(w) || '-'}</span>
             ${startTimeHtml}
@@ -69,8 +61,8 @@ const renderWarCard = (w) => {
                 </div>
             </div>
             <div class="text-center leading-tight">
-                <p class="inline-block px-2 py-0.5 rounded-full bg-white/5 border border-white/10 text-[8px] font-bold tracking-widest ${r.color}">${r.label}</p>
-                <p class="medieval text-lg font-bold ${r.color}">${c.stars || 0} - ${o.stars || 0}</p>
+                <p class="text-[9px] font-semibold tracking-widest ${r.color}">${r.label}</p>
+                <p class="medieval text-lg font-bold text-white">${c.stars || 0} - ${o.stars || 0}</p>
                 <p class="text-[8px] text-[#6B7280]">${pct(c.destructionPercentage)} vs ${pct(o.destructionPercentage)}</p>
             </div>
             <div class="flex items-center justify-end gap-2 min-w-0">
@@ -80,10 +72,6 @@ const renderWarCard = (w) => {
                 </div>
                 <img src="${o.badgeUrls?.small || ''}" class="w-8 h-8 shrink-0 object-contain" alt="" onerror="this.style.visibility='hidden'">
             </div>
-        </div>
-        <div class="mt-2 grid grid-cols-2 gap-4">
-            ${attackBar(warAttacksUsed(c), max)}
-            ${attackBar(warAttacksUsed(o), max)}
         </div>
     </div>`;
 };
@@ -120,8 +108,20 @@ function warSummary(done) {
     ];
 }
 
-// "Stars per war" chart, shown on the dashboard (About)
-export const renderWarChartCard = () => {
+// Data for the combined Membership + War chart on the dashboard (About)
+export const getWarChartData = () => {
+    const done = state.wars
+        .filter((w) => isEndedWar(w) && warDate(w))
+        .reverse(); // index is newest first -> flip to oldest first
+    return {
+        points: done.slice(-7).map((w) => ({ date: warDate(w), value: w.clan?.stars || 0 })),
+        stats: done.length ? warSummary(done) : [],
+        total: done.length,
+    };
+};
+
+// "Stars per war" chart on its own (no longer used by About)
+export const renderWarChartCard = (bare = false) => {
     const done = state.wars
         .filter((w) => isEndedWar(w) && warDate(w))
         .reverse(); // index is newest first -> flip to oldest first
@@ -132,6 +132,7 @@ export const renderWarChartCard = () => {
         points: done.slice(-7).map((w) => ({ label: dayLabel(warDate(w)), value: w.clan?.stars || 0 })),
         stats: done.length ? warSummary(done) : [],
         note: done.length ? `Summary of ${done.length} finished wars` : '',
+        bare,
     });
 };
 
@@ -139,7 +140,7 @@ export const renderWarChartCard = () => {
 const renderStars = (n) => [1, 2, 3].map((i) =>
     `<span class="${i <= n ? 'text-[#F5C542]' : 'text-[#3A3A3A]'}">★</span>`).join('');
 
-const starColor = (n) => (n >= 3 ? 'border-[#6B5A1E] bg-[#2A2410]' : n > 0 ? 'border-[#3A3A3A] bg-[#252525]' : 'border-[#4a2323] bg-[#2a1818]');
+const starColor = () => 'border-[#2A2A2A] bg-[#252525]';
 
 const renderAttackChip = (a) => `
     <div class="flex items-center justify-between gap-2 rounded-lg border ${starColor(a.stars || 0)} px-2 py-0.5">
@@ -160,7 +161,7 @@ const renderWarMemberRow = (m, i, ended) => {
                ${missed && ended ? `<span class="text-center text-[8px] font-semibold uppercase tracking-wide text-red-400">${missed} missed</span>` : ''}
            </div>`
         : `<span class="shrink-0 rounded-lg px-2.5 py-1 text-[10px] font-bold border
-                ${ended ? 'text-red-400 border-[#4a2323] bg-[#2a1818]' : 'text-[#8B8F98] border-[#3A3A3A] bg-[#252525]'}">${pending}</span>`;
+                ${ended ? 'text-red-400 border-[#2A2A2A]' : 'text-[#8B8F98] border-[#2A2A2A]'}">${pending}</span>`;
 
     return `
     <div class="row-in flex items-center gap-3 px-3 py-2.5 ${i > 0 ? 'border-t border-[#2A2A2A]' : ''}" style="--i:${Math.min(i, 14)}">
@@ -168,7 +169,7 @@ const renderWarMemberRow = (m, i, ended) => {
         ${th ? `<img src="${getTHImage(th)}" class="w-9 h-9 shrink-0 object-contain" alt="TH${th}" onerror="this.style.visibility='hidden'">` : ''}
         <div class="min-w-0 flex-1 leading-tight">
             <p class="text-[12px] font-bold text-white truncate">${escapeHtml(m.name)}</p>
-            <p class="text-[9px] text-[#8B8F98]">${th ? `TH${th} · ` : ''}${attacks.length}/${m.__max} attacks${attacks.length ? ` · <span class="text-[#D4A72C] font-semibold">${stars}★</span>` : ''}</p>
+            <p class="text-[9px] text-[#8B8F98]">${th ? `TH${th} · ` : ''}${attacks.length}/${m.__max} attacks${attacks.length ? ` · <span class="text-white font-semibold">${stars}★</span>` : ''}</p>
         </div>
         ${right}
     </div>`;
@@ -176,7 +177,6 @@ const renderWarMemberRow = (m, i, ended) => {
 
 const renderWarMemberGroup = (title, dot, members, ended) => `
     <div class="flex items-center gap-2 mb-2">
-        <span class="w-1.5 h-1.5 rounded-full ${dot}"></span>
         <h4 class="medieval text-[11px] font-bold text-[#D4A72C] uppercase tracking-wide">${title}</h4>
         <span class="text-[9px] font-mono text-[#8B8F98] bg-[#252525] px-1.5 py-0.5 rounded-md">${members.length}</span>
     </div>
@@ -195,14 +195,13 @@ const renderWarScoreboard = (w, r) => {
     const pct = (v) => (v || 0).toFixed(1) + '%';
     const side = (s, name, align) => `
         <div class="flex flex-col items-center gap-1 min-w-0 ${align}">
-            <img src="${s.badgeUrls?.medium || s.badgeUrls?.small || ''}" class="w-12 h-12 object-contain drop-shadow-[0_0_8px_rgba(212,167,44,0.25)]" alt="" onerror="this.style.visibility='hidden'">
+            <img src="${s.badgeUrls?.medium || s.badgeUrls?.small || ''}" class="w-12 h-12 object-contain" alt="" onerror="this.style.visibility='hidden'">
             <p class="text-[11px] font-bold text-white truncate max-w-full">${escapeHtml(name)}</p>
             <p class="text-[9px] font-mono text-[#8B8F98]">${pct(s.destructionPercentage)}</p>
         </div>`;
 
     return `
-    <div class="rounded-2xl border border-[#3A3A3A] p-3 mb-3"
-         style="background: radial-gradient(120% 140% at 50% 0%, rgba(212,167,44,0.14) 0%, rgba(30,30,30,0) 60%), #1E1E1E;">
+    <div class="rounded-2xl border border-[#2A2A2A] bg-[#1E1E1E] p-3 mb-3">
         <div class="grid grid-cols-[1fr_auto_1fr] items-center gap-2">
             ${side(c, c.name || 'Clan', '')}
             <div class="text-center leading-tight px-1">
@@ -243,8 +242,8 @@ function renderWarDetail(w) {
         ${renderWarScoreboard(w, r)}
         <div class="grid grid-cols-4 gap-1.5 mb-4">
             ${renderWarStat('Attacks', `${used}/${members.length * max}`)}
-            ${renderWarStat('Stars', totalStars, 'text-[#F5C542]')}
-            ${renderWarStat('3 Stars', threeStars, 'text-green-500')}
+            ${renderWarStat('Stars', totalStars)}
+            ${renderWarStat('3 Stars', threeStars)}
             ${renderWarStat('Missed', ended ? missed : '-', ended && missed ? 'text-red-400' : 'text-white')}
         </div>
         ${renderWarMemberGroup('Attacked', 'bg-green-500', attacked, ended)}
@@ -356,11 +355,10 @@ const renderRaidCard = (w, i) => {
     const attackers = (w.members || []).filter((m) => (m.attacks || 0) > 0).length;
     const targets = raidTargets(w);
     return `
-    <div data-raid="${i}" class="relative overflow-hidden bg-[#1E1E1E] border border-[#3A3A3A] rounded-xl pl-4 pr-3 py-2.5 cursor-pointer active:scale-[0.99] transition-transform">
-        <span class="absolute left-0 top-0 bottom-0 w-1 ${attackers < 15 ? 'bg-red-500' : 'bg-green-500'}"></span>
+    <div data-raid="${i}" class="bg-[#1E1E1E] border border-[#2A2A2A] rounded-xl px-3 py-2.5 cursor-pointer active:scale-[0.99] transition-transform">
         <div class="flex items-center justify-between text-[9px] font-mono tracking-wide text-[#8B8F98] mb-1">
             <span>${warDate(w) || '-'}</span>
-            <span class="px-2 py-0.5 rounded-full bg-white/5 border border-white/10 text-[8px] font-bold ${attackers < 15 ? 'text-red-500' : 'text-green-500'}">${attackers}/${(w.members || []).length} attacked</span>
+            <span class="text-[8px] font-semibold ${attackers < 15 ? 'text-red-400' : ''}">${attackers}/${(w.members || []).length} attacked</span>
         </div>
         <div class="grid grid-cols-[1fr_auto_1fr] items-center gap-2">
             <div class="flex items-center gap-2 min-w-0">
@@ -371,7 +369,7 @@ const renderRaidCard = (w, i) => {
                 </div>
             </div>
             <div class="text-center leading-tight">
-                <p class="inline-block px-2 py-0.5 rounded-full bg-[#2A2410] border border-[#6B5A1E] text-[8px] font-bold tracking-widest text-[#D4A72C]">RAID</p>
+                <p class="text-[9px] font-semibold tracking-widest text-[#8B8F98]">RAID</p>
                 <p class="medieval text-lg font-bold text-[#D4A72C]">${fmt(w.capitalTotalLoot)}</p>
                 <p class="text-[8px] text-[#6B7280]">Capital Gold</p>
             </div>

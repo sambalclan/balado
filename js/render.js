@@ -1,7 +1,7 @@
-import { roleName, getTHImage, escapeHtml, fmt, dayLabel, renderAreaChart, warStars, warDate, isEndedWar, pagePanel, backButton } from './constants.js';
+import { roleName, getTHImage, escapeHtml, fmt, dayLabel, renderAreaChart, warStars, warDate, isEndedWar, pagePanel, backButton, renderCombinedChart } from './constants.js';
 import { state, getRaidWeeks } from './state.js';
 import { getLiveLog, LIVE_API_URL } from './api.js';
-import { renderWarChartCard } from './war.js';
+import { getWarChartData } from './war.js';
 
 // ═══ Reports · Config ══════════════════════════════════════════════════
 const BASE_STYLE = {
@@ -499,12 +499,19 @@ const renderPersonRow = (m, index, value, label, color = 'text-[#D4A72C]') => `
     </div>
 `;
 
-const renderMembershipCard = () => renderAreaChart({
-    title: 'Membership',
-    subtitle: 'Members per day',
-    points: state.history.slice(-7).map((p) => ({ label: dayLabel(p.date), value: p.members })),
-    note: state.history.length > 1 ? `Last ${Math.min(state.history.length, 7)} days` : '',
-});
+// Membership (blue, left axis) and War stars (red, right axis) on one chart
+const renderStatsCard = () => {
+    const war = getWarChartData();
+    return renderCombinedChart({
+        title: 'Membership & War',
+        subtitle: 'Anggota per hari · bintang per war',
+        a: { name: 'Anggota', color: '#3B82F6', labelColor: '#93C5FD',
+             points: state.history.slice(-7).map((p) => ({ date: p.date, value: p.members })) },
+        b: { name: 'War (bintang)', color: '#EF4444', labelColor: '#FCA5A5', points: war.points },
+        stats: war.stats,
+        note: war.total ? `Ringkasan ${war.total} war selesai` : '',
+    });
+};
 
 const renderLeadSection = (title, rows) => rows ? `
     <div>
@@ -570,8 +577,7 @@ export function renderAbout(clan) {
             <div class="w-full bg-[#1a1a1a] border border-[#2A2A2A] rounded-xl p-3 flex flex-col gap-4">
                 ${renderLeadSection('Ranking', rankingHtml)}
             </div>
-            ${renderMembershipCard()}
-            ${renderWarChartCard()}
+            ${renderStatsCard()}
         </div>
     `;
 }

@@ -1,11 +1,7 @@
 import { dateFrom } from './constants.js';
 
 // Worker proxy Clash of Clans
-export const LIVE_API_URL = 'https://coc-proxy-sambal.sambalclash.workers.dev';
-
-// Worker penyimpanan War, CWL, dan aktivitas member (D1)
-export const ACTIVITY_API_URL = 'https://balado-war.sambalclash.workers.dev';
-
+export const LIVE_API_URL = 'https://balado-war.sambalclash.workers.dev';
 const LIVE_TIMEOUT_MS = 15000;
 
 // Catatan setiap panggilan live; ditampilkan di halaman Settings

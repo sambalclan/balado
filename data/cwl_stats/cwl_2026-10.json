@@ -1,29 +1,1024 @@
 {
   "season": "2026-10",
   "clan": {
+    "tag": "#DEMOCLAN",
+    "name": "Sambal Balado",
     "members": [
-      { "tag": "#AAA111", "name": "Budi", "townHallLevel": 16 },
-      { "tag": "#BBB222", "name": "Sari", "townHallLevel": 15 },
-      { "tag": "#CCC333", "name": "Andi", "townHallLevel": 14 }
+      {
+        "tag": "#DEMO0000",
+        "name": "Balado King",
+        "townHallLevel": 18,
+        "mapPosition": 1
+      },
+      {
+        "tag": "#DEMO0001",
+        "name": "Sambal Pedas",
+        "townHallLevel": 18,
+        "mapPosition": 2
+      },
+      {
+        "tag": "#DEMO0002",
+        "name": "Naga Merah",
+        "townHallLevel": 18,
+        "mapPosition": 3
+      },
+      {
+        "tag": "#DEMO0003",
+        "name": "Raja Bintang",
+        "townHallLevel": 18,
+        "mapPosition": 4
+      },
+      {
+        "tag": "#DEMO0004",
+        "name": "Kapten War",
+        "townHallLevel": 18,
+        "mapPosition": 5
+      },
+      {
+        "tag": "#DEMO0005",
+        "name": "Api Biru",
+        "townHallLevel": 17,
+        "mapPosition": 6
+      },
+      {
+        "tag": "#DEMO0006",
+        "name": "Garuda",
+        "townHallLevel": 17,
+        "mapPosition": 7
+      },
+      {
+        "tag": "#DEMO0007",
+        "name": "Petir",
+        "townHallLevel": 17,
+        "mapPosition": 8
+      },
+      {
+        "tag": "#DEMO0008",
+        "name": "Kopi Hitam",
+        "townHallLevel": 17,
+        "mapPosition": 9
+      },
+      {
+        "tag": "#DEMO0009",
+        "name": "Macan",
+        "townHallLevel": 17,
+        "mapPosition": 10
+      },
+      {
+        "tag": "#DEMO0010",
+        "name": "Bintang Tiga",
+        "townHallLevel": 16,
+        "mapPosition": 11
+      },
+      {
+        "tag": "#DEMO0011",
+        "name": "Ksatria",
+        "townHallLevel": 16,
+        "mapPosition": 12
+      },
+      {
+        "tag": "#DEMO0012",
+        "name": "Tornado",
+        "townHallLevel": 16,
+        "mapPosition": 13
+      },
+      {
+        "tag": "#DEMO0013",
+        "name": "Jagoan",
+        "townHallLevel": 16,
+        "mapPosition": 14
+      },
+      {
+        "tag": "#DEMO0014",
+        "name": "Laskar",
+        "townHallLevel": 16,
+        "mapPosition": 15
+      }
     ]
   },
   "rounds": [
     {
+      "round": 1,
+      "opponent": {
+        "name": "Dragon Empire",
+        "tag": "#OPP0001"
+      },
+      "state": "warEnded",
       "attacks": [
-        { "attackerTag": "#AAA111", "stars": 3 },
-        { "attackerTag": "#BBB222", "stars": 2 }
+        {
+          "attackerTag": "#DEMO0001",
+          "defenderTag": "#OPP0102",
+          "stars": 2,
+          "destructionPercentage": 76,
+          "order": 2,
+          "duration": 118
+        },
+        {
+          "attackerTag": "#DEMO0002",
+          "defenderTag": "#OPP0103",
+          "stars": 3,
+          "destructionPercentage": 100,
+          "order": 3,
+          "duration": 131
+        },
+        {
+          "attackerTag": "#DEMO0003",
+          "defenderTag": "#OPP0104",
+          "stars": 1,
+          "destructionPercentage": 48,
+          "order": 4,
+          "duration": 144
+        },
+        {
+          "attackerTag": "#DEMO0004",
+          "defenderTag": "#OPP0105",
+          "stars": 3,
+          "destructionPercentage": 100,
+          "order": 5,
+          "duration": 157
+        },
+        {
+          "attackerTag": "#DEMO0005",
+          "defenderTag": "#OPP0106",
+          "stars": 3,
+          "destructionPercentage": 100,
+          "order": 6,
+          "duration": 170
+        },
+        {
+          "attackerTag": "#DEMO0006",
+          "defenderTag": "#OPP0107",
+          "stars": 1,
+          "destructionPercentage": 48,
+          "order": 7,
+          "duration": 183
+        },
+        {
+          "attackerTag": "#DEMO0007",
+          "defenderTag": "#OPP0108",
+          "stars": 3,
+          "destructionPercentage": 100,
+          "order": 8,
+          "duration": 106
+        },
+        {
+          "attackerTag": "#DEMO0008",
+          "defenderTag": "#OPP0109",
+          "stars": 2,
+          "destructionPercentage": 76,
+          "order": 9,
+          "duration": 119
+        },
+        {
+          "attackerTag": "#DEMO0009",
+          "defenderTag": "#OPP0110",
+          "stars": 3,
+          "destructionPercentage": 100,
+          "order": 10,
+          "duration": 132
+        },
+        {
+          "attackerTag": "#DEMO0010",
+          "defenderTag": "#OPP0111",
+          "stars": 3,
+          "destructionPercentage": 100,
+          "order": 11,
+          "duration": 145
+        },
+        {
+          "attackerTag": "#DEMO0012",
+          "defenderTag": "#OPP0113",
+          "stars": 3,
+          "destructionPercentage": 100,
+          "order": 13,
+          "duration": 171
+        },
+        {
+          "attackerTag": "#DEMO0013",
+          "defenderTag": "#OPP0114",
+          "stars": 2,
+          "destructionPercentage": 76,
+          "order": 14,
+          "duration": 184
+        },
+        {
+          "attackerTag": "#DEMO0014",
+          "defenderTag": "#OPP0115",
+          "stars": 3,
+          "destructionPercentage": 100,
+          "order": 15,
+          "duration": 107
+        }
       ]
     },
     {
+      "round": 2,
+      "opponent": {
+        "name": "Royal Titans",
+        "tag": "#OPP0002"
+      },
+      "state": "warEnded",
       "attacks": [
-        { "attackerTag": "#AAA111", "stars": 2 },
-        { "attackerTag": "#CCC333", "stars": 1 }
+        {
+          "attackerTag": "#DEMO0000",
+          "defenderTag": "#OPP0201",
+          "stars": 3,
+          "destructionPercentage": 100,
+          "order": 1,
+          "duration": 112
+        },
+        {
+          "attackerTag": "#DEMO0001",
+          "defenderTag": "#OPP0202",
+          "stars": 2,
+          "destructionPercentage": 76,
+          "order": 2,
+          "duration": 125
+        },
+        {
+          "attackerTag": "#DEMO0002",
+          "defenderTag": "#OPP0203",
+          "stars": 3,
+          "destructionPercentage": 100,
+          "order": 3,
+          "duration": 138
+        },
+        {
+          "attackerTag": "#DEMO0003",
+          "defenderTag": "#OPP0204",
+          "stars": 3,
+          "destructionPercentage": 100,
+          "order": 4,
+          "duration": 151
+        },
+        {
+          "attackerTag": "#DEMO0004",
+          "defenderTag": "#OPP0205",
+          "stars": 2,
+          "destructionPercentage": 76,
+          "order": 5,
+          "duration": 164
+        },
+        {
+          "attackerTag": "#DEMO0005",
+          "defenderTag": "#OPP0206",
+          "stars": 3,
+          "destructionPercentage": 100,
+          "order": 6,
+          "duration": 177
+        },
+        {
+          "attackerTag": "#DEMO0006",
+          "defenderTag": "#OPP0207",
+          "stars": 2,
+          "destructionPercentage": 76,
+          "order": 7,
+          "duration": 190
+        },
+        {
+          "attackerTag": "#DEMO0007",
+          "defenderTag": "#OPP0208",
+          "stars": 3,
+          "destructionPercentage": 100,
+          "order": 8,
+          "duration": 113
+        },
+        {
+          "attackerTag": "#DEMO0008",
+          "defenderTag": "#OPP0209",
+          "stars": 3,
+          "destructionPercentage": 100,
+          "order": 9,
+          "duration": 126
+        },
+        {
+          "attackerTag": "#DEMO0009",
+          "defenderTag": "#OPP0210",
+          "stars": 2,
+          "destructionPercentage": 76,
+          "order": 10,
+          "duration": 139
+        },
+        {
+          "attackerTag": "#DEMO0011",
+          "defenderTag": "#OPP0212",
+          "stars": 1,
+          "destructionPercentage": 48,
+          "order": 12,
+          "duration": 165
+        },
+        {
+          "attackerTag": "#DEMO0012",
+          "defenderTag": "#OPP0213",
+          "stars": 3,
+          "destructionPercentage": 100,
+          "order": 13,
+          "duration": 178
+        },
+        {
+          "attackerTag": "#DEMO0013",
+          "defenderTag": "#OPP0214",
+          "stars": 3,
+          "destructionPercentage": 100,
+          "order": 14,
+          "duration": 191
+        },
+        {
+          "attackerTag": "#DEMO0014",
+          "defenderTag": "#OPP0215",
+          "stars": 1,
+          "destructionPercentage": 48,
+          "order": 15,
+          "duration": 114
+        }
+      ]
+    },
+    {
+      "round": 3,
+      "opponent": {
+        "name": "Phoenix Army",
+        "tag": "#OPP0003"
+      },
+      "state": "warEnded",
+      "attacks": [
+        {
+          "attackerTag": "#DEMO0000",
+          "defenderTag": "#OPP0301",
+          "stars": 3,
+          "destructionPercentage": 100,
+          "order": 1,
+          "duration": 119
+        },
+        {
+          "attackerTag": "#DEMO0001",
+          "defenderTag": "#OPP0302",
+          "stars": 3,
+          "destructionPercentage": 100,
+          "order": 2,
+          "duration": 132
+        },
+        {
+          "attackerTag": "#DEMO0002",
+          "defenderTag": "#OPP0303",
+          "stars": 2,
+          "destructionPercentage": 76,
+          "order": 3,
+          "duration": 145
+        },
+        {
+          "attackerTag": "#DEMO0003",
+          "defenderTag": "#OPP0304",
+          "stars": 3,
+          "destructionPercentage": 100,
+          "order": 4,
+          "duration": 158
+        },
+        {
+          "attackerTag": "#DEMO0004",
+          "defenderTag": "#OPP0305",
+          "stars": 1,
+          "destructionPercentage": 48,
+          "order": 5,
+          "duration": 171
+        },
+        {
+          "attackerTag": "#DEMO0005",
+          "defenderTag": "#OPP0306",
+          "stars": 3,
+          "destructionPercentage": 100,
+          "order": 6,
+          "duration": 184
+        },
+        {
+          "attackerTag": "#DEMO0006",
+          "defenderTag": "#OPP0307",
+          "stars": 3,
+          "destructionPercentage": 100,
+          "order": 7,
+          "duration": 107
+        },
+        {
+          "attackerTag": "#DEMO0007",
+          "defenderTag": "#OPP0308",
+          "stars": 1,
+          "destructionPercentage": 48,
+          "order": 8,
+          "duration": 120
+        },
+        {
+          "attackerTag": "#DEMO0008",
+          "defenderTag": "#OPP0309",
+          "stars": 3,
+          "destructionPercentage": 100,
+          "order": 9,
+          "duration": 133
+        },
+        {
+          "attackerTag": "#DEMO0010",
+          "defenderTag": "#OPP0311",
+          "stars": 3,
+          "destructionPercentage": 100,
+          "order": 11,
+          "duration": 159
+        },
+        {
+          "attackerTag": "#DEMO0011",
+          "defenderTag": "#OPP0312",
+          "stars": 3,
+          "destructionPercentage": 100,
+          "order": 12,
+          "duration": 172
+        },
+        {
+          "attackerTag": "#DEMO0012",
+          "defenderTag": "#OPP0313",
+          "stars": 2,
+          "destructionPercentage": 76,
+          "order": 13,
+          "duration": 185
+        },
+        {
+          "attackerTag": "#DEMO0013",
+          "defenderTag": "#OPP0314",
+          "stars": 3,
+          "destructionPercentage": 100,
+          "order": 14,
+          "duration": 108
+        },
+        {
+          "attackerTag": "#DEMO0014",
+          "defenderTag": "#OPP0315",
+          "stars": 2,
+          "destructionPercentage": 76,
+          "order": 15,
+          "duration": 121
+        }
+      ]
+    },
+    {
+      "round": 4,
+      "opponent": {
+        "name": "Night Wolves",
+        "tag": "#OPP0004"
+      },
+      "state": "warEnded",
+      "attacks": [
+        {
+          "attackerTag": "#DEMO0000",
+          "defenderTag": "#OPP0401",
+          "stars": 1,
+          "destructionPercentage": 48,
+          "order": 1,
+          "duration": 126
+        },
+        {
+          "attackerTag": "#DEMO0001",
+          "defenderTag": "#OPP0402",
+          "stars": 3,
+          "destructionPercentage": 100,
+          "order": 2,
+          "duration": 139
+        },
+        {
+          "attackerTag": "#DEMO0002",
+          "defenderTag": "#OPP0403",
+          "stars": 2,
+          "destructionPercentage": 76,
+          "order": 3,
+          "duration": 152
+        },
+        {
+          "attackerTag": "#DEMO0003",
+          "defenderTag": "#OPP0404",
+          "stars": 3,
+          "destructionPercentage": 100,
+          "order": 4,
+          "duration": 165
+        },
+        {
+          "attackerTag": "#DEMO0004",
+          "defenderTag": "#OPP0405",
+          "stars": 3,
+          "destructionPercentage": 100,
+          "order": 5,
+          "duration": 178
+        },
+        {
+          "attackerTag": "#DEMO0005",
+          "defenderTag": "#OPP0406",
+          "stars": 2,
+          "destructionPercentage": 76,
+          "order": 6,
+          "duration": 191
+        },
+        {
+          "attackerTag": "#DEMO0006",
+          "defenderTag": "#OPP0407",
+          "stars": 3,
+          "destructionPercentage": 100,
+          "order": 7,
+          "duration": 114
+        },
+        {
+          "attackerTag": "#DEMO0007",
+          "defenderTag": "#OPP0408",
+          "stars": 2,
+          "destructionPercentage": 76,
+          "order": 8,
+          "duration": 127
+        },
+        {
+          "attackerTag": "#DEMO0009",
+          "defenderTag": "#OPP0410",
+          "stars": 3,
+          "destructionPercentage": 100,
+          "order": 10,
+          "duration": 153
+        },
+        {
+          "attackerTag": "#DEMO0010",
+          "defenderTag": "#OPP0411",
+          "stars": 2,
+          "destructionPercentage": 76,
+          "order": 11,
+          "duration": 166
+        },
+        {
+          "attackerTag": "#DEMO0011",
+          "defenderTag": "#OPP0412",
+          "stars": 3,
+          "destructionPercentage": 100,
+          "order": 12,
+          "duration": 179
+        },
+        {
+          "attackerTag": "#DEMO0012",
+          "defenderTag": "#OPP0413",
+          "stars": 1,
+          "destructionPercentage": 48,
+          "order": 13,
+          "duration": 192
+        },
+        {
+          "attackerTag": "#DEMO0013",
+          "defenderTag": "#OPP0414",
+          "stars": 3,
+          "destructionPercentage": 100,
+          "order": 14,
+          "duration": 115
+        },
+        {
+          "attackerTag": "#DEMO0014",
+          "defenderTag": "#OPP0415",
+          "stars": 3,
+          "destructionPercentage": 100,
+          "order": 15,
+          "duration": 128
+        }
+      ]
+    },
+    {
+      "round": 5,
+      "opponent": {
+        "name": "Golden Warriors",
+        "tag": "#OPP0005"
+      },
+      "state": "warEnded",
+      "attacks": [
+        {
+          "attackerTag": "#DEMO0000",
+          "defenderTag": "#OPP0501",
+          "stars": 2,
+          "destructionPercentage": 76,
+          "order": 1,
+          "duration": 133
+        },
+        {
+          "attackerTag": "#DEMO0001",
+          "defenderTag": "#OPP0502",
+          "stars": 3,
+          "destructionPercentage": 100,
+          "order": 2,
+          "duration": 146
+        },
+        {
+          "attackerTag": "#DEMO0002",
+          "defenderTag": "#OPP0503",
+          "stars": 3,
+          "destructionPercentage": 100,
+          "order": 3,
+          "duration": 159
+        },
+        {
+          "attackerTag": "#DEMO0003",
+          "defenderTag": "#OPP0504",
+          "stars": 2,
+          "destructionPercentage": 76,
+          "order": 4,
+          "duration": 172
+        },
+        {
+          "attackerTag": "#DEMO0004",
+          "defenderTag": "#OPP0505",
+          "stars": 3,
+          "destructionPercentage": 100,
+          "order": 5,
+          "duration": 185
+        },
+        {
+          "attackerTag": "#DEMO0005",
+          "defenderTag": "#OPP0506",
+          "stars": 1,
+          "destructionPercentage": 48,
+          "order": 6,
+          "duration": 108
+        },
+        {
+          "attackerTag": "#DEMO0006",
+          "defenderTag": "#OPP0507",
+          "stars": 3,
+          "destructionPercentage": 100,
+          "order": 7,
+          "duration": 121
+        },
+        {
+          "attackerTag": "#DEMO0008",
+          "defenderTag": "#OPP0509",
+          "stars": 1,
+          "destructionPercentage": 48,
+          "order": 9,
+          "duration": 147
+        },
+        {
+          "attackerTag": "#DEMO0009",
+          "defenderTag": "#OPP0510",
+          "stars": 3,
+          "destructionPercentage": 100,
+          "order": 10,
+          "duration": 160
+        },
+        {
+          "attackerTag": "#DEMO0010",
+          "defenderTag": "#OPP0511",
+          "stars": 2,
+          "destructionPercentage": 76,
+          "order": 11,
+          "duration": 173
+        },
+        {
+          "attackerTag": "#DEMO0011",
+          "defenderTag": "#OPP0512",
+          "stars": 3,
+          "destructionPercentage": 100,
+          "order": 12,
+          "duration": 186
+        },
+        {
+          "attackerTag": "#DEMO0012",
+          "defenderTag": "#OPP0513",
+          "stars": 3,
+          "destructionPercentage": 100,
+          "order": 13,
+          "duration": 109
+        },
+        {
+          "attackerTag": "#DEMO0013",
+          "defenderTag": "#OPP0514",
+          "stars": 2,
+          "destructionPercentage": 76,
+          "order": 14,
+          "duration": 122
+        },
+        {
+          "attackerTag": "#DEMO0014",
+          "defenderTag": "#OPP0515",
+          "stars": 3,
+          "destructionPercentage": 100,
+          "order": 15,
+          "duration": 135
+        }
+      ]
+    },
+    {
+      "round": 6,
+      "opponent": {
+        "name": "Storm Legends",
+        "tag": "#OPP0006"
+      },
+      "state": "warEnded",
+      "attacks": [
+        {
+          "attackerTag": "#DEMO0000",
+          "defenderTag": "#OPP0601",
+          "stars": 3,
+          "destructionPercentage": 100,
+          "order": 1,
+          "duration": 140
+        },
+        {
+          "attackerTag": "#DEMO0001",
+          "defenderTag": "#OPP0602",
+          "stars": 1,
+          "destructionPercentage": 48,
+          "order": 2,
+          "duration": 153
+        },
+        {
+          "attackerTag": "#DEMO0002",
+          "defenderTag": "#OPP0603",
+          "stars": 3,
+          "destructionPercentage": 100,
+          "order": 3,
+          "duration": 166
+        },
+        {
+          "attackerTag": "#DEMO0003",
+          "defenderTag": "#OPP0604",
+          "stars": 2,
+          "destructionPercentage": 76,
+          "order": 4,
+          "duration": 179
+        },
+        {
+          "attackerTag": "#DEMO0004",
+          "defenderTag": "#OPP0605",
+          "stars": 3,
+          "destructionPercentage": 100,
+          "order": 5,
+          "duration": 192
+        },
+        {
+          "attackerTag": "#DEMO0005",
+          "defenderTag": "#OPP0606",
+          "stars": 3,
+          "destructionPercentage": 100,
+          "order": 6,
+          "duration": 115
+        },
+        {
+          "attackerTag": "#DEMO0007",
+          "defenderTag": "#OPP0608",
+          "stars": 3,
+          "destructionPercentage": 100,
+          "order": 8,
+          "duration": 141
+        },
+        {
+          "attackerTag": "#DEMO0008",
+          "defenderTag": "#OPP0609",
+          "stars": 2,
+          "destructionPercentage": 76,
+          "order": 9,
+          "duration": 154
+        },
+        {
+          "attackerTag": "#DEMO0009",
+          "defenderTag": "#OPP0610",
+          "stars": 3,
+          "destructionPercentage": 100,
+          "order": 10,
+          "duration": 167
+        },
+        {
+          "attackerTag": "#DEMO0010",
+          "defenderTag": "#OPP0611",
+          "stars": 3,
+          "destructionPercentage": 100,
+          "order": 11,
+          "duration": 180
+        },
+        {
+          "attackerTag": "#DEMO0011",
+          "defenderTag": "#OPP0612",
+          "stars": 2,
+          "destructionPercentage": 76,
+          "order": 12,
+          "duration": 193
+        },
+        {
+          "attackerTag": "#DEMO0012",
+          "defenderTag": "#OPP0613",
+          "stars": 3,
+          "destructionPercentage": 100,
+          "order": 13,
+          "duration": 116
+        },
+        {
+          "attackerTag": "#DEMO0013",
+          "defenderTag": "#OPP0614",
+          "stars": 1,
+          "destructionPercentage": 48,
+          "order": 14,
+          "duration": 129
+        },
+        {
+          "attackerTag": "#DEMO0014",
+          "defenderTag": "#OPP0615",
+          "stars": 3,
+          "destructionPercentage": 100,
+          "order": 15,
+          "duration": 142
+        }
+      ]
+    },
+    {
+      "round": 7,
+      "opponent": {
+        "name": "Iron Kings",
+        "tag": "#OPP0007"
+      },
+      "state": "warEnded",
+      "attacks": [
+        {
+          "attackerTag": "#DEMO0000",
+          "defenderTag": "#OPP0701",
+          "stars": 3,
+          "destructionPercentage": 100,
+          "order": 1,
+          "duration": 147
+        },
+        {
+          "attackerTag": "#DEMO0001",
+          "defenderTag": "#OPP0702",
+          "stars": 2,
+          "destructionPercentage": 76,
+          "order": 2,
+          "duration": 160
+        },
+        {
+          "attackerTag": "#DEMO0002",
+          "defenderTag": "#OPP0703",
+          "stars": 3,
+          "destructionPercentage": 100,
+          "order": 3,
+          "duration": 173
+        },
+        {
+          "attackerTag": "#DEMO0003",
+          "defenderTag": "#OPP0704",
+          "stars": 3,
+          "destructionPercentage": 100,
+          "order": 4,
+          "duration": 186
+        },
+        {
+          "attackerTag": "#DEMO0004",
+          "defenderTag": "#OPP0705",
+          "stars": 2,
+          "destructionPercentage": 76,
+          "order": 5,
+          "duration": 109
+        },
+        {
+          "attackerTag": "#DEMO0006",
+          "defenderTag": "#OPP0707",
+          "stars": 1,
+          "destructionPercentage": 48,
+          "order": 7,
+          "duration": 135
+        },
+        {
+          "attackerTag": "#DEMO0007",
+          "defenderTag": "#OPP0708",
+          "stars": 3,
+          "destructionPercentage": 100,
+          "order": 8,
+          "duration": 148
+        },
+        {
+          "attackerTag": "#DEMO0008",
+          "defenderTag": "#OPP0709",
+          "stars": 3,
+          "destructionPercentage": 100,
+          "order": 9,
+          "duration": 161
+        },
+        {
+          "attackerTag": "#DEMO0009",
+          "defenderTag": "#OPP0710",
+          "stars": 1,
+          "destructionPercentage": 48,
+          "order": 10,
+          "duration": 174
+        },
+        {
+          "attackerTag": "#DEMO0010",
+          "defenderTag": "#OPP0711",
+          "stars": 3,
+          "destructionPercentage": 100,
+          "order": 11,
+          "duration": 187
+        },
+        {
+          "attackerTag": "#DEMO0011",
+          "defenderTag": "#OPP0712",
+          "stars": 2,
+          "destructionPercentage": 76,
+          "order": 12,
+          "duration": 110
+        },
+        {
+          "attackerTag": "#DEMO0012",
+          "defenderTag": "#OPP0713",
+          "stars": 3,
+          "destructionPercentage": 100,
+          "order": 13,
+          "duration": 123
+        },
+        {
+          "attackerTag": "#DEMO0013",
+          "defenderTag": "#OPP0714",
+          "stars": 3,
+          "destructionPercentage": 100,
+          "order": 14,
+          "duration": 136
+        },
+        {
+          "attackerTag": "#DEMO0014",
+          "defenderTag": "#OPP0715",
+          "stars": 2,
+          "destructionPercentage": 76,
+          "order": 15,
+          "duration": 149
+        }
       ]
     }
   ],
   "members": [
-    { "tag": "#AAA111", "stars": 5 },
-    { "tag": "#BBB222", "stars": 2 },
-    { "tag": "#CCC333", "stars": 1 }
+    {
+      "tag": "#DEMO0000",
+      "name": "Balado King",
+      "stars": 15
+    },
+    {
+      "tag": "#DEMO0001",
+      "name": "Sambal Pedas",
+      "stars": 16
+    },
+    {
+      "tag": "#DEMO0002",
+      "name": "Naga Merah",
+      "stars": 19
+    },
+    {
+      "tag": "#DEMO0003",
+      "name": "Raja Bintang",
+      "stars": 17
+    },
+    {
+      "tag": "#DEMO0004",
+      "name": "Kapten War",
+      "stars": 17
+    },
+    {
+      "tag": "#DEMO0005",
+      "name": "Api Biru",
+      "stars": 15
+    },
+    {
+      "tag": "#DEMO0006",
+      "name": "Garuda",
+      "stars": 13
+    },
+    {
+      "tag": "#DEMO0007",
+      "name": "Petir",
+      "stars": 15
+    },
+    {
+      "tag": "#DEMO0008",
+      "name": "Kopi Hitam",
+      "stars": 14
+    },
+    {
+      "tag": "#DEMO0009",
+      "name": "Macan",
+      "stars": 15
+    },
+    {
+      "tag": "#DEMO0010",
+      "name": "Bintang Tiga",
+      "stars": 16
+    },
+    {
+      "tag": "#DEMO0011",
+      "name": "Ksatria",
+      "stars": 14
+    },
+    {
+      "tag": "#DEMO0012",
+      "name": "Tornado",
+      "stars": 18
+    },
+    {
+      "tag": "#DEMO0013",
+      "name": "Jagoan",
+      "stars": 17
+    },
+    {
+      "tag": "#DEMO0014",
+      "name": "Laskar",
+      "stars": 17
+    }
   ]
 }

@@ -93,7 +93,8 @@ const renderStatTile = ({ label, value, color = 'text-white' }) => `
 
 // Area chart (plain SVG, no library). points: [{ label, value }]
 // stats: [{ label, value, color? }] shown as small tiles under the chart
-export function renderAreaChart({ title, subtitle, points, stats = [], note = '', extraClass = '' }) {
+// bare: draw only the chart (no card around it) so several charts can share one card
+export function renderAreaChart({ title, subtitle, points, stats = [], note = '', extraClass = '', bare = false }) {
     if (points.length < 2) return '';
 
     const W = 340, H = 160, L = 34, R = 26, T = 24, B = 26;
@@ -114,7 +115,7 @@ export function renderAreaChart({ title, subtitle, points, stats = [], note = ''
     const axis = 'fill="#8B8F98" font-size="9"';
 
     return `
-        <div class="w-full bg-[#1a1a1a] border border-[#2A2A2A] rounded-xl p-3 ${extraClass}">
+        <div class="w-full ${bare ? '' : 'bg-[#1a1a1a] border border-[#2A2A2A] rounded-xl p-3'} ${extraClass}">
             <h4 class="medieval text-[11px] font-bold text-[#D4A72C] uppercase tracking-wide">${title}</h4>
             <p class="text-[10px] text-[#8B8F98] mb-2">${subtitle}</p>
             <svg viewBox="0 0 ${W} ${H}" class="w-full" role="img" aria-label="${subtitle}">
@@ -127,6 +128,76 @@ export function renderAreaChart({ title, subtitle, points, stats = [], note = ''
                 ${pts.map(([px, py]) => `<circle cx="${px}" cy="${py}" r="3.5" fill="#3B82F6"/>`).join('')}
                 ${pts.map(([px, py], i) => `<text x="${px}" y="${py - 8}" text-anchor="middle" fill="#D1D5DB" font-size="9" font-weight="600">${points[i].value}</text>`).join('')}
                 ${points.map((p, i) => `<text x="${x(i)}" y="${H - 8}" text-anchor="middle" ${axis}>${p.label}</text>`).join('')}
+            </svg>
+            ${stats.length ? `<div class="grid ${STAT_COLS[stats.length] || 'grid-cols-3'} gap-1 mt-2">${stats.map(renderStatTile).join('')}</div>` : ''}
+            ${note ? `<p class="text-[8px] text-[#6B7280] mt-1.5">${note}</p>` : ''}
+        </div>`;
+}
+
+// Two series on one chart, each with its own scale: `a` on the left axis, `b` on the right axis.
+// a / b: { name, color, labelColor, points: [{ date: 'YYYY-MM-DD', value }] }
+export function renderCombinedChart({ title, subtitle, a, b, stats = [], note = '' }) {
+    const pa = a.points.filter((p) => p.date), pb = b.points.filter((p) => p.date);
+    if (pa.length + pb.length < 2) return '';
+
+    const W = 340, H = 190, L = 34, R = 34, T = 34, B = 26;
+    const time = (d) => new Date(d + 'T12:00:00').getTime();
+    const dates = [...new Set([...pa, ...pb].map((p) => p.date))].sort();
+    const t0 = time(dates[0]), t1 = time(dates[dates.length - 1]);
+    const x = (d) => (t1 === t0 ? (L + W - R) / 2 : L + ((time(d) - t0) / (t1 - t0)) * (W - L - R));
+
+    const axis = 'font-size="9"';
+    const series = (s, pts, side) => {
+        if (!pts.length) return '';
+        let min = Math.min(...pts.map((p) => p.value)), max = Math.max(...pts.map((p) => p.value));
+        if (min === max) { min -= 1; max += 1; }
+        const y = (v) => T + ((max - v) * (H - T - B)) / (max - min);
+        const P = pts.map((p) => [x(p.date), y(p.value), p.value]);
+
+        const line = P.map(([px, py], i) => {
+            if (i === 0) return `M${px},${py}`;
+            const mid = (P[i - 1][0] + px) / 2;
+            return `C${mid},${P[i - 1][1]} ${mid},${py} ${px},${py}`;
+        }).join(' ');
+        const area = P.length > 1 && side === 'left'
+            ? `<path d="${line} L${P[P.length - 1][0]},${H - B} L${P[0][0]},${H - B} Z" fill="${s.color}" fill-opacity="0.15"/>` : '';
+
+        const ax = side === 'left' ? L - 6 : W - R + 6;
+        const anchor = side === 'left' ? 'end' : 'start';
+        // blue labels above their points, red below (above when a point sits on the bottom line)
+        const labelY = (py) => (side === 'left' || py + 15 > H - B - 2 ? py - 8 : py + 15);
+        return `
+            <text x="${ax}" y="${y(max) + 3}" text-anchor="${anchor}" fill="${s.color}" ${axis}>${max}</text>
+            <text x="${ax}" y="${y(min) + 3}" text-anchor="${anchor}" fill="${s.color}" ${axis}>${min}</text>
+            ${area}
+            ${P.length > 1 ? `<path d="${line}" fill="none" stroke="${s.color}" stroke-width="2"/>` : ''}
+            ${P.map(([px, py]) => `<circle cx="${px}" cy="${py}" r="3.5" fill="${s.color}"/>`).join('')}
+            ${P.map(([px, py, v]) => `<text x="${px}" y="${labelY(py)}" text-anchor="middle" fill="${s.labelColor}" font-size="9" font-weight="600">${v}</text>`).join('')}`;
+    };
+
+    // Day numbers along the bottom; the month is added on the first date and when it changes
+    const xLabels = dates.map((d, i) => {
+        const date = new Date(d + 'T12:00:00');
+        const monthChanged = i === 0 || date.getMonth() !== new Date(dates[i - 1] + 'T12:00:00').getMonth();
+        const text = monthChanged ? date.toLocaleDateString('en-US', { day: 'numeric', month: 'short' }) : date.getDate();
+        return `<text x="${x(d)}" y="${H - 8}" text-anchor="middle" fill="#8B8F98" ${axis}>${text}</text>`;
+    }).join('');
+
+    const legend = [a, b].map((s, i) => `
+        <circle cx="${L + i * 96 + 4}" cy="12" r="4" fill="${s.color}"/>
+        <text x="${L + i * 96 + 12}" y="15" fill="#D1D5DB" ${axis}>${s.name}</text>`).join('');
+
+    return `
+        <div class="w-full bg-[#1a1a1a] border border-[#2A2A2A] rounded-xl p-3">
+            <h4 class="medieval text-[11px] font-bold text-[#D4A72C] uppercase tracking-wide">${title}</h4>
+            <p class="text-[10px] text-[#8B8F98] mb-2">${subtitle}</p>
+            <svg viewBox="0 0 ${W} ${H}" class="w-full" role="img" aria-label="${subtitle}">
+                ${legend}
+                <line x1="${L}" y1="${T}" x2="${W - R}" y2="${T}" class="chart-grid"/>
+                <line x1="${L}" y1="${H - B}" x2="${W - R}" y2="${H - B}" class="chart-grid"/>
+                ${series(a, pa, 'left')}
+                ${series(b, pb, 'right')}
+                ${xLabels}
             </svg>
             ${stats.length ? `<div class="grid ${STAT_COLS[stats.length] || 'grid-cols-3'} gap-1 mt-2">${stats.map(renderStatTile).join('')}</div>` : ''}
             ${note ? `<p class="text-[8px] text-[#6B7280] mt-1.5">${note}</p>` : ''}
