@@ -1,0 +1,21 @@
+# Balado: satu Worker untuk website, API, D1, dan Cron.
+name = "balado"
+main = "worker.js"
+compatibility_date = "2026-10-29"
+
+[assets]
+directory = "./public"
+binding = "ASSETS"
+run_worker_first = ["/api/*", "/health", "/clan", "/currentwar", "/raid", "/cwl", "/members/history", "/war/history", "/cwl/history", "/cwl/groups", "/cwl/wars", "/raid/history"]
+
+[vars]
+CLAN_TAG = "#2RVRP900V"
+COC_API_BASE = "https://cocproxy.royaleapi.dev/v1"
+
+[[d1_databases]]
+binding = "DB"
+database_name = "balado-archive"
+database_id = "ISI_DATABASE_ID_D1_MILIKMU"
+
+[triggers]
+crons = ["*/15 * * * *"]
