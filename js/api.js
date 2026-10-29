@@ -1,8 +1,10 @@
 import { dateFrom } from './constants.js';
 
 // Worker proxy Clash of Clans
-export const LIVE_API_URL = 'https://balado-war.sambalclash.workers.dev';
+export const LIVE_API_URL = 'https://balado.sambalclash.workers.dev';
+export const ACTIVITY_API_URL = LIVE_API_URL;
 const LIVE_TIMEOUT_MS = 15000;
+const ACTIVITY_CACHE_TTL_MS = 60_000;
 
 // Catatan setiap panggilan live; ditampilkan di halaman Settings
 const liveLog = [];
@@ -19,9 +21,13 @@ const logLive = (path, status, note = '') => {
 export const getLiveLog = () => [...liveLog];
 
 const liveCache = new Map();
+let activityCacheTime = 0;
 
 // Hapus cache agar Refresh mengambil data terbaru
-export const clearLiveCache = () => liveCache.clear();
+export const clearLiveCache = () => {
+    liveCache.clear();
+    activityCacheTime = 0;
+};
 
 function fetchLive(path, baseUrl = LIVE_API_URL) {
     if (!baseUrl) return Promise.resolve(null);
@@ -30,7 +36,7 @@ function fetchLive(path, baseUrl = LIVE_API_URL) {
     const cacheKey = `${baseUrl.replace(/\/+$/, '')}${path}`;
 
     if (!liveCache.has(cacheKey)) {
-        liveCache.set(cacheKey, (async () => {
+        const request = (async () => {
             const ctl = new AbortController();
             const timer = setTimeout(() => ctl.abort(), LIVE_TIMEOUT_MS);
 
@@ -51,9 +57,9 @@ function fetchLive(path, baseUrl = LIVE_API_URL) {
                     return null;
                 }
 
+                const data = await res.json();
                 logLive(path, 'OK');
-
-                return await res.json();
+                return data;
 
             } catch (e) {
                 logLive(
@@ -67,7 +73,9 @@ function fetchLive(path, baseUrl = LIVE_API_URL) {
             } finally {
                 clearTimeout(timer);
             }
-        })());
+        })();
+
+        liveCache.set(cacheKey, request);
     }
 
     return liveCache.get(cacheKey);
@@ -225,10 +233,19 @@ export async function fetchRaidData(filename) {
 // MEMBER ACTIVITY — CLOUDFLARE D1
 // ─────────────────────────────────────────────
 
-// Mengambil aktivitas dari Worker balado-war,
-// bukan dari Worker coc-proxy-sambal.
-export const fetchActivity = () =>
-    fetchLive('/activity', ACTIVITY_API_URL);
+// Mengambil aktivitas dari Worker api-tracker.
+// Cache /activity diperbarui setelah maksimal 60 detik.
+export async function fetchActivity() {
+    const cacheKey = `${ACTIVITY_API_URL.replace(/\/+$/, '')}/activity`;
+    const now = Date.now();
+
+    if (!activityCacheTime || now - activityCacheTime >= ACTIVITY_CACHE_TTL_MS) {
+        liveCache.delete(cacheKey);
+        activityCacheTime = now;
+    }
+
+    return fetchLive('/activity', ACTIVITY_API_URL);
+}
 
 // ─────────────────────────────────────────────
 // CWL
