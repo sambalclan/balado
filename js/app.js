@@ -1,5 +1,5 @@
-import { fetchClanData, fetchClanHistory, fetchLatestRaid, fetchLatestCwl, fetchWarIndex, fetchWarData, fetchRaidIndex, fetchRaidData, clearLiveCache } from './api.js';
-import { setWarData, setClanHistory, setRaidData, setRaids, setCwlData } from './state.js';
+import { fetchClanData, fetchClanHistory, fetchLatestRaid, fetchLatestCwl, fetchActivity, fetchWarIndex, fetchWarData, fetchRaidIndex, fetchRaidData, clearLiveCache } from './api.js';
+import { setWarData, setClanHistory, setRaidData, setRaids, setCwlData, setActivity } from './state.js';
 import { renderPillTabs, setPillActive } from './constants.js';
 import { renderAbout, renderSettings } from './render.js';
 import { renderMembers } from './members.js';
@@ -158,18 +158,22 @@ async function refreshAll() {
     clearLiveCache();
 
     try {
-        const [clan, history, raid, cwl] = await Promise.allSettled([
-            fetchClanData(), fetchClanHistory(), fetchLatestRaid(), fetchLatestCwl(),
+        const [clan, raid, cwl, activity] = await Promise.allSettled([
+            fetchClanData(), fetchLatestRaid(), fetchLatestCwl(), fetchActivity(),
             loadRaidWeeks(), loadWarData(), // these render their own pages
         ]);
         // Keep the old data when a request fails
         if (clan.status === 'fulfilled' && clan.value) latestClanData = clan.value;
-        if (history.status === 'fulfilled') setClanHistory(history.value);
         if (raid.status === 'fulfilled') setRaidData(raid.value);
         if (cwl.status === 'fulfilled') setCwlData(cwl.value);
+        if (activity.status === 'fulfilled') setActivity(activity.value);
 
         renderClanViews();
         if (warMode === 'cwl') renderCwl();
+
+        // Membership history comes last: it is many small file downloads
+        const history = await Promise.allSettled([fetchClanHistory()]);
+        if (history[0].status === 'fulfilled') { setClanHistory(history[0].value); renderClanViews(); }
     } finally {
         refreshing = false;
         setRefreshing(false); // the header was re-rendered, so look the button up again
@@ -182,9 +186,9 @@ async function init() {
         renderClanViews();
         switchView(currentView);
 
-        // Load membership history, capital gold and CWL in the background, then re-render
-        Promise.allSettled([fetchClanHistory(), fetchLatestRaid(), fetchLatestCwl()]).then(([history, raid, cwl]) => {
-            if (history.status === 'fulfilled') setClanHistory(history.value);
+        // Load capital gold and CWL in the background, then re-render
+        Promise.allSettled([fetchLatestRaid(), fetchLatestCwl(), fetchActivity()]).then(([raid, cwl, activity]) => {
+            if (activity.status === 'fulfilled') setActivity(activity.value);
             if (raid.status === 'fulfilled') setRaidData(raid.value);
             if (cwl.status === 'fulfilled') setCwlData(cwl.value);
             renderClanViews();
@@ -193,6 +197,9 @@ async function init() {
 
         await loadWarData();
         renderClanViews();
+
+        // Membership history last, so its file downloads never delay the live data above
+        fetchClanHistory().then((history) => { setClanHistory(history); renderClanViews(); }).catch(() => {});
     } catch { /* clan data unavailable */ }
 }
 
