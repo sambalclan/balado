@@ -7,14 +7,12 @@ export const state = {
     raids: [],      // all raid weekends (newest first)
     cwl: null,      // latest Clan War League season
     history: [],    // members per day
-    activity: null, // last active time per member (from the Worker's D1)
 };
 
 export const setWarData = (war) => { state.war = war; };
 export const setRaidData = (raid) => { state.raid = raid || null; };
 export const setRaids = (raids) => { state.raids = raids || []; };
 export const setCwlData = (cwl) => { state.cwl = cwl || null; };
-export const setActivity = (activity) => { state.activity = activity || null; };
 export const setClanHistory = (history) => { state.history = history || []; };
 
 // All raid weekends; falls back to the latest one while the full list is still loading

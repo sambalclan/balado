@@ -223,7 +223,7 @@ function renderWarDetail(w) {
 
     const attacked = members.filter((m) => (m.attacks || []).length > 0)
         .sort((a, b) => warStars(b) - warStars(a) || (a.mapPosition || 0) - (b.mapPosition || 0));
-    const idle = members.filter((m) => !(m.attacks || []).length);
+    const notAttacked = members.filter((m) => !(m.attacks || []).length);
 
     const used = members.reduce((n, m) => n + (m.attacks || []).length, 0);
     const totalStars = members.reduce((n, m) => n + warStars(m), 0);
@@ -247,7 +247,7 @@ function renderWarDetail(w) {
             ${renderWarStat('Missed', ended ? missed : '-', ended && missed ? 'text-red-400' : 'text-white')}
         </div>
         ${renderWarMemberGroup('Attacked', 'bg-green-500', attacked, ended)}
-        ${renderWarMemberGroup('Not attacked', ended ? 'bg-red-500' : 'bg-[#6B7280]', idle, ended)}
+        ${renderWarMemberGroup('Not attacked', ended ? 'bg-red-500' : 'bg-[#6B7280]', notAttacked, ended)}
         </div>
     `);
 }
@@ -393,9 +393,9 @@ const renderRaidMemberRow = (m, i) => {
     const info = (state.clan?.memberList || []).find((c) => c.tag === m.tag) || {};
     const th = info.townHallLevel;
     const limit = (m.attackLimit || 0) + (m.bonusAttackLimit || 0);
-    const idle = !(m.attacks > 0);
+    const noAttack = !(m.attacks > 0);
     return `
-    <div class="row-in flex items-center gap-3 px-3 py-2 ${i > 0 ? 'border-t border-[#2A2A2A]' : ''} ${idle ? 'opacity-50' : ''}" style="--i:${Math.min(i, 14)}">
+    <div class="row-in flex items-center gap-3 px-3 py-2 ${i > 0 ? 'border-t border-[#2A2A2A]' : ''} ${noAttack ? 'opacity-50' : ''}" style="--i:${Math.min(i, 14)}">
         <span class="w-5 text-[10px] font-mono text-[#6B7280]">${i + 1}</span>
         ${th ? `<img src="${getTHImage(th)}" class="w-9 h-9 shrink-0 object-contain" alt="TH${th}"
                      onerror="this.style.visibility='hidden'">` : ''}

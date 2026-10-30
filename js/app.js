@@ -1,5 +1,5 @@
-import { fetchClanData, fetchClanHistory, fetchLatestRaid, fetchLatestCwl, fetchActivity, fetchWarIndex, fetchWarData, fetchRaidIndex, fetchRaidData, clearLiveCache } from './api.js';
-import { setWarData, setClanHistory, setRaidData, setRaids, setCwlData, setActivity } from './state.js';
+import { fetchClanData, fetchClanHistory, fetchLatestRaid, fetchLatestCwl, fetchWarIndex, fetchWarData, fetchRaidIndex, fetchRaidData, clearLiveCache } from './api.js';
+import { setWarData, setClanHistory, setRaidData, setRaids, setCwlData } from './state.js';
 import { renderPillTabs, setPillActive } from './constants.js';
 import { renderAbout, renderSettings } from './render.js';
 import { renderMembers } from './members.js';
@@ -158,15 +158,14 @@ async function refreshAll() {
     clearLiveCache();
 
     try {
-        const [clan, raid, cwl, activity] = await Promise.allSettled([
-            fetchClanData(), fetchLatestRaid(), fetchLatestCwl(), fetchActivity(),
+        const [clan, raid, cwl] = await Promise.allSettled([
+            fetchClanData(), fetchLatestRaid(), fetchLatestCwl(),
             loadRaidWeeks(), loadWarData(), // these render their own pages
         ]);
         // Keep the old data when a request fails
         if (clan.status === 'fulfilled' && clan.value) latestClanData = clan.value;
         if (raid.status === 'fulfilled') setRaidData(raid.value);
         if (cwl.status === 'fulfilled') setCwlData(cwl.value);
-        if (activity.status === 'fulfilled') setActivity(activity.value);
 
         renderClanViews();
         if (warMode === 'cwl') renderCwl();
@@ -187,8 +186,7 @@ async function init() {
         switchView(currentView);
 
         // Load capital gold and CWL in the background, then re-render
-        Promise.allSettled([fetchLatestRaid(), fetchLatestCwl(), fetchActivity()]).then(([raid, cwl, activity]) => {
-            if (activity.status === 'fulfilled') setActivity(activity.value);
+        Promise.allSettled([fetchLatestRaid(), fetchLatestCwl()]).then(([raid, cwl]) => {
             if (raid.status === 'fulfilled') setRaidData(raid.value);
             if (cwl.status === 'fulfilled') setCwlData(cwl.value);
             renderClanViews();
