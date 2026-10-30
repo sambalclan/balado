@@ -3,11 +3,19 @@ main = "worker.js"
 compatibility_date = "2026-10-29"
 workers_dev = true
 
-[assets]
-directory = "./public"
+[[assets]
+directory = "."
 binding = "ASSETS"
-run_worker_first = ["/api/*", "/health", "/clan", "/currentwar", "/raid", "/activity", "/cwl", "/cwl/groups"]
-
+run_worker_first = [
+    "/api/*",
+    "/health",
+    "/clan",
+    "/currentwar",
+    "/raid",
+    "/activity",
+    "/cwl",
+    "/cwl/groups"
+]
 [triggers]
 crons = ["*/10 * * * *"]
 
