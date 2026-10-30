@@ -1,0 +1,12 @@
+name = "balado"
+main = "worker.js"
+compatibility_date = "2026-10-29"
+workers_dev = true
+
+[triggers]
+crons = ["*/10 * * * *"]
+
+[[d1_databases]]
+binding = "DB"
+database_name = "coc-stats"
+database_id = "GANTI_DENGAN_DATABASE_ID_ASLI"

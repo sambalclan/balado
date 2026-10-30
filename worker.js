@@ -1,384 +1,169 @@
-import { dateFrom } from './constants.js';
-
-// ─────────────────────────────────────────────
-// API CONFIGURATION
-// ─────────────────────────────────────────────
-
-export const LIVE_API_URL =
-    'https://balado.sambalclash.workers.dev';
-
-export const ACTIVITY_API_URL =
-    'https://api-tracker.sambalclash.workers.dev';
-
-const LIVE_TIMEOUT_MS = 15000;
-const ACTIVITY_CACHE_TTL_MS = 60_000;
-
-// ─────────────────────────────────────────────
-// LIVE LOG
-// ─────────────────────────────────────────────
-
-const liveLog = [];
-
-const logLive = (path, status, note = '') => {
-    liveLog.push({
-        time: new Date().toLocaleTimeString('id-ID'),
-        path,
-        status,
-        note
-    });
-
-    if (liveLog.length > 100) {
-        liveLog.shift();
-    }
+const BASE = 'https://cocproxy.royaleapi.dev/v1';
+const TAG = '#2RVRP900V';
+const TRACKER = 'https://api-tracker.sambalclash.workers.dev';
+const CORS = {
+  'Access-Control-Allow-Origin': '*',
+  'Access-Control-Allow-Methods': 'GET, OPTIONS',
+  'Access-Control-Allow-Headers': 'Content-Type',
+  'Cache-Control': 'no-store',
 };
+const json = (value, status = 200) => new Response(JSON.stringify(value), {
+  status, headers: { ...CORS, 'Content-Type': 'application/json; charset=utf-8' }
+});
+const message = e => String(e?.message || e);
 
-export const getLiveLog = () => [...liveLog];
-
-// ─────────────────────────────────────────────
-// CACHE
-// ─────────────────────────────────────────────
-
-const liveCache = new Map();
-let activityCacheTime = 0;
-
-export const clearLiveCache = () => {
-    liveCache.clear();
-    activityCacheTime = 0;
-};
-
-// ─────────────────────────────────────────────
-// LIVE FETCH
-// ─────────────────────────────────────────────
-
-function fetchLive(path, baseUrl = LIVE_API_URL) {
-    if (!baseUrl) return Promise.resolve(null);
-
-    const cacheKey =
-        `${baseUrl.replace(/\/+$/, '')}${path}`;
-
-    if (!liveCache.has(cacheKey)) {
-        const request = (async () => {
-            const controller = new AbortController();
-
-            const timer = setTimeout(
-                () => controller.abort(),
-                LIVE_TIMEOUT_MS
-            );
-
-            try {
-                const response = await fetch(cacheKey, {
-                    signal: controller.signal,
-                    headers: {
-                        Accept: 'application/json'
-                    }
-                });
-
-                if (!response.ok) {
-                    const body = await response.text()
-                        .catch(() => '');
-
-                    logLive(
-                        path,
-                        `HTTP ${response.status}`,
-                        body.slice(0, 90)
-                    );
-
-                    return null;
-                }
-
-                const data = await response.json();
-
-                logLive(path, 'OK');
-                return data;
-
-            } catch (error) {
-                logLive(
-                    path,
-                    'GAGAL',
-                    `${error.name}: ${error.message}`
-                );
-
-                return null;
-
-            } finally {
-                clearTimeout(timer);
-            }
-        })();
-
-        liveCache.set(cacheKey, request);
-
-        request.then(result => {
-            if (result === null) {
-                liveCache.delete(cacheKey);
-            }
-        });
-    }
-
-    return liveCache.get(cacheKey);
+async function init(db) {
+  await db.batch([
+    db.prepare('CREATE TABLE IF NOT EXISTS latest (kind TEXT PRIMARY KEY, payload TEXT NOT NULL, updated_at TEXT NOT NULL)'),
+    db.prepare('CREATE TABLE IF NOT EXISTS history (kind TEXT NOT NULL, record_id TEXT NOT NULL, payload TEXT NOT NULL, updated_at TEXT NOT NULL, PRIMARY KEY(kind, record_id))'),
+    db.prepare('CREATE INDEX IF NOT EXISTS history_kind_updated ON history(kind, updated_at DESC)'),
+    db.prepare('CREATE TABLE IF NOT EXISTS member_activity (tag TEXT PRIMARY KEY, first_seen TEXT NOT NULL, last_active TEXT)'),
+  ]);
 }
-
-// ─────────────────────────────────────────────
-// LOCAL JSON FALLBACK
-// ─────────────────────────────────────────────
-
-async function fetchData(path) {
-    const separator = path.includes('?') ? '&' : '?';
-
-    const response = await fetch(
-        `${path}${separator}t=${Date.now()}`
-    );
-
-    if (!response.ok) {
-        throw new Error(
-            `Failed to fetch ${path}: ${response.status}`
-        );
-    }
-
-    return response.json();
+async function coc(env, path) {
+  if (!env.COC_API_TOKEN) throw Error('COC_API_TOKEN missing');
+  const r = await fetch(`${BASE}${path}`, {
+    headers: { Authorization: `Bearer ${env.COC_API_TOKEN}`, Accept: 'application/json' },
+    signal: AbortSignal.timeout(15000)
+  });
+  if (!r.ok) throw Error(`CoC ${r.status} ${path}: ${(await r.text()).slice(0, 150)}`);
+  return r.json();
 }
-
-const fetchIndex = kind =>
-    fetchData(`data/${kind}_stats_index.json`);
-
-const fetchStats = (kind, filename) =>
-    fetchData(`data/${kind}_stats/${filename}`);
-
-async function fetchLatest(kind) {
-    const index = await fetchIndex(kind);
-
-    for (const filename of index || []) {
-        try {
-            return await fetchStats(kind, filename);
-        } catch {
-            // Coba file berikutnya
+async function latest(db, kind, payload, now) {
+  await db.prepare('INSERT INTO latest(kind,payload,updated_at) VALUES(?,?,?) ON CONFLICT(kind) DO UPDATE SET payload=excluded.payload,updated_at=excluded.updated_at')
+    .bind(kind, JSON.stringify(payload), now).run();
+}
+async function history(db, kind, id, payload, now) {
+  await db.prepare('INSERT INTO history(kind,record_id,payload,updated_at) VALUES(?,?,?,?) ON CONFLICT(kind,record_id) DO UPDATE SET payload=excluded.payload,updated_at=excluded.updated_at')
+    .bind(kind, id, JSON.stringify(payload), now).run();
+}
+async function readLatest(db, kind) {
+  const row = await db.prepare('SELECT payload FROM latest WHERE kind=?').bind(kind).first();
+  return row ? JSON.parse(row.payload) : null;
+}
+async function readHistory(db, kind, limit) {
+  const { results } = await db.prepare('SELECT record_id,payload,updated_at FROM history WHERE kind=? ORDER BY updated_at DESC LIMIT ?')
+    .bind(kind, limit).all();
+  return { items: results.map(r => ({ id: r.record_id, updatedAt: r.updated_at, data: JSON.parse(r.payload) })) };
+}
+async function refreshClanWarRaid(env, now) {
+  const tag = encodeURIComponent(TAG);
+  const paths = {
+    clan: `/clans/${tag}`,
+    currentwar: `/clans/${tag}/currentwar`,
+    raid: `/clans/${tag}/capitalraidseasons?limit=5`
+  };
+  return Promise.all(Object.entries(paths).map(async ([kind, path]) => {
+    try {
+      const raw = await coc(env, path);
+      const data = kind === 'raid' ? raw.items?.[0] ?? null : raw;
+      await latest(env.DB, kind, data, now);
+      if (kind === 'currentwar' && data?.startTime && data.state !== 'notInWar') {
+        await history(env.DB, 'war', `${TAG}:${data.startTime}`, data, now);
+      }
+      if (kind === 'raid') {
+        for (const item of raw.items || []) {
+          if (item.startTime) await history(env.DB, 'raid', item.startTime, item, now);
         }
-    }
-
-    return null;
+      }
+      return { kind, ok: true };
+    } catch (e) { return { kind, ok: false, error: message(e) }; }
+  }));
 }
-
-// ─────────────────────────────────────────────
-// CLAN
-// ─────────────────────────────────────────────
-
-export async function fetchClanData() {
-    const clan =
-        (await fetchLive('/clan')) ||
-        (await fetchLatest('clan').catch(() => null));
-
-    if (!clan) {
-        throw new Error(
-            'Clan data unavailable from Worker and local files.'
-        );
-    }
-
-    return clan;
+async function refreshActivity(env, now) {
+  // Import data tracker lama tanpa menghapus firstSeen atau lastActive yang sudah ada.
+  // Aktivitas dari tracker merupakan deteksi perubahan, bukan login langsung.
+  const r = await fetch(`${TRACKER}/activity`, { signal: AbortSignal.timeout(12000) });
+  if (!r.ok) throw Error(`Tracker HTTP ${r.status}`);
+  const raw = await r.json();
+  if (!Array.isArray(raw.members)) throw Error('Tracker response missing members[]');
+  for (const m of raw.members) {
+    if (!m.tag) continue;
+    await env.DB.prepare(`INSERT INTO member_activity(tag,first_seen,last_active) VALUES(?,?,?)
+      ON CONFLICT(tag) DO UPDATE SET
+      first_seen=CASE WHEN excluded.first_seen < member_activity.first_seen THEN excluded.first_seen ELSE member_activity.first_seen END,
+      last_active=CASE WHEN excluded.last_active IS NULL THEN member_activity.last_active
+        WHEN member_activity.last_active IS NULL OR excluded.last_active > member_activity.last_active THEN excluded.last_active
+        ELSE member_activity.last_active END`)
+      .bind(m.tag, m.firstSeen || now, m.lastActive || null).run();
+  }
+  return { kind: 'activity', ok: true, count: raw.members.length };
 }
-
-export async function fetchClanHistory(days = 7) {
-    const perDay = new Map();
-
-    const index = await fetchIndex('clan')
-        .catch(() => []);
-
-    for (const filename of index || []) {
-        const day = dateFrom(filename);
-
-        if (!day || perDay.has(day)) continue;
-
-        try {
-            const data = await fetchStats('clan', filename);
-
-            perDay.set(day, {
-                members:
-                    data.members ??
-                    data.memberList?.length ??
-                    0
-            });
-        } catch {
-            // Lewati snapshot rusak
-        }
-
-        if (perDay.size >= days) break;
-    }
-
-    return [...perDay]
-        .map(([date, value]) => ({
-            date,
-            ...value
-        }))
-        .reverse();
+async function activityResponse(db) {
+  const { results } = await db.prepare('SELECT tag,first_seen,last_active FROM member_activity ORDER BY tag').all();
+  return { members: results.map(r => ({ tag: r.tag, firstSeen: r.first_seen, lastActive: r.last_active })) };
 }
-
-// ─────────────────────────────────────────────
-// WAR
-// ─────────────────────────────────────────────
-
-const liveWar = async () => {
-    const war = await fetchLive('/currentwar');
-
-    return war &&
-        war.state &&
-        war.state !== 'notInWar' &&
-        war.startTime
-        ? war
-        : null;
+async function refreshCwl(env, now) {
+  const group = await coc(env, `/clans/${encodeURIComponent(TAG)}/currentwar/leaguegroup`);
+  if (!group || !Array.isArray(group.rounds)) throw Error('No active CWL group (or unavailable API)');
+  await latest(env.DB, 'cwl_group', group, now);
+  const season = group.season || 'unknown';
+  await history(env.DB, 'cwl_group', season, group, now);
+  const rounds = [];
+  let saved = 0;
+  for (let i = 0; i < group.rounds.length; i++) {
+    const tags = group.rounds[i]?.warTags || [];
+    let ownWar = null;
+    for (const warTag of tags) {
+      if (!warTag || warTag === '#0') continue;
+      try {
+        const war = await coc(env, `/clanwarleagues/wars/${encodeURIComponent(warTag)}`);
+        if (war.clan?.tag !== TAG && war.opponent?.tag !== TAG) continue;
+        ownWar = war;
+        await history(env.DB, 'cwl', `${season}:round_${i + 1}`, war, now);
+        saved++;
+        break;
+      } catch (e) { console.warn('CWL war unavailable', warTag, message(e)); }
+    }
+    rounds.push({ round: i + 1, war: ownWar });
+  }
+  const data = { season, state: group.state, group, rounds };
+  await latest(env.DB, 'cwl', data, now);
+  return { kind: 'cwl', ok: true, savedRounds: saved };
+}
+async function refreshAll(env) {
+  await init(env.DB);
+  const now = new Date().toISOString();
+  const base = await refreshClanWarRaid(env, now);
+  const extras = await Promise.all([
+    refreshActivity(env, now).catch(e => ({ kind: 'activity', ok: false, error: message(e) })),
+    refreshCwl(env, now).catch(e => ({ kind: 'cwl', ok: false, error: message(e) }))
+  ]);
+  const results = [...base, ...extras];
+  return { updatedAt: now, ok: results.every(x => x.ok), results };
+}
+export default {
+  async fetch(request, env) {
+    if (request.method === 'OPTIONS') return new Response(null, { status: 204, headers: CORS });
+    if (request.method !== 'GET') return json({ error: 'Method not allowed' }, 405);
+    try {
+      if (!env.DB) return json({ error: 'D1 binding missing' }, 500);
+      const path = new URL(request.url).pathname.replace(/\/$/, '') || '/';
+      if (path === '/') return json({ name: 'Balado API', endpoints: ['/health','/clan','/currentwar','/raid','/activity','/cwl','/cwl/groups','/api/war/history','/api/raid/history','/api/cwl/history'] });
+      await init(env.DB);
+      if (path === '/health') return json({ status: 'ok', d1: true, apiTokenConfigured: !!env.COC_API_TOKEN });
+      if (path === '/activity') return json(await activityResponse(env.DB));
+      const route = { '/clan': 'clan', '/currentwar': 'currentwar', '/raid': 'raid', '/cwl': 'cwl', '/cwl/groups': 'cwl_group', '/api/clan': 'clan', '/api/currentwar': 'currentwar', '/api/raid': 'raid', '/api/cwl': 'cwl' }[path];
+      if (route) {
+        const data = await readLatest(env.DB, route);
+        return data === null ? json({ error: 'No saved data yet' }, 404) : json(data);
+      }
+      const kind = { '/api/war/history': 'war', '/api/raid/history': 'raid', '/api/cwl/history': 'cwl' }[path];
+      if (kind) {
+        const limit = Math.min(100, Math.max(1, Number.parseInt(new URL(request.url).searchParams.get('limit') || '20', 10) || 20));
+        return json(await readHistory(env.DB, kind, limit));
+      }
+      return json({ error: 'Not found' }, 404);
+    } catch (e) { console.error('Request error', e); return json({ error: 'Request failed', detail: message(e) }, 500); }
+  },
+  async scheduled(controller, env) {
+    try {
+      const result = await refreshAll(env);
+      console.log('Balado scheduled refresh', JSON.stringify(result));
+      // CWL may be unavailable outside league season: do not fail entire cron for this.
+      if (result.results.some(x => !x.ok && !['cwl', 'activity'].includes(x.kind))) {
+        throw Error('Core refresh failed: ' + JSON.stringify(result.results.filter(x => !x.ok)));
+      }
+    } catch (e) { console.error('Cron failed', e?.stack || message(e)); throw e; }
+  }
 };
-
-const liveWarFile = war =>
-    `war_${war.startTime}.json`;
-
-async function fetchWarHistoryD1() {
-    const result = await fetchLive(
-        '/api/war/history?limit=100'
-    );
-
-    if (!Array.isArray(result?.items)) return [];
-
-    return result.items
-        .map(item => item.data)
-        .filter(war => war?.startTime);
-}
-
-export async function fetchWarIndex() {
-    const localIndex = await fetchIndex('war')
-        .catch(() => []);
-
-    const history = await fetchWarHistoryD1();
-    const currentWar = await liveWar();
-
-    const files = [
-        ...history.map(liveWarFile),
-        ...localIndex
-    ];
-
-    if (currentWar) {
-        files.push(liveWarFile(currentWar));
-    }
-
-    return [...new Set(files)].sort().reverse();
-}
-
-export async function fetchWarData(filename) {
-    const currentWar = await liveWar();
-
-    if (
-        currentWar &&
-        liveWarFile(currentWar) === filename
-    ) {
-        return currentWar;
-    }
-
-    const history = await fetchWarHistoryD1();
-
-    const savedWar = history.find(
-        war => liveWarFile(war) === filename
-    );
-
-    if (savedWar) return savedWar;
-
-    return fetchStats('war', filename);
-}
-
-// ─────────────────────────────────────────────
-// RAID
-// ─────────────────────────────────────────────
-
-const liveRaidFile = raid =>
-    `raid_${raid.startTime}.json`;
-
-const liveRaid = async () => {
-    const raid = await fetchLive('/raid');
-
-    return raid?.startTime ? raid : null;
-};
-
-async function fetchRaidHistoryD1() {
-    const result = await fetchLive(
-        '/api/raid/history?limit=100'
-    );
-
-    if (!Array.isArray(result?.items)) return [];
-
-    return result.items
-        .map(item => item.data)
-        .filter(raid => raid?.startTime);
-}
-
-export async function fetchLatestRaid() {
-    return (
-        (await liveRaid()) ||
-        (await fetchLatest('raid').catch(() => null))
-    );
-}
-
-export async function fetchRaidIndex() {
-    const localIndex = await fetchIndex('raid')
-        .catch(() => []);
-
-    const history = await fetchRaidHistoryD1();
-    const currentRaid = await liveRaid();
-
-    const files = [
-        ...history.map(liveRaidFile),
-        ...localIndex
-    ];
-
-    if (currentRaid) {
-        files.push(liveRaidFile(currentRaid));
-    }
-
-    return [...new Set(files)].sort().reverse();
-}
-
-export async function fetchRaidData(filename) {
-    const currentRaid = await liveRaid();
-
-    if (
-        currentRaid &&
-        liveRaidFile(currentRaid) === filename
-    ) {
-        return currentRaid;
-    }
-
-    const history = await fetchRaidHistoryD1();
-
-    const savedRaid = history.find(
-        raid => liveRaidFile(raid) === filename
-    );
-
-    if (savedRaid) return savedRaid;
-
-    return fetchStats('raid', filename);
-}
-
-// ─────────────────────────────────────────────
-// MEMBER ACTIVITY
-// ─────────────────────────────────────────────
-
-export async function fetchActivity() {
-    const cacheKey =
-        `${ACTIVITY_API_URL.replace(/\/+$/, '')}/activity`;
-
-    const now = Date.now();
-
-    if (
-        !activityCacheTime ||
-        now - activityCacheTime >= ACTIVITY_CACHE_TTL_MS
-    ) {
-        liveCache.delete(cacheKey);
-        activityCacheTime = now;
-    }
-
-    return fetchLive('/activity', ACTIVITY_API_URL);
-}
-
-// ─────────────────────────────────────────────
-// CWL
-// ─────────────────────────────────────────────
-
-// Worker baru belum mendukung CWL.
-// Gunakan data JSON lokal tanpa memanggil endpoint /cwl.
-
-export const fetchLatestCwl = async () =>
-    fetchLatest('cwl').catch(() => null);
