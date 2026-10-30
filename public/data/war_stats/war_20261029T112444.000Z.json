@@ -15,9 +15,9 @@
             "medium": "https://api-assets.clashofclans.com/badges/200/SduuUQLqAXUP6SALWXozMv9RIY-mBQkDPxECOZkap2s.png"
         },
         "clanLevel": 11,
-        "attacks": 10,
-        "stars": 21,
-        "destructionPercentage": 85.3,
+        "attacks": 7,
+        "stars": 15,
+        "destructionPercentage": 65.3,
         "members": [
             {
                 "tag": "#GPCYQG89Y",
@@ -49,16 +49,6 @@
                 "name": "kaco",
                 "townhallLevel": 13,
                 "mapPosition": 7,
-                "attacks": [
-                    {
-                        "attackerTag": "#GVL2QP9JV",
-                        "defenderTag": "#YLUGJ29P",
-                        "stars": 1,
-                        "destructionPercentage": 42,
-                        "order": 14,
-                        "duration": 180
-                    }
-                ],
                 "opponentAttacks": 1,
                 "bestOpponentAttack": {
                     "attackerTag": "#YLUGJ29P",
@@ -131,15 +121,7 @@
                 "name": "OKI LOTUS 22",
                 "townhallLevel": 17,
                 "mapPosition": 1,
-                "opponentAttacks": 1,
-                "bestOpponentAttack": {
-                    "attackerTag": "#YP9J200C2",
-                    "defenderTag": "#R9LY8QJC",
-                    "stars": 3,
-                    "destructionPercentage": 100,
-                    "order": 17,
-                    "duration": 118
-                }
+                "opponentAttacks": 0
             },
             {
                 "tag": "#G989PRQJL",
@@ -156,15 +138,7 @@
                         "duration": 165
                     }
                 ],
-                "opponentAttacks": 1,
-                "bestOpponentAttack": {
-                    "attackerTag": "#YLUGJ29P",
-                    "defenderTag": "#G989PRQJL",
-                    "stars": 3,
-                    "destructionPercentage": 100,
-                    "order": 12,
-                    "duration": 156
-                }
+                "opponentAttacks": 0
             },
             {
                 "tag": "#QJUYL2L9V",
@@ -181,15 +155,7 @@
                         "duration": 122
                     }
                 ],
-                "opponentAttacks": 2,
-                "bestOpponentAttack": {
-                    "attackerTag": "#YP9J200C2",
-                    "defenderTag": "#QJUYL2L9V",
-                    "stars": 2,
-                    "destructionPercentage": 98,
-                    "order": 18,
-                    "duration": 180
-                }
+                "opponentAttacks": 0
             },
             {
                 "tag": "#QR98PU0QJ",
@@ -213,24 +179,6 @@
                 "name": "Kodok",
                 "townhallLevel": 16,
                 "mapPosition": 2,
-                "attacks": [
-                    {
-                        "attackerTag": "#GQJGU808G",
-                        "defenderTag": "#29VCPLJR8",
-                        "stars": 3,
-                        "destructionPercentage": 100,
-                        "order": 15,
-                        "duration": 93
-                    },
-                    {
-                        "attackerTag": "#GQJGU808G",
-                        "defenderTag": "#2U0GCU9R8",
-                        "stars": 3,
-                        "destructionPercentage": 100,
-                        "order": 16,
-                        "duration": 100
-                    }
-                ],
                 "opponentAttacks": 1,
                 "bestOpponentAttack": {
                     "attackerTag": "#QPLUUY8PC",
@@ -252,9 +200,9 @@
             "medium": "https://api-assets.clashofclans.com/badges/200/3cPTaxGyF0Q7QezveMcMpShHxGOJohI_fzjZ2ENBPqk.png"
         },
         "clanLevel": 21,
-        "attacks": 8,
-        "stars": 18,
-        "destructionPercentage": 61.4,
+        "attacks": 4,
+        "stars": 10,
+        "destructionPercentage": 31.6,
         "members": [
             {
                 "tag": "#Q2P2Q8UJL",
@@ -276,15 +224,7 @@
                 "name": "Doom_beast",
                 "townhallLevel": 16,
                 "mapPosition": 2,
-                "opponentAttacks": 1,
-                "bestOpponentAttack": {
-                    "attackerTag": "#GQJGU808G",
-                    "defenderTag": "#29VCPLJR8",
-                    "stars": 3,
-                    "destructionPercentage": 100,
-                    "order": 15,
-                    "duration": 93
-                }
+                "opponentAttacks": 0
             },
             {
                 "tag": "#2U0GCU9R8",
@@ -301,15 +241,7 @@
                         "duration": 111
                     }
                 ],
-                "opponentAttacks": 1,
-                "bestOpponentAttack": {
-                    "attackerTag": "#GQJGU808G",
-                    "defenderTag": "#2U0GCU9R8",
-                    "stars": 3,
-                    "destructionPercentage": 100,
-                    "order": 16,
-                    "duration": 100
-                }
+                "opponentAttacks": 0
             },
             {
                 "tag": "#YLUGJ29P",
@@ -324,17 +256,9 @@
                         "destructionPercentage": 100,
                         "order": 11,
                         "duration": 137
-                    },
-                    {
-                        "attackerTag": "#YLUGJ29P",
-                        "defenderTag": "#G989PRQJL",
-                        "stars": 3,
-                        "destructionPercentage": 100,
-                        "order": 12,
-                        "duration": 156
                     }
                 ],
-                "opponentAttacks": 2,
+                "opponentAttacks": 1,
                 "bestOpponentAttack": {
                     "attackerTag": "#GPCYQG89Y",
                     "defenderTag": "#YLUGJ29P",
@@ -382,16 +306,6 @@
                 "name": "Salamun Fajri",
                 "townhallLevel": 16,
                 "mapPosition": 5,
-                "attacks": [
-                    {
-                        "attackerTag": "#UL22G08",
-                        "defenderTag": "#QJUYL2L9V",
-                        "stars": 0,
-                        "destructionPercentage": 49,
-                        "order": 13,
-                        "duration": 86
-                    }
-                ],
                 "opponentAttacks": 1,
                 "bestOpponentAttack": {
                     "attackerTag": "#QJUYL2L9V",
@@ -422,24 +336,6 @@
                 "name": "zio",
                 "townhallLevel": 18,
                 "mapPosition": 1,
-                "attacks": [
-                    {
-                        "attackerTag": "#YP9J200C2",
-                        "defenderTag": "#R9LY8QJC",
-                        "stars": 3,
-                        "destructionPercentage": 100,
-                        "order": 17,
-                        "duration": 118
-                    },
-                    {
-                        "attackerTag": "#YP9J200C2",
-                        "defenderTag": "#QJUYL2L9V",
-                        "stars": 2,
-                        "destructionPercentage": 98,
-                        "order": 18,
-                        "duration": 180
-                    }
-                ],
                 "opponentAttacks": 0
             },
             {
