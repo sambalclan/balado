@@ -1,0 +1,59 @@
+# Secrets and local environment
+.env
+.env.*
+!.env.example
+!.env_example
+*.pem
+*.key
+*.p12
+*.pfx
+secrets.json
+credentials.json
+
+# Cloudflare / Wrangler local state
+.wrangler/
+.dev.vars
+.dev.vars.*
+!.dev.vars.example
+wrangler.toml.bak
+
+# Dependencies and build caches
+node_modules/
+.npm/
+.cache/
+dist/
+build/
+coverage/
+
+# Python caches and virtual environments
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.venv/
+venv/
+
+# Logs and temporary files
+*.log
+*.tmp
+*.temp
+*.swp
+*.swo
+.DS_Store
+Thumbs.db
+
+# Local editors
+.vscode/
+.idea/
+
+# Local database files (D1 database is remote)
+*.sqlite
+*.sqlite3
+*.db
+*.db-shm
+*.db-wal
+
+# Backups and archives
+*.bak
+*.backup
+*.old
+*.zip
