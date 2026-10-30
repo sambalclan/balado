@@ -1,0 +1,249 @@
+{
+    "state": "preparation",
+    "teamSize": 15,
+    "attacksPerMember": 2,
+    "battleModifier": "none",
+    "preparationStartTime": "20261030T123338.000Z",
+    "startTime": "20261031T113338.000Z",
+    "endTime": "20261101T113338.000Z",
+    "clan": {
+        "tag": "#2RVRP900V",
+        "name": "Sambal balado",
+        "badgeUrls": {
+            "small": "https://api-assets.clashofclans.com/badges/70/SduuUQLqAXUP6SALWXozMv9RIY-mBQkDPxECOZkap2s.png",
+            "large": "https://api-assets.clashofclans.com/badges/512/SduuUQLqAXUP6SALWXozMv9RIY-mBQkDPxECOZkap2s.png",
+            "medium": "https://api-assets.clashofclans.com/badges/200/SduuUQLqAXUP6SALWXozMv9RIY-mBQkDPxECOZkap2s.png"
+        },
+        "clanLevel": 11,
+        "attacks": 0,
+        "stars": 0,
+        "destructionPercentage": 0.0,
+        "members": [
+            {
+                "tag": "#GPCYQG89Y",
+                "name": "kutur18",
+                "townhallLevel": 16,
+                "mapPosition": 7,
+                "opponentAttacks": 0
+            },
+            {
+                "tag": "#R2YVRJRYY",
+                "name": "Banten fc",
+                "townhallLevel": 15,
+                "mapPosition": 8,
+                "opponentAttacks": 0
+            },
+            {
+                "tag": "#R09Q8JLY9",
+                "name": "D rend",
+                "townhallLevel": 11,
+                "mapPosition": 13,
+                "opponentAttacks": 0
+            },
+            {
+                "tag": "#90LUURLPV",
+                "name": "ezza1990",
+                "townhallLevel": 16,
+                "mapPosition": 6,
+                "opponentAttacks": 0
+            },
+            {
+                "tag": "#GVL2QP9JV",
+                "name": "kaco",
+                "townhallLevel": 13,
+                "mapPosition": 9,
+                "opponentAttacks": 0
+            },
+            {
+                "tag": "#R0UYQ88YQ",
+                "name": "mpruy",
+                "townhallLevel": 11,
+                "mapPosition": 15,
+                "opponentAttacks": 0
+            },
+            {
+                "tag": "#GLJR89GYC",
+                "name": "not4ppl",
+                "townhallLevel": 15,
+                "mapPosition": 4,
+                "opponentAttacks": 0
+            },
+            {
+                "tag": "#QYVQR80PU",
+                "name": "pinduwangga",
+                "townhallLevel": 16,
+                "mapPosition": 2,
+                "opponentAttacks": 0
+            },
+            {
+                "tag": "#Q9PY8LCGL",
+                "name": "Evanescent",
+                "townhallLevel": 16,
+                "mapPosition": 3,
+                "opponentAttacks": 0
+            },
+            {
+                "tag": "#QQ888CGYY",
+                "name": "snowy",
+                "townhallLevel": 11,
+                "mapPosition": 14,
+                "opponentAttacks": 0
+            },
+            {
+                "tag": "#G9CQG8R0Y",
+                "name": "Malz",
+                "townhallLevel": 12,
+                "mapPosition": 11,
+                "opponentAttacks": 0
+            },
+            {
+                "tag": "#G989PRQJL",
+                "name": "Nanzi",
+                "townhallLevel": 13,
+                "mapPosition": 10,
+                "opponentAttacks": 0
+            },
+            {
+                "tag": "#QJUYL2L9V",
+                "name": "Zysss ur clown",
+                "townhallLevel": 15,
+                "mapPosition": 5,
+                "opponentAttacks": 0
+            },
+            {
+                "tag": "#QR98PU0QJ",
+                "name": "Skyzo",
+                "townhallLevel": 11,
+                "mapPosition": 12,
+                "opponentAttacks": 0
+            },
+            {
+                "tag": "#GQJGU808G",
+                "name": "Kodok",
+                "townhallLevel": 16,
+                "mapPosition": 1,
+                "opponentAttacks": 0
+            }
+        ]
+    },
+    "opponent": {
+        "tag": "#2CVQL0GU8",
+        "name": "99% ONE STAR.",
+        "badgeUrls": {
+            "small": "https://api-assets.clashofclans.com/badges/70/_IeBB4BPWTsO_6BE_M_uzmAnDee65_bgO1sBtN5htgE.png",
+            "large": "https://api-assets.clashofclans.com/badges/512/_IeBB4BPWTsO_6BE_M_uzmAnDee65_bgO1sBtN5htgE.png",
+            "medium": "https://api-assets.clashofclans.com/badges/200/_IeBB4BPWTsO_6BE_M_uzmAnDee65_bgO1sBtN5htgE.png"
+        },
+        "clanLevel": 6,
+        "attacks": 0,
+        "stars": 0,
+        "destructionPercentage": 0.0,
+        "members": [
+            {
+                "tag": "#9P9UVLGRG",
+                "name": "RuSh BK",
+                "townhallLevel": 17,
+                "mapPosition": 1,
+                "opponentAttacks": 0
+            },
+            {
+                "tag": "#R0UY882LQ",
+                "name": "my turn",
+                "townhallLevel": 13,
+                "mapPosition": 10,
+                "opponentAttacks": 0
+            },
+            {
+                "tag": "#R22JUU2QU",
+                "name": "Sallu bhai",
+                "townhallLevel": 11,
+                "mapPosition": 13,
+                "opponentAttacks": 0
+            },
+            {
+                "tag": "#GVVJ22GUJ",
+                "name": "slayer",
+                "townhallLevel": 9,
+                "mapPosition": 15,
+                "opponentAttacks": 0
+            },
+            {
+                "tag": "#QUQRRC8GU",
+                "name": "~UNO~",
+                "townhallLevel": 11,
+                "mapPosition": 12,
+                "opponentAttacks": 0
+            },
+            {
+                "tag": "#LJLPVLR88",
+                "name": "Vikas",
+                "townhallLevel": 15,
+                "mapPosition": 4,
+                "opponentAttacks": 0
+            },
+            {
+                "tag": "#P8UL929UR",
+                "name": "Luckily",
+                "townhallLevel": 16,
+                "mapPosition": 3,
+                "opponentAttacks": 0
+            },
+            {
+                "tag": "#LVCU2UL8R",
+                "name": "Vikas 2",
+                "townhallLevel": 15,
+                "mapPosition": 5,
+                "opponentAttacks": 0
+            },
+            {
+                "tag": "#9JVYPYL8V",
+                "name": "IRONMANM42",
+                "townhallLevel": 15,
+                "mapPosition": 7,
+                "opponentAttacks": 0
+            },
+            {
+                "tag": "#G29UGLQYJ",
+                "name": "KETO\u2726",
+                "townhallLevel": 12,
+                "mapPosition": 11,
+                "opponentAttacks": 0
+            },
+            {
+                "tag": "#R2CJCP88V",
+                "name": "Lilo Sumi",
+                "townhallLevel": 16,
+                "mapPosition": 6,
+                "opponentAttacks": 0
+            },
+            {
+                "tag": "#L899LQYU8",
+                "name": "temsu imchen",
+                "townhallLevel": 14,
+                "mapPosition": 8,
+                "opponentAttacks": 0
+            },
+            {
+                "tag": "#R9L2CVYJ0",
+                "name": "bbyshaylaa:)",
+                "townhallLevel": 11,
+                "mapPosition": 14,
+                "opponentAttacks": 0
+            },
+            {
+                "tag": "#GVPQJUGYY",
+                "name": "dad",
+                "townhallLevel": 16,
+                "mapPosition": 9,
+                "opponentAttacks": 0
+            },
+            {
+                "tag": "#2UJC0U829",
+                "name": "Hob Sumi",
+                "townhallLevel": 16,
+                "mapPosition": 2,
+                "opponentAttacks": 0
+            }
+        ]
+    }
+}
