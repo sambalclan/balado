@@ -11,6 +11,12 @@ const json = (value, status = 200) => new Response(JSON.stringify(value), {
   status, headers: { ...CORS, 'Content-Type': 'application/json; charset=utf-8' }
 });
 const message = e => String(e?.message || e);
+const tagKey = t => String(t || '').replace(/^#/, '').toUpperCase();
+const parseCoCTime = t => {
+  if (!t) return NaN;
+  const m = String(t).match(/^(\d{4})(\d{2})(\d{2})T(\d{2})(\d{2})(\d{2})(?:\.\d+)?Z$/);
+  return m ? Date.UTC(+m[1], +m[2]-1, +m[3], +m[4], +m[5], +m[6]) : Date.parse(t);
+};
 
 async function init(db) {
   await db.batch([
@@ -46,6 +52,65 @@ async function readHistory(db, kind, limit) {
     .bind(kind, limit).all();
   return { items: results.map(r => ({ id: r.record_id, updatedAt: r.updated_at, data: JSON.parse(r.payload) })) };
 }
+
+// War log entries are summaries, not full attack records. Preserve the saved
+// current-war payload and only add final score/status once the entry is matched.
+function matchWarLog(war, log) {
+  if (!war?.startTime || !war?.opponent?.tag) return null;
+  const opponent = tagKey(war.opponent.tag);
+  const own = tagKey(TAG);
+  const targetEnd = parseCoCTime(war.endTime);
+  for (const entry of log?.items || []) {
+    const a = tagKey(entry.clan?.tag);
+    const b = tagKey(entry.opponent?.tag);
+    if (!((a === own && b === opponent) || (b === own && a === opponent))) continue;
+    const logEnd = parseCoCTime(entry.endTime);
+    // Opponent may recur; require matching end time within 10 minutes.
+    if (!Number.isFinite(logEnd) || !Number.isFinite(targetEnd) || Math.abs(logEnd - targetEnd) > 600000) continue;
+    const ours = a === own ? entry.clan : entry.opponent;
+    const theirs = a === own ? entry.opponent : entry.clan;
+    return { entry, ours, theirs };
+  }
+  return null;
+}
+async function finalizeWar(env, now) {
+  // Only finalize previously captured full wars. Never fabricate attack details.
+  const { results } = await env.DB.prepare(
+    "SELECT record_id,payload FROM history WHERE kind='war' ORDER BY updated_at DESC LIMIT 30"
+  ).all();
+  const pending = results.map(r => ({ id: r.record_id, data: JSON.parse(r.payload) }))
+    .filter(r => r.data?.state !== 'warEnded' && r.data?.startTime &&
+      Number.isFinite(parseCoCTime(r.data.endTime)) && parseCoCTime(r.data.endTime) <= Date.now());
+  if (!pending.length) return { kind: 'war_finalize', ok: true, pending: 0, finalized: 0 };
+  let log;
+  try {
+    log = await coc(env, `/clans/${encodeURIComponent(TAG)}/warlog?limit=50`);
+  } catch (e) {
+    // Private war logs / API outages must not erase existing snapshots.
+    return { kind: 'war_finalize', ok: false, pending: pending.length, error: message(e) };
+  }
+  let finalized = 0;
+  for (const row of pending) {
+    const matched = matchWarLog(row.data, log);
+    if (!matched) continue;
+    const data = {
+      ...row.data,
+      state: 'warEnded',
+      clan: { ...row.data.clan, attacks: matched.ours.attacks ?? row.data.clan?.attacks,
+        stars: matched.ours.stars ?? row.data.clan?.stars,
+        destructionPercentage: matched.ours.destructionPercentage ?? row.data.clan?.destructionPercentage },
+      opponent: { ...row.data.opponent, attacks: matched.theirs.attacks ?? row.data.opponent?.attacks,
+        stars: matched.theirs.stars ?? row.data.opponent?.stars,
+        destructionPercentage: matched.theirs.destructionPercentage ?? row.data.opponent?.destructionPercentage },
+      finalResult: matched.entry.result || null,
+      finalSource: 'warlog',
+    };
+    await history(env.DB, 'war', row.id, data, now);
+    finalized++;
+  }
+  return { kind: 'war_finalize', ok: true, pending: pending.length, finalized };
+}
+
 async function refreshClanWarRaid(env, now) {
   const tag = encodeURIComponent(TAG);
   const paths = {
@@ -59,7 +124,13 @@ async function refreshClanWarRaid(env, now) {
       const data = kind === 'raid' ? raw.items?.[0] ?? null : raw;
       await latest(env.DB, kind, data, now);
       if (kind === 'currentwar' && data?.startTime && data.state !== 'notInWar') {
-        await history(env.DB, 'war', `${TAG}:${data.startTime}`, data, now);
+        const id = `${TAG}:${data.startTime}`;
+        const previous = await env.DB.prepare("SELECT payload FROM history WHERE kind='war' AND record_id=?").bind(id).first();
+        const prev = previous ? JSON.parse(previous.payload) : null;
+        // A stale inWar response must not overwrite a finalized snapshot.
+        if (prev?.state !== 'warEnded' || data.state === 'warEnded') {
+          await history(env.DB, 'war', id, data, now);
+        }
       }
       if (kind === 'raid') {
         for (const item of raw.items || []) {
@@ -71,8 +142,6 @@ async function refreshClanWarRaid(env, now) {
   }));
 }
 async function refreshActivity(env, now) {
-  // Import data tracker lama tanpa menghapus firstSeen atau lastActive yang sudah ada.
-  // Aktivitas dari tracker merupakan deteksi perubahan, bukan login langsung.
   const r = await fetch(`${TRACKER}/activity`, { signal: AbortSignal.timeout(12000) });
   if (!r.ok) throw Error(`Tracker HTTP ${r.status}`);
   const raw = await r.json();
@@ -126,6 +195,7 @@ async function refreshAll(env) {
   const now = new Date().toISOString();
   const base = await refreshClanWarRaid(env, now);
   const extras = await Promise.all([
+    finalizeWar(env, now).catch(e => ({ kind: 'war_finalize', ok: false, error: message(e) })),
     refreshActivity(env, now).catch(e => ({ kind: 'activity', ok: false, error: message(e) })),
     refreshCwl(env, now).catch(e => ({ kind: 'cwl', ok: false, error: message(e) }))
   ]);
@@ -139,7 +209,7 @@ export default {
     try {
       if (!env.DB) return json({ error: 'D1 binding missing' }, 500);
       const path = new URL(request.url).pathname.replace(/\/$/, '') || '/';
-      if (path === '/') return json({ name: 'Balado API', endpoints: ['/health','/clan','/currentwar','/raid','/activity','/cwl','/cwl/groups','/api/war/history','/api/raid/history','/api/cwl/history'] });
+      if (path === '/') return json({ name: 'Balado API', endpoints: ['/health','/clan','/currentwar','/raid','/activity','/cwl','/cwl/groups','/api/war/history','/war/history','/api/raid/history','/api/cwl/history'] });
       await init(env.DB);
       if (path === '/health') return json({ status: 'ok', d1: true, apiTokenConfigured: !!env.COC_API_TOKEN });
       if (path === '/activity') return json(await activityResponse(env.DB));
@@ -148,7 +218,7 @@ export default {
         const data = await readLatest(env.DB, route);
         return data === null ? json({ error: 'No saved data yet' }, 404) : json(data);
       }
-      const kind = { '/api/war/history': 'war', '/api/raid/history': 'raid', '/api/cwl/history': 'cwl' }[path];
+      const kind = { '/api/war/history': 'war', '/war/history': 'war', '/api/raid/history': 'raid', '/api/cwl/history': 'cwl' }[path];
       if (kind) {
         const limit = Math.min(100, Math.max(1, Number.parseInt(new URL(request.url).searchParams.get('limit') || '20', 10) || 20));
         return json(await readHistory(env.DB, kind, limit));
@@ -160,8 +230,7 @@ export default {
     try {
       const result = await refreshAll(env);
       console.log('Balado scheduled refresh', JSON.stringify(result));
-      // CWL may be unavailable outside league season: do not fail entire cron for this.
-      if (result.results.some(x => !x.ok && !['cwl', 'activity'].includes(x.kind))) {
+      if (result.results.some(x => !x.ok && !['cwl', 'activity', 'war_finalize'].includes(x.kind))) {
         throw Error('Core refresh failed: ' + JSON.stringify(result.results.filter(x => !x.ok)));
       }
     } catch (e) { console.error('Cron failed', e?.stack || message(e)); throw e; }

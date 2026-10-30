@@ -1,87 +1,45 @@
-import { roleName, getTHImage, escapeHtml, fmt, dayLabel, renderAreaChart, warStars, warDate, isEndedWar, pagePanel, backButton, renderCombinedChart } from './constants.js';
+import { roleName, getTHImage, escapeHtml, fmt, renderCombinedChart, warStars, warDate, isEndedWar, pagePanel, backButton } from './constants.js';
 import { state, getRaidWeeks } from './state.js';
 import { getLiveLog, LIVE_API_URL } from './api.js';
 import { getWarChartData } from './war.js';
 
-// ═══ Reports · Config ══════════════════════════════════════════════════
-const BASE_STYLE = {
-    Footer: '',
-    Accent: '#d4a017',
-    Theme: 'light',
-    Scale: 3,
-    Format: 'jpeg',
-    Logo: true,
-    Date: true,
-    Zebra: true,
-};
-
-const REPORT_CONFIG = {
-    month: {
-        ...BASE_STYLE,
-        Title: 'Monthly Statistics',
-        Cols: ['no', 'name', 'th', 'wars', 'attacks', 'stars', 'destruction', 'raidAttacks', 'raidGold'],
-    },
-};
-
-// ═══ Reports · Table Columns ══════════════════════════════════════════
-const MONTH_COLS = [
-    { id: 'no',          label: 'No',          get: (m, i) => i + 1 },
-    { id: 'name',        label: 'Name',        get: (m) => m.name },
-    { id: 'th',          label: 'TH',          get: (m) => m.th ?? '-' },
-    { id: 'wars',        label: 'Wars',        get: (m) => m.wars },
-    { id: 'attacks',     label: 'Attacks',     get: (m) => `${m.attacks}/${m.attackLimit}` },
-    { id: 'stars',       label: 'Stars',       get: (m) => m.stars },
-    { id: 'destruction', label: 'Destruction', get: (m) => (m.attacks ? Math.round(m.destruction / m.attacks) + '%' : '-') },
-    { id: 'raidAttacks', label: 'Raid Atks',   get: (m) => `${m.raidAttacks}/${m.raidLimit}` },
-    { id: 'raidGold',    label: 'Capital Gold', get: (m) => fmt(m.raidGold) },
+const COLUMNS = [
+    { label: 'No',           get: (m, i) => i + 1 },
+    { label: 'Name',         get: (m) => m.name },
+    { label: 'TH',           get: (m) => m.th ?? '-' },
+    { label: 'Wars',         get: (m) => m.wars },
+    { label: 'Attacks',      get: (m) => `${m.attacks}/${m.attackLimit}` },
+    { label: 'Stars',        get: (m) => m.stars },
+    { label: 'Destruction',  get: (m) => (m.attacks ? Math.round(m.destruction / m.attacks) + '%' : '-') },
+    { label: 'Raid Atks',    get: (m) => `${m.raidAttacks}/${m.raidLimit}` },
+    { label: 'Capital Gold', get: (m) => fmt(m.raidGold) },
 ];
 
-// ═══ Reports · Content ═════════════════════════════════════════════════
-function safeColor(color) {
-    return /^#[0-9a-f]{3,8}$/i.test(color) ? color : '#d4a017';
-}
+const ACCENT = '#d4a017';
+const FONT = 'Arial, Helvetica, sans-serif';
+const SCALE = 3;
+const L = { pad: 24, cellPad: 12, rowH: 30, headH: 34, headBlock: 88, minWidth: 520 };
+const THEME = { bg: '#ffffff', text: '#111111', sub: '#555555', line: '#c4c4c4', zebra: '#f5f5f5', border: '#d1d5db' };
 
-function makeReport({ config, allCols, items, groups, subtitle, emptyNote }) {
-    const cols = allCols.filter((c) => config.Cols.includes(c.id));
-    const rowsOf = (list) => list.map((item, i) => cols.map((c) => String(c.get(item, i) ?? '')));
-    // Sections (title + rows); a report without sections is one untitled table
-    const sections = (groups || [{ title: '', items }])
-        .filter((g) => g.items.length)
-        .map((g) => ({ title: g.title, rows: rowsOf(g.items) }));
-    const allItems = groups ? groups.flatMap((g) => g.items) : items;
-    const today = new Date().toLocaleDateString('en-US', { dateStyle: 'long' });
+const shortDate = (d, opts) => d.toLocaleDateString('en-US', opts);
 
-    return {
-        config,
-        title: config.Title,
-        subtitle,
-        note: allItems.length ? '' : emptyNote,
-        accent: safeColor(config.Accent),
-        date: config.Date ? today : '',
-        logoUrl: config.Logo ? (state.clan?.badgeUrls?.medium || '') : '',
-        headers: cols.map((c) => c.label),
-        sections,
-        rows: sections.flatMap((s) => s.rows), // all rows together, used to size the columns
-    };
-}
-
-// Last calendar month, e.g. on 2 Nov: 1 Sep .. 1 Oct (the end date is not included)
 function lastMonthRange(now = new Date()) {
     const start = new Date(now.getFullYear(), now.getMonth() - 1, 1);
     const end = new Date(now.getFullYear(), now.getMonth(), 1);
-    const iso = (d) => `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-01`;
     const lastDay = new Date(end.getTime() - 86400000);
+    const iso = (d) => `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-01`;
+    const day = { day: 'numeric', month: 'short' };
+
     return {
         from: iso(start),
         to: iso(end),
-        label: start.toLocaleDateString('en-US', { month: 'long', year: 'numeric' }),
-        span: `${start.toLocaleDateString('en-US', { day: 'numeric', month: 'short' })} - ${lastDay.toLocaleDateString('en-US', { day: 'numeric', month: 'short' })}`,
+        label: shortDate(start, { month: 'long', year: 'numeric' }),
+        span: `${shortDate(start, day)} - ${shortDate(lastDay, day)}`,
     };
 }
 
-// One row per member (all current members, plus anyone who played last month and has left since)
-function collectMonthStats(range) {
-    const inRange = (rec) => { const d = warDate(rec); return d >= range.from && d < range.to; };
+function collectMonthStats({ from, to }) {
+    const inRange = (rec) => { const d = warDate(rec); return d >= from && d < to; };
     const wars = state.wars.filter((w) => isEndedWar(w) && inRange(w));
     const raids = getRaidWeeks().filter(inRange);
 
@@ -123,35 +81,15 @@ function makeMonthReport() {
     const { list, wars, raids } = collectMonthStats(range);
     const empty = !wars && !raids;
 
-    return makeReport({
-        config: { ...REPORT_CONFIG.month, Title: `Statistics ${range.label}` },
-        allCols: MONTH_COLS,
-        items: empty ? [] : list,
-        subtitle: `${state.clan?.name || ''} · ${range.span} · ${wars} wars, ${raids} raids`,
-        emptyNote: `No war or raid data for ${range.label}.`,
-    });
+    return {
+        title: `Statistics ${range.label}`,
+        subtitle: [`${state.clan?.name || ''} · ${range.span} · ${wars} wars, ${raids} raids`, shortDate(new Date(), { dateStyle: 'long' })].join(' · '),
+        note: empty ? `No war or raid data for ${range.label}.` : '',
+        logoUrl: state.clan?.badgeUrls?.medium || '',
+        headers: COLUMNS.map((c) => c.label),
+        rows: empty ? [] : list.map((m, i) => COLUMNS.map((c) => String(c.get(m, i) ?? ''))),
+    };
 }
-
-const REPORTS = { month: makeMonthReport };
-
-// ═══ Reports · Image Drawing ═══════════════════════════════════════════
-const FONT = 'Arial, Helvetica, sans-serif';
-
-const LAYOUT = {
-    pad: 24,
-    cellPad: 12,
-    rowH: 30,
-    headH: 34,
-    headBlock: 88,
-    minWidth: 520,
-    titleH: 30,
-    gap: 14,
-};
-
-const THEMES = {
-    light: { bg: '#ffffff', text: '#111111', sub: '#555555', line: '#c4c4c4', zebra: '#f5f5f5', border: '#d1d5db' },
-    dark:  { bg: '#121212', text: '#f2f2f2', sub: '#a0a0a0', line: '#3d3d3d', zebra: '#1b1b1b', border: '#3A3A3A' },
-};
 
 function loadImage(url) {
     return new Promise((resolve) => {
@@ -165,30 +103,26 @@ function loadImage(url) {
     });
 }
 
-function measureColumns(report) {
+function measureColumns({ headers, rows }) {
     const ctx = document.createElement('canvas').getContext('2d');
 
-    return report.headers.map((header, col) => {
+    return headers.map((header, col) => {
         ctx.font = 'bold 14px ' + FONT;
         let widest = ctx.measureText(header).width;
-
         ctx.font = '14px ' + FONT;
-        report.rows.forEach((row) => {
-            widest = Math.max(widest, ctx.measureText(row[col]).width);
-        });
-
-        return Math.ceil(widest) + LAYOUT.cellPad * 2;
+        rows.forEach((row) => { widest = Math.max(widest, ctx.measureText(row[col]).width); });
+        return Math.ceil(widest) + L.cellPad * 2;
     });
 }
 
-function pickScale(wanted, height) {
-    let scale = Math.min(4, Math.max(1, Number(wanted) || 2));
+function pickScale(height) {
+    let scale = SCALE;
     while (height * scale > 16000 && scale > 1) scale -= 1;
     return scale;
 }
 
-function drawHeader(ctx, report, width, logo, theme) {
-    const { pad } = LAYOUT;
+function drawHeader(ctx, report, width, logo) {
+    const { pad } = L;
     let textX = pad;
 
     if (logo) {
@@ -196,114 +130,74 @@ function drawHeader(ctx, report, width, logo, theme) {
         textX = pad + 70;
     }
 
-    ctx.fillStyle = theme.text;
+    ctx.fillStyle = THEME.text;
     ctx.font = 'bold 24px ' + FONT;
     ctx.fillText(report.title, textX, pad + 26);
 
-    const parts = [report.subtitle, report.date].filter(Boolean);
-    ctx.fillStyle = theme.sub;
+    ctx.fillStyle = THEME.sub;
     ctx.font = '14px ' + FONT;
-    ctx.fillText(parts.join(' · '), textX, pad + 50);
+    ctx.fillText(report.subtitle, textX, pad + 50);
 
-    ctx.fillStyle = report.accent;
+    ctx.fillStyle = ACCENT;
     ctx.fillRect(pad, pad + 66, width - pad * 2, 3);
 }
 
-function drawTable(ctx, report, widths, startY, theme) {
-    const { pad, cellPad, rowH, headH } = LAYOUT;
+function drawTable(ctx, { headers, rows }, widths, top) {
+    const { pad, cellPad, rowH, headH } = L;
     const tableW = widths.reduce((a, b) => a + b, 0);
-    let y = startY;
+    const bodyTop = top + headH;
+    const bottom = bodyTop + rows.length * rowH;
+    const drawRow = (cells, y) => {
+        let x = pad;
+        cells.forEach((cell, col) => {
+            ctx.fillText(cell, x + cellPad, y);
+            x += widths[col];
+        });
+    };
 
-    ctx.fillStyle = report.accent;
-    ctx.fillRect(pad, y, tableW, headH);
+    ctx.fillStyle = ACCENT;
+    ctx.fillRect(pad, top, tableW, headH);
     ctx.fillStyle = '#ffffff';
     ctx.font = 'bold 14px ' + FONT;
-    let x = pad;
-    report.headers.forEach((header, col) => {
-        ctx.fillText(header, x + cellPad, y + 22);
-        x += widths[col];
-    });
-    y += headH;
+    drawRow(headers, top + 22);
 
     ctx.font = '14px ' + FONT;
-    report.rows.forEach((row, rowIndex) => {
-        if (report.config.Zebra && rowIndex % 2 === 1) {
-            ctx.fillStyle = theme.zebra;
+    rows.forEach((row, i) => {
+        const y = bodyTop + i * rowH;
+        if (i % 2 === 1) {
+            ctx.fillStyle = THEME.zebra;
             ctx.fillRect(pad, y, tableW, rowH);
         }
-
-        ctx.fillStyle = theme.line;
+        ctx.fillStyle = THEME.line;
         ctx.fillRect(pad, y + rowH - 1, tableW, 1);
-
-        ctx.fillStyle = theme.text;
-        let cellX = pad;
-        row.forEach((cell, col) => {
-            ctx.fillText(cell, cellX + cellPad, y + 20);
-            cellX += widths[col];
-        });
-
-        y += rowH;
+        ctx.fillStyle = THEME.text;
+        drawRow(row, y + 20);
     });
 
-    drawTableLines(ctx, widths, startY, y, theme);
-    return y;
-}
-
-function drawTableLines(ctx, widths, topY, bottomY, theme) {
-    const { pad, headH } = LAYOUT;
-    const tableW = widths.reduce((a, b) => a + b, 0);
-    const bodyTop = topY + headH;
-
-    ctx.fillStyle = theme.border;
+    ctx.fillStyle = THEME.border;
     let x = pad;
-    widths.forEach((w) => {
-        ctx.fillRect(x, bodyTop, 1, bottomY - bodyTop);
-        x += w;
-    });
-    ctx.fillRect(pad + tableW - 1, bodyTop, 1, bottomY - bodyTop);
-
-    x = pad;
     widths.forEach((w, i) => {
-        if (i > 0) ctx.fillRect(x, topY, 1, headH);
+        ctx.fillRect(x, bodyTop, 1, bottom - bodyTop);
+        if (i > 0) ctx.fillRect(x, top, 1, headH);
         x += w;
     });
+    ctx.fillRect(pad + tableW - 1, bodyTop, 1, bottom - bodyTop);
 
-    ctx.strokeStyle = theme.border;
+    ctx.strokeStyle = THEME.border;
     ctx.lineWidth = 1;
-    ctx.strokeRect(pad + 0.5, topY + 0.5, tableW - 1, bottomY - topY - 1);
+    ctx.strokeRect(pad + 0.5, top + 0.5, tableW - 1, bottom - top - 1);
 }
 
-function drawSectionTitle(ctx, title, y, theme) {
-    ctx.fillStyle = theme.text;
-    ctx.font = 'bold 16px ' + FONT;
-    ctx.fillText(title, LAYOUT.pad, y + 20);
-}
-
-function drawCenteredText(ctx, text, width, y, font, color) {
-    ctx.fillStyle = color;
-    ctx.font = font;
-    ctx.textAlign = 'center';
-    ctx.fillText(text, width / 2, y);
-    ctx.textAlign = 'left';
-}
-
-async function createReportImage(type) {
-    const report = (REPORTS[type] || makeMonthReport)();
-    const { config } = report;
-    const theme = THEMES[config.Theme] || THEMES.light;
-    const { pad, rowH, headH, headBlock, minWidth, titleH, gap } = LAYOUT;
+async function createReportImage() {
+    const report = makeMonthReport();
+    const { pad, rowH, headH, headBlock, minWidth } = L;
 
     const logo = await loadImage(report.logoUrl);
     const widths = measureColumns(report);
-
-    const tableW = widths.reduce((a, b) => a + b, 0);
-    const width = Math.max(minWidth, tableW + pad * 2);
-    const tableH = report.rows.length
-        ? report.sections.reduce((sum, s) => sum + (s.title ? titleH : 0) + headH + s.rows.length * rowH + gap, 0) - gap
-        : 60;
-    const footerH = config.Footer ? 44 : 12;
-    const height = pad + headBlock + tableH + footerH + pad;
-    const scale = pickScale(config.Scale, height);
+    const width = Math.max(minWidth, widths.reduce((a, b) => a + b, 0) + pad * 2);
+    const tableH = report.rows.length ? headH + report.rows.length * rowH : 60;
+    const height = pad + headBlock + tableH + 12 + pad;
+    const scale = pickScale(height);
 
     const canvas = document.createElement('canvas');
     canvas.width = Math.round(width * scale);
@@ -311,82 +205,60 @@ async function createReportImage(type) {
     const ctx = canvas.getContext('2d');
     ctx.scale(scale, scale);
 
-    ctx.fillStyle = theme.bg;
+    ctx.fillStyle = THEME.bg;
     ctx.fillRect(0, 0, width, height);
+    drawHeader(ctx, report, width, logo);
 
-    drawHeader(ctx, report, width, logo, theme);
-
-    let y = pad + headBlock;
+    const top = pad + headBlock;
     if (report.rows.length) {
-        report.sections.forEach((section, i) => {
-            if (i > 0) y += gap;
-            if (section.title) {
-                drawSectionTitle(ctx, section.title, y, theme);
-                y += titleH;
-            }
-            y = drawTable(ctx, { ...report, rows: section.rows }, widths, y, theme);
-        });
+        drawTable(ctx, report, widths, top);
     } else {
-        drawCenteredText(ctx, report.note, width, y + 30, '14px ' + FONT, theme.sub);
-        y += 60;
+        ctx.fillStyle = THEME.sub;
+        ctx.font = '14px ' + FONT;
+        ctx.textAlign = 'center';
+        ctx.fillText(report.note, width / 2, top + 30);
     }
 
-    if (config.Footer) {
-        drawCenteredText(ctx, config.Footer, width, y + 28, '12px ' + FONT, theme.sub);
-    }
-
-    const mime = config.Format === 'jpeg' ? 'image/jpeg' : 'image/png';
-    return { dataUrl: canvas.toDataURL(mime, 0.92), mime, title: report.title };
+    return { dataUrl: canvas.toDataURL('image/jpeg', 0.92), title: report.title };
 }
 
-// ═══ Reports · Download ════════════════════════════════════════════════
-function makeFileName(title) {
-    const slug = title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
-    return slug || 'report';
-}
-
-async function generateReport(type) {
+async function downloadReport() {
     try {
-        const { dataUrl, mime, title } = await createReportImage(type);
+        const { dataUrl, title } = await createReportImage();
         const link = document.createElement('a');
         link.href = dataUrl;
-        link.download = `${makeFileName(title)}.${mime === 'image/jpeg' ? 'jpg' : 'png'}`;
+        link.download = `${title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '') || 'report'}.jpg`;
         link.click();
     } catch (err) {
         alert('Failed to create image: ' + err.message);
     }
 }
 
-const SETTINGS_REPORTS = () => [
-    { type: 'month', icon: 'calendar_month', title: 'Last Month Statistics', desc: `All members · ${lastMonthRange().label}` },
-];
-
-// ═══ Settings Page (back button is handled in app.js) ══════════════════
-const reportButtonHtml = ({ type, icon, title, desc }) => `
-    <button type="button" data-report="${type}"
+const reportButtonHtml = () => `
+    <button type="button" data-report
             class="w-full flex items-center gap-3 px-3 py-3 bg-[#1E1E1E] border border-[#3A3A3A] rounded-xl
                    text-left active:scale-[0.99] transition-transform">
-        <span class="material-symbols-outlined text-[26px] text-[#D4A72C]">${icon}</span>
+        <span class="material-symbols-outlined text-[26px] text-[#D4A72C]">calendar_month</span>
         <div class="leading-tight">
-            <p class="text-sm font-bold text-white">${title}</p>
-            <p class="text-[10px] text-[#8B8F98]">${desc}</p>
+            <p class="text-sm font-bold text-white">Last Month Statistics</p>
+            <p class="text-[10px] text-[#8B8F98]">All members · ${lastMonthRange().label}</p>
         </div>
     </button>
 `;
 
-// Log koneksi ke Worker proxy (diisi saat halaman dimuat)
+const muted = (text) => `<p class="text-[11px] text-[#8B8F98] py-1">${text}</p>`;
+
 const liveLogHtml = () => {
     const rows = getLiveLog();
-    const body = !LIVE_API_URL
-        ? '<p class="text-[11px] text-[#8B8F98] py-1">Live API nonaktif (LIVE_API_URL kosong).</p>'
-        : rows.length === 0
-            ? '<p class="text-[11px] text-[#8B8F98] py-1">Belum ada panggilan.</p>'
-            : rows.map((row) => `
-                <div class="flex items-start gap-2 text-[11px] font-mono py-1 border-t border-[#2A2A2A] first:border-t-0">
-                    <span class="text-[#8B8F98] shrink-0">${escapeHtml(row.time)}</span>
-                    <span class="text-white shrink-0">${escapeHtml(row.path)}</span>
-                    <span class="${row.status === 'OK' ? 'text-green-400' : 'text-red-400'} break-all">${escapeHtml(row.status)}${row.note ? ' ' + escapeHtml(row.note) : ''}</span>
-                </div>`).join('');
+    const body = !LIVE_API_URL ? muted('Live API nonaktif (LIVE_API_URL kosong).')
+        : !rows.length ? muted('Belum ada panggilan.')
+        : rows.map((row) => `
+            <div class="flex items-start gap-2 text-[11px] font-mono py-1 border-t border-[#2A2A2A] first:border-t-0">
+                <span class="text-[#8B8F98] shrink-0">${escapeHtml(row.time)}</span>
+                <span class="text-white shrink-0">${escapeHtml(row.path)}</span>
+                <span class="${row.status === 'OK' ? 'text-green-400' : 'text-red-400'} break-all">${escapeHtml(row.status)}${row.note ? ' ' + escapeHtml(row.note) : ''}</span>
+            </div>`).join('');
+
     return `
         <div class="mt-4">
             <h3 class="text-[11px] font-bold text-[#D4A72C] uppercase mb-1">developer log</h3>
@@ -403,17 +275,15 @@ export function renderSettings() {
             ${backButton('data-settings-back')}
             <h2 class="medieval text-lg font-bold text-white uppercase">Settings</h2>
         </div>
-        <div class="flex flex-col gap-2">${SETTINGS_REPORTS().map(reportButtonHtml).join('')}</div>
+        <div class="flex flex-col gap-2">${reportButtonHtml()}</div>
         ${liveLogHtml()}
     `);
 
     page.onclick = (e) => {
-        const button = e.target.closest('[data-report]');
-        if (button) generateReport(button.dataset.report);
+        if (e.target.closest('[data-report]')) downloadReport();
     };
 }
 
-// ═══ About Page ════════════════════════════════════════════════════════
 const renderLabel = (label) => `
     <div class="flex items-center gap-1 bg-[#252525] px-2 py-1 rounded-lg">
         <img src="${label.iconUrls?.small || ''}" class="w-4 h-4" alt="">
@@ -421,31 +291,11 @@ const renderLabel = (label) => `
     </div>
 `;
 
-const renderRefreshButton = () => `
-    <button
-        id="refreshBtn"
-        type="button"
-        aria-label="Refresh data"
-        class="flex items-center justify-center
-               w-9 h-9 rounded-full bg-white/10 hover:bg-white/20
-               text-gray-200 transition-all duration-300
-               active:scale-95 disabled:opacity-60"
-    >
-        <span class="material-symbols-outlined text-[22px]">refresh</span>
-    </button>
-`;
-
-const renderSettingsButton = () => `
-    <button
-        id="settingsBtn"
-        type="button"
-        aria-label="Settings"
-        class="flex items-center justify-center
-               w-9 h-9 rounded-full bg-white/10 hover:bg-white/20
-               text-gray-200 transition-all duration-300
-               hover:rotate-45 active:scale-95"
-    >
-        <span class="material-symbols-outlined text-[22px]">settings</span>
+const iconButton = (id, label, icon, extra = '') => `
+    <button id="${id}" type="button" aria-label="${label}"
+            class="flex items-center justify-center w-9 h-9 rounded-full bg-white/10 hover:bg-white/20
+                   text-gray-200 transition-all duration-300 active:scale-95 ${extra}">
+        <span class="material-symbols-outlined text-[22px]">${icon}</span>
     </button>
 `;
 
@@ -459,15 +309,13 @@ function renderClanHeader(clan) {
                 <img src="${clan.badgeUrls?.medium || ''}"
                      class="w-10 h-10 md:w-12 md:h-12 shrink-0 rounded-lg" style="filter: drop-shadow(0 0 12px rgba(212, 167, 44, 0.6));" alt="Clan Badge">
                 <div class="min-w-0">
-                    <h1 class="text-lg md:text-2xl font-bold text-white leading-tight truncate">
-                        ${escapeHtml(clan.name || 'Unknown Clan')}
-                    </h1>
+                    <h1 class="text-lg md:text-2xl font-bold text-white leading-tight truncate">${escapeHtml(clan.name || 'Unknown Clan')}</h1>
                     <p class="text-xs text-gray-400 font-mono">${escapeHtml(clan.tag || '')}</p>
                 </div>
             </div>
             <div class="shrink-0 flex items-center gap-1.5">
-                ${renderRefreshButton()}
-                ${renderSettingsButton()}
+                ${iconButton('refreshBtn', 'Refresh data', 'refresh', 'disabled:opacity-60')}
+                ${iconButton('settingsBtn', 'Settings', 'settings', 'hover:rotate-45')}
             </div>
         </div>
         <hr class="border-t border-[#2A2A2A]">
@@ -487,9 +335,7 @@ const renderPersonRow = (m, index, value, label, color = 'text-[#D4A72C]') => `
              alt="TH${m.townHallLevel}" onerror="this.style.visibility='hidden'">
         <div class="min-w-0 flex-1 leading-tight">
             <p class="text-[13px] font-bold text-white truncate">${escapeHtml(m.name)}</p>
-            <p class="text-[9px] font-semibold tracking-wide uppercase text-[#D4A72C]">
-                ${roleName(m.role)} · TH${m.townHallLevel}
-            </p>
+            <p class="text-[9px] font-semibold tracking-wide uppercase text-[#D4A72C]">${roleName(m.role)} · TH${m.townHallLevel}</p>
         </div>
         ${value != null ? `
         <div class="shrink-0 text-right leading-tight">
@@ -499,7 +345,6 @@ const renderPersonRow = (m, index, value, label, color = 'text-[#D4A72C]') => `
     </div>
 `;
 
-// Membership (blue, left axis) and War stars (red, right axis) on one chart
 const renderStatsCard = () => {
     const war = getWarChartData();
     return renderCombinedChart({
@@ -520,47 +365,40 @@ const renderLeadSection = (title, rows) => rows ? `
     </div>
 ` : '';
 
+const GOLD = 'text-[#D4A72C]';
+
+const RANKING = [
+    { score: (m) => m.donations || 0, value: (m) => m.donations, label: 'Donated' },
+    { score: (m) => m.trophies || 0, value: (m) => m.trophies, label: 'Trophies', color: GOLD },
+    { score: (m) => (m.townHallLevel || 0) * 100000 + (m.trophies || 0), value: (m) => `TH${m.townHallLevel}`, label: 'Town Hall', color: GOLD },
+    { score: (m) => m.expLevel || 0, value: (m) => m.expLevel ?? '-', label: 'XP', color: GOLD },
+];
+
 export function renderAbout(clan) {
     const container = document.getElementById('section-about');
     if (!container || !clan) return;
     state.clan = clan;
     renderClanHeader(clan);
 
-    const labels = (clan.labels || []).map(renderLabel).join('');
-
     const list = clan.memberList || [];
     const topBy = (score) => [...list].sort((a, b) => score(b) - score(a))[0];
-    const gold = 'text-[#D4A72C]';
 
-    const ranking = [
-        { score: (m) => m.donations || 0, value: (m) => m.donations, label: 'Donated' },
-        { score: (m) => m.trophies || 0, value: (m) => m.trophies, label: 'Trophies', color: gold },
-        { score: (m) => (m.townHallLevel || 0) * 100000 + (m.trophies || 0), value: (m) => `TH${m.townHallLevel}`,
-          label: 'Town Hall', color: gold },
-        { score: (m) => m.expLevel || 0, value: (m) => m.expLevel ?? '-', label: 'XP', color: gold },
-    ];
-
-    const rankingHtml = ranking.map(({ score, value, label, color }, i) => {
+    const rankingHtml = RANKING.map(({ score, value, label, color }, i) => {
         const m = topBy(score);
         return m ? renderPersonRow(m, i, value(m), label, color) : '';
     }).join('');
 
     container.innerHTML = `
         <div class="pt-4 pb-3 px-0 md:p-5 w-full flex flex-col gap-4">
-            <div class="w-full overflow-hidden
-                        bg-[#1E1E1E] border border-[#2A2A2A]
-                        p-3 md:p-6 rounded-xl flex flex-col gap-3">
-
+            <div class="w-full overflow-hidden bg-[#1E1E1E] border border-[#2A2A2A] p-3 md:p-6 rounded-xl flex flex-col gap-3">
                 <div class="pb-3 border-b border-[#2A2A2A]">
                     <div class="text-sm font-bold text-gray-200 mb-1">Description</div>
-                    <div class="text-xs md:text-sm text-gray-300 break-words whitespace-pre-line m-0">
-                        ${clan.description || ''}
-                    </div>
+                    <div class="text-xs md:text-sm text-gray-300 break-words whitespace-pre-line m-0">${clan.description || ''}</div>
                 </div>
 
                 <div class="pb-3 border-b border-[#2A2A2A]">
                     <div class="text-sm font-bold text-gray-200 mb-1.5">Clan Labels</div>
-                    <div class="flex flex-wrap gap-1.5">${labels}</div>
+                    <div class="flex flex-wrap gap-1.5">${(clan.labels || []).map(renderLabel).join('')}</div>
                 </div>
 
                 <div>
@@ -571,7 +409,6 @@ export function renderAbout(clan) {
                         ${renderRecordTile('Draws', clan.warTies, 'text-gray-400')}
                     </div>
                 </div>
-
             </div>
 
             <div class="w-full bg-[#1a1a1a] border border-[#2A2A2A] rounded-xl p-3 flex flex-col gap-4">
