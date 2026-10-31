@@ -1,5 +1,5 @@
 {
-    "state": "preparation",
+    "state": "inWar",
     "teamSize": 15,
     "attacksPerMember": 2,
     "battleModifier": "none",
@@ -15,23 +15,57 @@
             "medium": "https://api-assets.clashofclans.com/badges/200/SduuUQLqAXUP6SALWXozMv9RIY-mBQkDPxECOZkap2s.png"
         },
         "clanLevel": 11,
-        "attacks": 0,
-        "stars": 0,
-        "destructionPercentage": 0.0,
+        "attacks": 3,
+        "stars": 7,
+        "destructionPercentage": 18.466667,
         "members": [
             {
                 "tag": "#GPCYQG89Y",
                 "name": "kutur18",
                 "townhallLevel": 16,
                 "mapPosition": 7,
-                "opponentAttacks": 0
+                "opponentAttacks": 1,
+                "bestOpponentAttack": {
+                    "attackerTag": "#9JVYPYL8V",
+                    "defenderTag": "#GPCYQG89Y",
+                    "stars": 3,
+                    "destructionPercentage": 100,
+                    "order": 1,
+                    "duration": 135
+                }
             },
             {
                 "tag": "#R2YVRJRYY",
                 "name": "Banten fc",
                 "townhallLevel": 15,
                 "mapPosition": 8,
-                "opponentAttacks": 0
+                "attacks": [
+                    {
+                        "attackerTag": "#R2YVRJRYY",
+                        "defenderTag": "#G29UGLQYJ",
+                        "stars": 1,
+                        "destructionPercentage": 77,
+                        "order": 4,
+                        "duration": 135
+                    },
+                    {
+                        "attackerTag": "#R2YVRJRYY",
+                        "defenderTag": "#R9L2CVYJ0",
+                        "stars": 3,
+                        "destructionPercentage": 100,
+                        "order": 5,
+                        "duration": 108
+                    }
+                ],
+                "opponentAttacks": 1,
+                "bestOpponentAttack": {
+                    "attackerTag": "#9JVYPYL8V",
+                    "defenderTag": "#R2YVRJRYY",
+                    "stars": 3,
+                    "destructionPercentage": 100,
+                    "order": 2,
+                    "duration": 76
+                }
             },
             {
                 "tag": "#R09Q8JLY9",
@@ -66,6 +100,16 @@
                 "name": "not4ppl",
                 "townhallLevel": 15,
                 "mapPosition": 4,
+                "attacks": [
+                    {
+                        "attackerTag": "#GLJR89GYC",
+                        "defenderTag": "#LJLPVLR88",
+                        "stars": 3,
+                        "destructionPercentage": 100,
+                        "order": 3,
+                        "duration": 122
+                    }
+                ],
                 "opponentAttacks": 0
             },
             {
@@ -135,9 +179,9 @@
             "medium": "https://api-assets.clashofclans.com/badges/200/_IeBB4BPWTsO_6BE_M_uzmAnDee65_bgO1sBtN5htgE.png"
         },
         "clanLevel": 6,
-        "attacks": 0,
-        "stars": 0,
-        "destructionPercentage": 0.0,
+        "attacks": 2,
+        "stars": 6,
+        "destructionPercentage": 13.333333,
         "members": [
             {
                 "tag": "#9P9UVLGRG",
@@ -179,7 +223,15 @@
                 "name": "Vikas",
                 "townhallLevel": 15,
                 "mapPosition": 4,
-                "opponentAttacks": 0
+                "opponentAttacks": 1,
+                "bestOpponentAttack": {
+                    "attackerTag": "#GLJR89GYC",
+                    "defenderTag": "#LJLPVLR88",
+                    "stars": 3,
+                    "destructionPercentage": 100,
+                    "order": 3,
+                    "duration": 122
+                }
             },
             {
                 "tag": "#P8UL929UR",
@@ -200,6 +252,24 @@
                 "name": "IRONMANM42",
                 "townhallLevel": 15,
                 "mapPosition": 7,
+                "attacks": [
+                    {
+                        "attackerTag": "#9JVYPYL8V",
+                        "defenderTag": "#GPCYQG89Y",
+                        "stars": 3,
+                        "destructionPercentage": 100,
+                        "order": 1,
+                        "duration": 135
+                    },
+                    {
+                        "attackerTag": "#9JVYPYL8V",
+                        "defenderTag": "#R2YVRJRYY",
+                        "stars": 3,
+                        "destructionPercentage": 100,
+                        "order": 2,
+                        "duration": 76
+                    }
+                ],
                 "opponentAttacks": 0
             },
             {
@@ -207,7 +277,15 @@
                 "name": "KETO\u2726",
                 "townhallLevel": 12,
                 "mapPosition": 11,
-                "opponentAttacks": 0
+                "opponentAttacks": 1,
+                "bestOpponentAttack": {
+                    "attackerTag": "#R2YVRJRYY",
+                    "defenderTag": "#G29UGLQYJ",
+                    "stars": 1,
+                    "destructionPercentage": 77,
+                    "order": 4,
+                    "duration": 135
+                }
             },
             {
                 "tag": "#R2CJCP88V",
@@ -228,7 +306,15 @@
                 "name": "bbyshaylaa:)",
                 "townhallLevel": 11,
                 "mapPosition": 14,
-                "opponentAttacks": 0
+                "opponentAttacks": 1,
+                "bestOpponentAttack": {
+                    "attackerTag": "#R2YVRJRYY",
+                    "defenderTag": "#R9L2CVYJ0",
+                    "stars": 3,
+                    "destructionPercentage": 100,
+                    "order": 5,
+                    "duration": 108
+                }
             },
             {
                 "tag": "#GVPQJUGYY",
