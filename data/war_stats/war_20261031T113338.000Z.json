@@ -15,9 +15,9 @@
             "medium": "https://api-assets.clashofclans.com/badges/200/SduuUQLqAXUP6SALWXozMv9RIY-mBQkDPxECOZkap2s.png"
         },
         "clanLevel": 11,
-        "attacks": 3,
-        "stars": 7,
-        "destructionPercentage": 18.466667,
+        "attacks": 5,
+        "stars": 12,
+        "destructionPercentage": 31.2,
         "members": [
             {
                 "tag": "#GPCYQG89Y",
@@ -93,7 +93,25 @@
                 "name": "mpruy",
                 "townhallLevel": 11,
                 "mapPosition": 15,
-                "opponentAttacks": 0
+                "attacks": [
+                    {
+                        "attackerTag": "#R0UYQ88YQ",
+                        "defenderTag": "#GVVJ22GUJ",
+                        "stars": 3,
+                        "destructionPercentage": 100,
+                        "order": 6,
+                        "duration": 73
+                    }
+                ],
+                "opponentAttacks": 1,
+                "bestOpponentAttack": {
+                    "attackerTag": "#R9L2CVYJ0",
+                    "defenderTag": "#R0UYQ88YQ",
+                    "stars": 1,
+                    "destructionPercentage": 54,
+                    "order": 7,
+                    "duration": 69
+                }
             },
             {
                 "tag": "#GLJR89GYC",
@@ -108,6 +126,14 @@
                         "destructionPercentage": 100,
                         "order": 3,
                         "duration": 122
+                    },
+                    {
+                        "attackerTag": "#GLJR89GYC",
+                        "defenderTag": "#LVCU2UL8R",
+                        "stars": 2,
+                        "destructionPercentage": 91,
+                        "order": 9,
+                        "duration": 120
                     }
                 ],
                 "opponentAttacks": 0
@@ -131,7 +157,15 @@
                 "name": "snowy",
                 "townhallLevel": 11,
                 "mapPosition": 14,
-                "opponentAttacks": 0
+                "opponentAttacks": 1,
+                "bestOpponentAttack": {
+                    "attackerTag": "#R9L2CVYJ0",
+                    "defenderTag": "#QQ888CGYY",
+                    "stars": 1,
+                    "destructionPercentage": 69,
+                    "order": 8,
+                    "duration": 120
+                }
             },
             {
                 "tag": "#G9CQG8R0Y",
@@ -179,9 +213,9 @@
             "medium": "https://api-assets.clashofclans.com/badges/200/_IeBB4BPWTsO_6BE_M_uzmAnDee65_bgO1sBtN5htgE.png"
         },
         "clanLevel": 6,
-        "attacks": 2,
-        "stars": 6,
-        "destructionPercentage": 13.333333,
+        "attacks": 4,
+        "stars": 8,
+        "destructionPercentage": 21.533333,
         "members": [
             {
                 "tag": "#9P9UVLGRG",
@@ -209,7 +243,15 @@
                 "name": "slayer",
                 "townhallLevel": 9,
                 "mapPosition": 15,
-                "opponentAttacks": 0
+                "opponentAttacks": 1,
+                "bestOpponentAttack": {
+                    "attackerTag": "#R0UYQ88YQ",
+                    "defenderTag": "#GVVJ22GUJ",
+                    "stars": 3,
+                    "destructionPercentage": 100,
+                    "order": 6,
+                    "duration": 73
+                }
             },
             {
                 "tag": "#QUQRRC8GU",
@@ -245,7 +287,15 @@
                 "name": "Vikas 2",
                 "townhallLevel": 15,
                 "mapPosition": 5,
-                "opponentAttacks": 0
+                "opponentAttacks": 1,
+                "bestOpponentAttack": {
+                    "attackerTag": "#GLJR89GYC",
+                    "defenderTag": "#LVCU2UL8R",
+                    "stars": 2,
+                    "destructionPercentage": 91,
+                    "order": 9,
+                    "duration": 120
+                }
             },
             {
                 "tag": "#9JVYPYL8V",
@@ -306,6 +356,24 @@
                 "name": "bbyshaylaa:)",
                 "townhallLevel": 11,
                 "mapPosition": 14,
+                "attacks": [
+                    {
+                        "attackerTag": "#R9L2CVYJ0",
+                        "defenderTag": "#R0UYQ88YQ",
+                        "stars": 1,
+                        "destructionPercentage": 54,
+                        "order": 7,
+                        "duration": 69
+                    },
+                    {
+                        "attackerTag": "#R9L2CVYJ0",
+                        "defenderTag": "#QQ888CGYY",
+                        "stars": 1,
+                        "destructionPercentage": 69,
+                        "order": 8,
+                        "duration": 120
+                    }
+                ],
                 "opponentAttacks": 1,
                 "bestOpponentAttack": {
                     "attackerTag": "#R2YVRJRYY",
