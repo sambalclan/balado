@@ -51,7 +51,7 @@ Siapkan:
 - Akun GitHub.
 - Akun Cloudflare.
 - Token Clash of Clans API yang valid.
-- Repository berisi kode Worker, misalnya `worker.js`.
+- Repository hasil fork yang sudah berisi file proyek, termasuk `worker.js`.
 
 **Jangan pernah memasukkan token API ke dalam repository publik.** Simpan token sebagai secret Cloudflare Worker.
 
@@ -70,7 +70,7 @@ Kode Worker akan membuat tabel `latest` dan `history` jika belum ada, ketika dij
 
 1. Buka **Workers & Pages**.
 2. Buat Worker baru atau buka Worker yang sudah ada.
-3. Masuk ke editor kode dan tempel isi `worker.js`.
+3. Gunakan file `worker.js` yang sudah tersedia di repository. Tidak perlu membuat file baru. Jika deploy melalui dashboard, gunakan kode dari file tersebut.
 4. Tambahkan **D1 binding** dengan nama variabel **`DB`**, lalu pilih database yang dibuat pada langkah sebelumnya.
 5. Tambahkan **Secret** bernama **`COC_API_TOKEN`** dan isi dengan token API milikmu.
 6. Sesuaikan konstanta `TAG` di `worker.js` dengan tag clan yang ingin dipantau.
@@ -81,7 +81,7 @@ Kode Worker akan membuat tabel `latest` dan `history` jika belum ada, ketika dij
 
 ### Melalui Wrangler (opsional)
 
-Jika repository sudah memiliki `wrangler.toml` atau `wrangler.jsonc` yang sesuai, kamu bisa melakukan deploy lewat terminal:
+Jika repository sudah memiliki konfigurasi Wrangler yang sesuai, kamu bisa melakukan deploy langsung dari folder repository tanpa menambahkan file baru:
 
 ```bash
 npm install -g wrangler
@@ -130,7 +130,7 @@ Sebagian endpoint juga tersedia dengan awalan `/api/`, misalnya `/api/raid/histo
 
 ## 7. Memasang Frontend
 
-Jika repository menyertakan `index.html`, folder `js/`, `pages/`, dan aset lain, unggah atau deploy file frontend tersebut melalui hosting statis pilihanmu, misalnya GitHub Pages atau Cloudflare Pages.
+Gunakan `index.html`, folder `js/`, `pages/`, dan aset lain yang sudah ada di repository. Deploy frontend melalui hosting statis pilihanmu, misalnya GitHub Pages atau Cloudflare Pages. Tidak perlu membuat ulang file-file tersebut.
 
 Pastikan alamat API pada JavaScript frontend mengarah ke URL Worker hasil deploy. Struktur dan cara build frontend bergantung pada file yang tersedia dalam fork masing-masing.
 
@@ -165,7 +165,3 @@ Proyek **Sambal Balado** dikembangkan dengan bantuan alat AI berikut:
 AI digunakan untuk membantu penulisan kode, penjelasan, pemecahan masalah, dan pengembangan fitur. Penyebutan nama tersebut merupakan bentuk transparansi penggunaan AI, **bukan** pernyataan dukungan atau kerja sama resmi.
 
 Clash of Clans adalah merek milik Supercell. Proyek ini merupakan proyek komunitas independen dan tidak berafiliasi dengan atau didukung oleh Supercell.
-
-## Lisensi
-
-Belum ditentukan. Jika ingin mengizinkan orang lain menggunakan, memodifikasi, dan mendistribusikan proyek ini secara jelas, tambahkan file `LICENSE` yang sesuai. Melakukan fork di GitHub tidak otomatis memberikan lisensi penggunaan ulang di luar ketentuan platform.
