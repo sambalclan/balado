@@ -414,9 +414,9 @@
                     "medium": "https://api-assets.clashofclans.com/badges/200/ZTWCqihAsAEtmyertYtLkykt8qq6AxUrneyLivKPOJw.png"
                 }
             },
-            "attackCount": 13,
+            "attackCount": 19,
             "districtCount": 7,
-            "districtsDestroyed": 4,
+            "districtsDestroyed": 6,
             "districts": [
                 {
                     "id": 70000000,
@@ -431,20 +431,70 @@
                     "id": 70000001,
                     "name": "Barbarian Camp",
                     "districtHallLevel": 4,
-                    "destructionPercent": 0,
-                    "stars": 0,
-                    "attackCount": 0,
-                    "totalLooted": 0
+                    "destructionPercent": 100,
+                    "stars": 3,
+                    "attackCount": 4,
+                    "totalLooted": 8872,
+                    "attacks": [
+                        {
+                            "attacker": {
+                                "tag": "#LJPG8JJ0U",
+                                "name": "Oreo_NoAttack"
+                            },
+                            "destructionPercent": 100,
+                            "stars": 3
+                        },
+                        {
+                            "attacker": {
+                                "tag": "#LJPG8JJ0U",
+                                "name": "Oreo_NoAttack"
+                            },
+                            "destructionPercent": 71,
+                            "stars": 2
+                        },
+                        {
+                            "attacker": {
+                                "tag": "#LJPG8JJ0U",
+                                "name": "Oreo_NoAttack"
+                            },
+                            "destructionPercent": 42,
+                            "stars": 0
+                        },
+                        {
+                            "attacker": {
+                                "tag": "#LJPG8JJ0U",
+                                "name": "Oreo_NoAttack"
+                            },
+                            "destructionPercent": 22,
+                            "stars": 0
+                        }
+                    ]
                 },
                 {
                     "id": 70000002,
                     "name": "Wizard Valley",
                     "districtHallLevel": 3,
-                    "destructionPercent": 40,
-                    "stars": 0,
-                    "attackCount": 1,
-                    "totalLooted": 2280,
+                    "destructionPercent": 100,
+                    "stars": 3,
+                    "attackCount": 3,
+                    "totalLooted": 6835,
                     "attacks": [
+                        {
+                            "attacker": {
+                                "tag": "#LJPG8JJ0U",
+                                "name": "Oreo_NoAttack"
+                            },
+                            "destructionPercent": 100,
+                            "stars": 3
+                        },
+                        {
+                            "attacker": {
+                                "tag": "#LJPG8JJ0U",
+                                "name": "Oreo_NoAttack"
+                            },
+                            "destructionPercent": 81,
+                            "stars": 2
+                        },
                         {
                             "attacker": {
                                 "tag": "#Q2P2UVPVC",
