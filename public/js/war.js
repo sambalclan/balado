@@ -1,154 +1,194 @@
-import { parseCoCDate, escapeHtml, roleName, fmt, warDate, getTHImage, renderAreaChart, dayLabel, isEndedWar, warStars, pageCard, emptyCard, backButton, renderPillTabs, setPillActive } from './constants.js';
+import {
+    parseCoCDate, escapeHtml, roleName, fmt, warDate, getTHImage,
+    renderAreaChart, dayLabel, isEndedWar, warStars, pageCard,
+    emptyCard, backButton, renderPillTabs, setPillActive
+} from './constants.js';
 import { state, getRaidWeeks } from './state.js';
 
-// ═══ War · List ════════════════════════════════════════════════════════
+// WAR
 let warFilter = 'all';
-let warSelected = null; // index in state.wars of the opened war, or null for the list
+let warSelected = null;
+let warCountdownTimer = null;
 
 const WAR_FILTERS = [
-    { id: 'all',     label: 'All' },
+    { id: 'all', label: 'All' },
     { id: 'victory', label: 'Victory' },
-    { id: 'defeat',  label: 'Defeat' },
-    { id: 'draw',    label: 'Draw' },
+    { id: 'defeat', label: 'Defeat' },
+    { id: 'draw', label: 'Draw' }
 ];
 
-function formatWarStartTime(w) {
-    const date = parseCoCDate(w.startTime || w.preparationStartTime);
-    if (!date) return '-';
-    return date.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: false });
+function warCountdown(w) {
+    if (isEndedWar(w)) return null;
+    const preparing = w.state === 'preparation';
+    const target = parseCoCDate(preparing ? w.startTime : w.endTime);
+    if (!target || Number.isNaN(target.getTime())) return null;
+
+    const remaining = Math.max(0, target.getTime() - Date.now());
+    const seconds = Math.floor(remaining / 1000);
+    const days = Math.floor(seconds / 86400);
+    const hours = Math.floor((seconds % 86400) / 3600);
+    const minutes = Math.floor((seconds % 3600) / 60);
+    const secs = seconds % 60;
+    const pad = n => String(n).padStart(2, '0');
+
+    return {
+        label: preparing ? 'War starts in' : 'War ends in',
+        time: `${days ? days + 'd ' : ''}${pad(hours)}:${pad(minutes)}:${pad(secs)}`
+    };
+}
+
+function warCountdownHtml(w) {
+    const timer = warCountdown(w);
+    if (!timer) return '';
+
+    return `
+        <div class="flex items-center justify-center gap-1.5 mt-2 text-[10px] text-[#D4A72C]" data-war-countdown="${state.wars.indexOf(w)}">
+            <span class="material-symbols-outlined text-[14px]">timer</span>
+            <span class="text-[#A0A0A0]">${timer.label}</span>
+            <span class="font-mono font-bold tabular-nums" data-war-time>${timer.time}</span>
+        </div>`;
+}
+
+function startWarCountdown(container) {
+    clearInterval(warCountdownTimer);
+
+    const update = () => {
+        if (!container.isConnected) {
+            clearInterval(warCountdownTimer);
+            return;
+        }
+
+        container.querySelectorAll('[data-war-countdown]').forEach(el => {
+            const w = state.wars[Number(el.dataset.warCountdown)];
+            const timer = w && warCountdown(w);
+            if (!timer) return el.remove();
+
+            const time = el.querySelector('[data-war-time]');
+            if (time) time.textContent = timer.time;
+        });
+    };
+
+    update();
+    warCountdownTimer = setInterval(update, 1000);
 }
 
 function warResult(w) {
     if (w.state === 'preparation') return { key: 'ongoing', label: 'PREPARATION', color: 'text-[#D4A72C]' };
     if (!isEndedWar(w)) return { key: 'ongoing', label: 'IN WAR', color: 'text-[#D4A72C]' };
 
-    const cs = w.clan?.stars || 0, os = w.opponent?.stars || 0;
-    const cd = w.clan?.destructionPercentage || 0, od = w.opponent?.destructionPercentage || 0;
+    const cs = w.clan?.stars || 0;
+    const os = w.opponent?.stars || 0;
+    const cd = w.clan?.destructionPercentage || 0;
+    const od = w.opponent?.destructionPercentage || 0;
+
     if (cs > os || (cs === os && cd > od)) return { key: 'victory', label: 'VICTORY', color: 'text-green-500' };
     if (cs < os || (cs === os && cd < od)) return { key: 'defeat', label: 'LOSS', color: 'text-red-500' };
     return { key: 'draw', label: 'DRAW', color: 'text-gray-400' };
 }
 
-const warAttacksUsed = (side) =>
-    side?.attacks ?? (side?.members || []).reduce((n, m) => n + (m.attacks?.length || 0), 0);
+const warAttacksUsed = side => side?.attacks ?? (side?.members || []).reduce((n, m) => n + (m.attacks?.length || 0), 0);
+const warAttacksMax = w => (w.teamSize || w.clan?.members?.length || 0) * (w.attacksPerMember || 2);
+const isRunning = w => warResult(w).key === 'ongoing';
+const warTime = w => parseCoCDate(w.endTime || w.startTime || w.preparationStartTime)?.getTime() || 0;
 
-const warAttacksMax = (w) =>
-    (w.teamSize || w.clan?.members?.length || 0) * (w.attacksPerMember || 2);
-
-const renderWarCard = (w) => {
-    const c = w.clan || {}, o = w.opponent || {};
+function renderWarCard(w) {
+    const c = w.clan || {};
+    const o = w.opponent || {};
     const r = warResult(w);
     const max = warAttacksMax(w);
-    const pct = (v) => (v || 0).toFixed(1) + '%';
-
-    const startTimeHtml = w.state === 'preparation'
-        ? `<span class="text-gray-300 font-semibold">Start Time: ${formatWarStartTime(w)}</span>`
-        : '';
+    const pct = v => (v || 0).toFixed(1) + '%';
 
     return `
-    <div data-war-open="${state.wars.indexOf(w)}" class="bg-[#1E1E1E] border border-[#2A2A2A] rounded-xl px-3 py-2.5 cursor-pointer active:scale-[0.99] transition-transform">
-        <div class="flex items-center justify-between text-[9px] font-mono tracking-wide text-[#8B8F98] mb-1">
-            <span>${warDate(w) || '-'}</span>
-            ${startTimeHtml}
-            <span class="material-symbols-outlined text-[14px] text-[#6B7280]">chevron_right</span>
-        </div>
-        <div class="grid grid-cols-[1fr_auto_1fr] items-center gap-2">
-            <div class="flex items-center gap-2 min-w-0">
-                <img src="${c.badgeUrls?.small || ''}" class="w-8 h-8 shrink-0 object-contain" alt="" onerror="this.style.visibility='hidden'">
-                <div class="min-w-0 leading-tight">
-                    <p class="text-xs font-bold text-white truncate">${escapeHtml(c.name || '')}</p>
-                    <p class="text-[9px] text-[#6B7280]">${warAttacksUsed(c)}/${max} Atks</p>
+        <div data-war-open="${state.wars.indexOf(w)}" class="bg-[#1E1E1E] border border-[#2A2A2A] rounded-xl px-3 py-3 cursor-pointer active:scale-[0.99] transition-transform">
+            <div class="flex items-center justify-between text-[9px] font-mono text-[#8B8F98] mb-2">
+                <span>${warDate(w) || '-'}</span>
+                <span class="material-symbols-outlined text-[14px]">chevron_right</span>
+            </div>
+            <div class="grid grid-cols-[1fr_auto_1fr] items-center gap-2">
+                <div class="flex items-center gap-2 min-w-0">
+                    <img src="${escapeHtml(c.badgeUrls?.small || '')}" class="w-8 h-8 shrink-0 object-contain" alt="">
+                    <div class="min-w-0 leading-tight">
+                        <p class="text-xs font-bold text-white truncate">${escapeHtml(c.name || '')}</p>
+                        <p class="text-[9px] text-[#6B7280]">${warAttacksUsed(c)}/${max} Atks</p>
+                    </div>
+                </div>
+                <div class="text-center leading-tight">
+                    <p class="text-[9px] font-semibold ${r.color}">${r.label}</p>
+                    <p class="medieval text-lg font-bold text-white">${c.stars || 0} - ${o.stars || 0}</p>
+                    <p class="text-[8px] text-[#6B7280]">${pct(c.destructionPercentage)} vs ${pct(o.destructionPercentage)}</p>
+                </div>
+                <div class="flex items-center justify-end gap-2 min-w-0">
+                    <div class="min-w-0 leading-tight text-right">
+                        <p class="text-xs font-bold text-white truncate">${escapeHtml(o.name || 'Opponent')}</p>
+                        <p class="text-[9px] text-[#6B7280]">${warAttacksUsed(o)}/${max} Atks</p>
+                    </div>
+                    <img src="${escapeHtml(o.badgeUrls?.small || '')}" class="w-8 h-8 shrink-0 object-contain" alt="">
                 </div>
             </div>
-            <div class="text-center leading-tight">
-                <p class="text-[9px] font-semibold tracking-widest ${r.color}">${r.label}</p>
-                <p class="medieval text-lg font-bold text-white">${c.stars || 0} - ${o.stars || 0}</p>
-                <p class="text-[8px] text-[#6B7280]">${pct(c.destructionPercentage)} vs ${pct(o.destructionPercentage)}</p>
-            </div>
-            <div class="flex items-center justify-end gap-2 min-w-0">
-                <div class="min-w-0 leading-tight text-right">
-                    <p class="text-xs font-bold text-white truncate">${escapeHtml(o.name || 'Opponent')}</p>
-                    <p class="text-[9px] text-[#6B7280]">${warAttacksUsed(o)}/${max} Atks</p>
-                </div>
-                <img src="${o.badgeUrls?.small || ''}" class="w-8 h-8 shrink-0 object-contain" alt="" onerror="this.style.visibility='hidden'">
-            </div>
-        </div>
-    </div>`;
-};
+            ${warCountdownHtml(w)}
+        </div>`;
+}
 
-// Running wars first (preparation and in war), then finished wars newest first
-const isRunning = (w) => warResult(w).key === 'ongoing';
-const warTime = (w) => parseCoCDate(w.endTime || w.startTime || w.preparationStartTime)?.getTime() || 0;
-const filterWars = () => [...state.wars]
-    .sort((a, b) => (isRunning(b) - isRunning(a)) || (warTime(b) - warTime(a)))
-    .filter((w) => warFilter === 'all' || warResult(w).key === warFilter);
+function filterWars() {
+    return [...state.wars]
+        .sort((a, b) => Number(isRunning(b)) - Number(isRunning(a)) || warTime(b) - warTime(a))
+        .filter(w => warFilter === 'all' || warResult(w).key === warFilter);
+}
 
-const renderWarList = () => {
+function renderWarList() {
     const shown = filterWars();
     const count = document.getElementById('warCount');
     if (count) count.textContent = `${shown.length} / ${state.wars.length}`;
-    return shown.length
-        ? shown.map(renderWarCard).join('')
-        : '<p class="text-sm text-gray-500 text-center py-6">No wars found.</p>';
-};
+    return shown.length ? shown.map(renderWarCard).join('') : '<p class="text-sm text-gray-500 text-center py-6">No wars found.</p>';
+}
 
-// ═══ War · Statistics (chart is shown on About) ════════════════════════
-// Summary of all finished wars, shown under the chart
+// WAR STATISTICS
 function warSummary(done) {
-    const count = (key) => done.filter((w) => warResult(w).key === key).length;
-    const avg = (v) => (done.length ? v / done.length : 0);
-
-    const won = count('victory'), lost = count('defeat'), drawn = count('draw');
+    const count = key => done.filter(w => warResult(w).key === key).length;
+    const avg = value => done.length ? value / done.length : 0;
+    const won = count('victory');
+    const lost = count('defeat');
+    const drawn = count('draw');
     const stars = done.reduce((n, w) => n + (w.clan?.stars || 0), 0);
 
     return [
         { label: 'Record (W-L-D)', value: `${won}-${lost}-${drawn}`, color: 'text-[#D4A72C]' },
         { label: 'Win rate', value: Math.round(avg(won) * 100) + '%', color: 'text-green-500' },
-        { label: 'Avg stars', value: avg(stars).toFixed(1) },
+        { label: 'Avg stars', value: avg(stars).toFixed(1) }
     ];
 }
 
-// Data for the combined Membership + War chart on the dashboard (About)
-export const getWarChartData = () => {
-    const done = state.wars
-        .filter((w) => isEndedWar(w) && warDate(w))
-        .reverse(); // index is newest first -> flip to oldest first
+export function getWarChartData() {
+    const done = state.wars.filter(w => isEndedWar(w) && warDate(w)).reverse();
     return {
-        points: done.slice(-7).map((w) => ({ date: warDate(w), value: w.clan?.stars || 0 })),
+        points: done.slice(-7).map(w => ({ date: warDate(w), value: w.clan?.stars || 0 })),
         stats: done.length ? warSummary(done) : [],
-        total: done.length,
+        total: done.length
     };
-};
+}
 
-// "Stars per war" chart on its own (no longer used by About)
-export const renderWarChartCard = (bare = false) => {
-    const done = state.wars
-        .filter((w) => isEndedWar(w) && warDate(w))
-        .reverse(); // index is newest first -> flip to oldest first
-
+export function renderWarChartCard(bare = false) {
+    const done = state.wars.filter(w => isEndedWar(w) && warDate(w)).reverse();
     return renderAreaChart({
         title: 'War',
         subtitle: 'Stars per war (last 7)',
-        points: done.slice(-7).map((w) => ({ label: dayLabel(warDate(w)), value: w.clan?.stars || 0 })),
+        points: done.slice(-7).map(w => ({ label: dayLabel(warDate(w)), value: w.clan?.stars || 0 })),
         stats: done.length ? warSummary(done) : [],
         note: done.length ? `Summary of ${done.length} finished wars` : '',
-        bare,
+        bare
     });
-};
+}
 
-// ═══ War · Detail (who attacked and who did not) ═══════════════════════
-const renderStars = (n) => [1, 2, 3].map((i) =>
-    `<span class="${i <= n ? 'text-[#F5C542]' : 'text-[#3A3A3A]'}">★</span>`).join('');
+// WAR DETAILS
+const renderStars = n => [1, 2, 3].map(i => `<span class="${i <= n ? 'text-[#F5C542]' : 'text-[#3A3A3A]'}">★</span>`).join('');
 
-const starColor = () => 'border-[#2A2A2A] bg-[#252525]';
-
-const renderAttackChip = (a) => `
-    <div class="flex items-center justify-between gap-2 rounded-lg border ${starColor(a.stars || 0)} px-2 py-0.5">
-        <span class="text-[11px] leading-none tracking-tighter">${renderStars(a.stars || 0)}</span>
-        <span class="text-[10px] font-bold text-white tabular-nums">${a.destructionPercentage || 0}%</span>
+const renderAttackChip = a => `
+    <div class="flex items-center justify-between gap-2 rounded-lg border border-[#2A2A2A] bg-[#252525] px-2 py-0.5">
+        <span class="text-[11px] leading-none">${renderStars(a.stars || 0)}</span>
+        <span class="text-[10px] font-bold text-white">${a.destructionPercentage || 0}%</span>
     </div>`;
 
-const renderWarMemberRow = (m, i, ended) => {
+function renderWarMemberRow(m, i, ended) {
     const attacks = m.attacks || [];
     const th = m.townhallLevel ?? m.townHallLevel;
     const stars = warStars(m);
@@ -157,110 +197,109 @@ const renderWarMemberRow = (m, i, ended) => {
 
     const right = attacks.length
         ? `<div class="shrink-0 w-[92px] flex flex-col gap-1">
-               ${attacks.map(renderAttackChip).join('')}
-               ${missed && ended ? `<span class="text-center text-[8px] font-semibold uppercase tracking-wide text-red-400">${missed} missed</span>` : ''}
+            ${attacks.map(renderAttackChip).join('')}
+            ${missed && ended ? `<span class="text-center text-[8px] text-red-400">${missed} missed</span>` : ''}
            </div>`
-        : `<span class="shrink-0 rounded-lg px-2.5 py-1 text-[10px] font-bold border
-                ${ended ? 'text-red-400 border-[#2A2A2A]' : 'text-[#8B8F98] border-[#2A2A2A]'}">${pending}</span>`;
+        : `<span class="shrink-0 rounded-lg px-2 py-1 text-[10px] border border-[#2A2A2A] ${ended ? 'text-red-400' : 'text-gray-400'}">${pending}</span>`;
 
     return `
-    <div class="row-in flex items-center gap-3 px-3 py-2.5 ${i > 0 ? 'border-t border-[#2A2A2A]' : ''}" style="--i:${Math.min(i, 14)}">
-        <span class="shrink-0 w-6 h-6 rounded-md bg-[#252525] border border-[#2F2F2F] flex items-center justify-center text-[10px] font-mono font-bold text-[#8B8F98]">${m.mapPosition ?? i + 1}</span>
-        ${th ? `<img src="${getTHImage(th)}" class="w-9 h-9 shrink-0 object-contain" alt="TH${th}" onerror="this.style.visibility='hidden'">` : ''}
-        <div class="min-w-0 flex-1 leading-tight">
-            <p class="text-[12px] font-bold text-white truncate">${escapeHtml(m.name)}</p>
-            <p class="text-[9px] text-[#8B8F98]">${th ? `TH${th} · ` : ''}${attacks.length}/${m.__max} attacks${attacks.length ? ` · <span class="text-white font-semibold">${stars}★</span>` : ''}</p>
-        </div>
-        ${right}
-    </div>`;
-};
+        <div class="flex items-center gap-3 px-3 py-2.5 ${i ? 'border-t border-[#2A2A2A]' : ''}">
+            <span class="w-6 h-6 shrink-0 rounded-md bg-[#252525] flex items-center justify-center text-[10px] text-gray-400">${m.mapPosition ?? i + 1}</span>
+            ${th ? `<img src="${getTHImage(th)}" class="w-9 h-9 shrink-0 object-contain" alt="TH${th}">` : ''}
+            <div class="min-w-0 flex-1 leading-tight">
+                <p class="text-xs font-bold text-white truncate">${escapeHtml(m.name)}</p>
+                <p class="text-[9px] text-gray-400">TH${th || '-'} · ${attacks.length}/${m.__max} attacks ${attacks.length ? `· ${stars}★` : ''}</p>
+            </div>
+            ${right}
+        </div>`;
+}
 
-const renderWarMemberGroup = (title, dot, members, ended) => `
-    <div class="flex items-center gap-2 mb-2">
-        <h4 class="medieval text-[11px] font-bold text-[#D4A72C] uppercase tracking-wide">${title}</h4>
-        <span class="text-[9px] font-mono text-[#8B8F98] bg-[#252525] px-1.5 py-0.5 rounded-md">${members.length}</span>
-    </div>
-    ${members.length
-        ? `<div class="rounded-xl overflow-hidden border border-[#2A2A2A] bg-[#1E1E1E] mb-4">${members.map((m, i) => renderWarMemberRow(m, i, ended)).join('')}</div>`
-        : '<p class="text-xs text-[#8B8F98] mb-4 pl-3.5">-</p>'}`;
+function renderWarMemberGroup(title, members, ended) {
+    return `
+        <div class="mb-4">
+            <h4 class="text-[11px] font-bold text-[#D4A72C] uppercase mb-2">${title} (${members.length})</h4>
+            <div class="rounded-xl overflow-hidden border border-[#2A2A2A]">
+                ${members.length ? members.map((m, i) => renderWarMemberRow(m, i, ended)).join('') : '<p class="text-xs text-gray-500 p-3">No members</p>'}
+            </div>
+        </div>`;
+}
 
-const renderWarStat = (label, value, color = 'text-white') => `
-    <div class="rounded-lg bg-[#141414] border border-[#2A2A2A] px-1.5 py-1.5 text-center leading-tight">
-        <p class="text-[13px] font-bold ${color}">${value}</p>
-        <p class="text-[7px] tracking-wide uppercase text-[#6B7280] mt-0.5">${label}</p>
-    </div>`;
-
-const renderWarScoreboard = (w, r) => {
-    const c = w.clan || {}, o = w.opponent || {};
-    const pct = (v) => (v || 0).toFixed(1) + '%';
-    const side = (s, name, align) => `
-        <div class="flex flex-col items-center gap-1 min-w-0 ${align}">
-            <img src="${s.badgeUrls?.medium || s.badgeUrls?.small || ''}" class="w-12 h-12 object-contain" alt="" onerror="this.style.visibility='hidden'">
-            <p class="text-[11px] font-bold text-white truncate max-w-full">${escapeHtml(name)}</p>
-            <p class="text-[9px] font-mono text-[#8B8F98]">${pct(s.destructionPercentage)}</p>
+function renderWarScoreboard(w, r) {
+    const c = w.clan || {};
+    const o = w.opponent || {};
+    const side = s => `
+        <div class="flex flex-col items-center gap-1 min-w-0">
+            <img src="${escapeHtml(s.badgeUrls?.medium || s.badgeUrls?.small || '')}" class="w-12 h-12 object-contain" alt="">
+            <p class="text-[11px] font-bold text-white truncate max-w-full">${escapeHtml(s.name || 'Clan')}</p>
+            <p class="text-[9px] text-gray-400">${(s.destructionPercentage || 0).toFixed(1)}%</p>
         </div>`;
 
     return `
-    <div class="rounded-2xl border border-[#2A2A2A] bg-[#1E1E1E] p-3 mb-3">
-        <div class="grid grid-cols-[1fr_auto_1fr] items-center gap-2">
-            ${side(c, c.name || 'Clan', '')}
-            <div class="text-center leading-tight px-1">
-                <p class="text-[9px] font-semibold tracking-widest ${r.color}">${r.label}</p>
-                <p class="medieval text-2xl font-bold ${r.color}">${c.stars || 0} <span class="text-[#6B7280]">-</span> ${o.stars || 0}</p>
-                <p class="text-[8px] text-[#6B7280]">${warDate(w) || '-'}</p>
+        <div class="rounded-xl border border-[#2A2A2A] bg-[#1E1E1E] p-3 mb-3">
+            <div class="grid grid-cols-[1fr_auto_1fr] items-center gap-2">
+                ${side(c)}
+                <div class="text-center">
+                    <p class="text-[9px] font-semibold ${r.color}">${r.label}</p>
+                    <p class="medieval text-2xl font-bold text-white">${c.stars || 0} - ${o.stars || 0}</p>
+                    <p class="text-[8px] text-gray-500">${warDate(w) || '-'}</p>
+                </div>
+                ${side(o)}
             </div>
-            ${side(o, o.name || 'Opponent', '')}
-        </div>
-    </div>`;
-};
+        </div>`;
+}
 
 function renderWarDetail(w) {
     const r = warResult(w);
     const ended = r.key !== 'ongoing';
     const max = w.attacksPerMember || 2;
-    const members = (w.clan?.members || []).map((m) => ({ ...m, __max: max }))
+    const members = (w.clan?.members || []).map(m => ({ ...m, __max: max }))
         .sort((a, b) => (a.mapPosition || 0) - (b.mapPosition || 0));
 
-    const attacked = members.filter((m) => (m.attacks || []).length > 0)
-        .sort((a, b) => warStars(b) - warStars(a) || (a.mapPosition || 0) - (b.mapPosition || 0));
-    const notAttacked = members.filter((m) => !(m.attacks || []).length);
-
+    const attacked = members.filter(m => (m.attacks || []).length)
+        .sort((a, b) => warStars(b) - warStars(a));
+    const notAttacked = members.filter(m => !(m.attacks || []).length);
     const used = members.reduce((n, m) => n + (m.attacks || []).length, 0);
-    const totalStars = members.reduce((n, m) => n + warStars(m), 0);
+    const stars = members.reduce((n, m) => n + warStars(m), 0);
     const missed = Math.max(members.length * max - used, 0);
-    const threeStars = members.reduce((n, m) => n + (m.attacks || []).filter((a) => a.stars === 3).length, 0);
+    const triples = members.reduce((n, m) => n + (m.attacks || []).filter(a => a.stars === 3).length, 0);
+
+    const stat = (label, value) => `
+        <div class="rounded-lg bg-[#252525] p-2 text-center">
+            <p class="text-sm font-bold text-white">${value}</p>
+            <p class="text-[8px] text-gray-400 uppercase">${label}</p>
+        </div>`;
 
     return pageCard(`
-        <div class="detail-in">
         <div class="flex items-center gap-3 mb-3">
             ${backButton('data-war-back')}
-            <div class="leading-tight min-w-0">
-                <h2 class="medieval text-lg font-bold text-white uppercase truncate">vs ${escapeHtml(w.opponent?.name || 'Opponent')}</h2>
-                <p class="text-[10px] text-[#8B8F98]">${members.length} members · ${max} attacks each</p>
+            <div class="min-w-0">
+                <h2 class="text-lg font-bold text-white truncate">vs ${escapeHtml(w.opponent?.name || 'Opponent')}</h2>
+                <p class="text-[10px] text-gray-400">${members.length} members · ${max} attacks each</p>
             </div>
         </div>
         ${renderWarScoreboard(w, r)}
-        <div class="grid grid-cols-4 gap-1.5 mb-4">
-            ${renderWarStat('Attacks', `${used}/${members.length * max}`)}
-            ${renderWarStat('Stars', totalStars)}
-            ${renderWarStat('3 Stars', threeStars)}
-            ${renderWarStat('Missed', ended ? missed : '-', ended && missed ? 'text-red-400' : 'text-white')}
+        <div class="mb-3">${warCountdownHtml(w)}</div>
+        <div class="grid grid-cols-4 gap-2 mb-4">
+            ${stat('Attacks', `${used}/${members.length * max}`)}
+            ${stat('Stars', stars)}
+            ${stat('3 Stars', triples)}
+            ${stat('Missed', ended ? missed : '-')}
         </div>
-        ${renderWarMemberGroup('Attacked', 'bg-green-500', attacked, ended)}
-        ${renderWarMemberGroup('Not attacked', ended ? 'bg-red-500' : 'bg-[#6B7280]', notAttacked, ended)}
-        </div>
+        ${renderWarMemberGroup('Attacked', attacked, ended)}
+        ${renderWarMemberGroup('Not attacked', notAttacked, ended)}
     `);
 }
 
-// ═══ War · Page ════════════════════════════════════════════════════════
+// WAR PAGE
 export function renderWar(wars) {
     const container = document.getElementById('section-war');
     if (!container) return;
 
+    clearInterval(warCountdownTimer);
     state.wars = (Array.isArray(wars) ? wars : wars ? [wars] : [])
-        .filter((w) => w && w.state !== 'notInWar' && (w.clan || w.opponent || w.state));
+        .filter(w => w && w.state !== 'notInWar' && (w.clan || w.opponent || w.state));
 
-    if (state.wars.length === 0) {
+    if (!state.wars.length) {
         container.innerHTML = emptyCard('War data is not available yet.');
         return;
     }
@@ -270,9 +309,13 @@ export function renderWar(wars) {
 
     if (open) {
         container.innerHTML = renderWarDetail(open);
+        startWarCountdown(container);
         window.scrollTo(0, 0);
-        container.onclick = (e) => {
-            if (e.target.closest('[data-war-back]')) { warSelected = null; renderWar(state.wars); }
+        container.onclick = e => {
+            if (e.target.closest('[data-war-back]')) {
+                warSelected = null;
+                renderWar(state.wars);
+            }
         };
         return;
     }
@@ -280,28 +323,33 @@ export function renderWar(wars) {
     container.innerHTML = pageCard(`
         <div class="flex items-center gap-3 mb-3">
             <h2 class="medieval text-lg font-bold text-white uppercase">Wars</h2>
-            <span id="warCount" class="text-[11px] text-[#8B8F98] font-mono">${state.wars.length} / ${state.wars.length}</span>
+            <span id="warCount" class="text-[11px] text-gray-400">${state.wars.length}</span>
         </div>
-
         ${renderPillTabs('data-war', WAR_FILTERS, warFilter)}
-
         <div id="warList" class="flex flex-col gap-2">${renderWarList()}</div>
     `);
 
-    container.onclick = (e) => {
+    startWarCountdown(container);
+
+    container.onclick = e => {
         const btn = e.target.closest('[data-war]');
         if (btn) {
             warFilter = btn.dataset.war;
             setPillActive(btn.closest('.pill-tabs'), 'data-war', warFilter);
             container.querySelector('#warList').innerHTML = renderWarList();
+            startWarCountdown(container);
             return;
         }
+
         const card = e.target.closest('[data-war-open]');
-        if (card) { warSelected = Number(card.dataset.warOpen); renderWar(state.wars); }
+        if (card) {
+            warSelected = Number(card.dataset.warOpen);
+            renderWar(state.wars);
+        }
     };
 }
 
-// ═══ CWL ═══════════════════════════════════════════════════════════════
+// CWL
 export function renderCwl() {
     const container = document.getElementById('section-cwl');
     if (!container) return;
@@ -315,135 +363,177 @@ export function renderCwl() {
     const rounds = cwl.rounds || [];
     const members = cwl.clan?.members || [];
 
-    const renderCwlMember = (m, i) => {
-        const stars = rounds.reduce((sum, r) => sum + (r.attacks?.find((a) => a.attackerTag === m.tag)?.stars || 0), 0);
-        const attacks = rounds.filter((r) => r.attacks?.some((a) => a.attackerTag === m.tag)).length;
+    const renderMember = (m, i) => {
+        const stars = rounds.reduce((n, r) => n + (r.attacks?.find(a => a.attackerTag === m.tag)?.stars || 0), 0);
+        const attacks = rounds.filter(r => r.attacks?.some(a => a.attackerTag === m.tag)).length;
+
         return `
-        <div class="flex items-center gap-3 px-3 py-2 ${i > 0 ? 'border-t border-[#2A2A2A]' : ''}">
-            <img src="${getTHImage(m.townHallLevel)}" class="w-9 h-9 shrink-0 object-contain" alt="TH${m.townHallLevel}" onerror="this.style.visibility='hidden'">
-            <div class="min-w-0 flex-1 leading-tight">
-                <p class="text-[12px] font-bold text-white truncate">${escapeHtml(m.name)}</p>
-                <p class="text-[9px] text-[#8B8F98]">TH${m.townHallLevel}</p>
-            </div>
-            <span class="shrink-0 text-[10px] font-bold text-[#D4A72C]">${stars}★ · ${attacks}/${rounds.length}</span>
-        </div>`;
+            <div class="flex items-center gap-3 px-3 py-2 ${i ? 'border-t border-[#2A2A2A]' : ''}">
+                <img src="${getTHImage(m.townHallLevel)}" class="w-9 h-9 object-contain" alt="">
+                <div class="min-w-0 flex-1">
+                    <p class="text-xs font-bold text-white truncate">${escapeHtml(m.name)}</p>
+                    <p class="text-[9px] text-gray-400">TH${m.townHallLevel}</p>
+                </div>
+                <span class="text-[10px] font-bold text-[#D4A72C]">${stars}★ · ${attacks}/${rounds.length}</span>
+            </div>`;
     };
 
     container.innerHTML = pageCard(`
         <div class="flex items-center gap-3 mb-3">
-            <h2 class="medieval text-lg font-bold text-white uppercase">CWL</h2>
-            <span class="text-[11px] text-[#8B8F98] font-mono">${cwl.season || '-'}</span>
+            <h2 class="text-lg font-bold text-white">CWL</h2>
+            <span class="text-[11px] text-gray-400">${escapeHtml(cwl.season || '-')}</span>
         </div>
-        <div class="rounded-xl overflow-hidden border border-[#2A2A2A] mb-4">
-            ${members.map(renderCwlMember).join('')}
+        <div class="rounded-xl overflow-hidden border border-[#2A2A2A]">
+            ${members.map(renderMember).join('')}
         </div>
-        <p class="text-[10px] text-[#8B8F98]">${rounds.length} rounds</p>
+        <p class="text-[10px] text-gray-400 mt-3">${rounds.length} rounds</p>
     `);
 }
 
-// ═══ Raid (one card per weekend, click it to see every member) ═════════
-let raidSelected = null; // index of the opened weekend, or null for the list
+// RAID
+let raidSelected = null;
 
-// Clans attacked during a raid weekend (from the attack log)
-const raidTargets = (w) => (Array.isArray(w.attackLog) ? w.attackLog : []).map((e) => ({
-    name: e.defender?.name || 'Unknown clan',
-    badge: e.defender?.badgeUrls?.small || '',
+const raidTargets = w => (w.attackLog || []).map(e => ({
+    name: e.defender?.name || 'Unknown Clan',
+    badge: e.defender?.badgeUrls?.small || ''
 }));
 
-const renderRaidCard = (w, i) => {
-    const mine = state.clan || {};
-    const attackers = (w.members || []).filter((m) => (m.attacks || 0) > 0).length;
-    const targets = raidTargets(w);
-    return `
-    <div data-raid="${i}" class="bg-[#1E1E1E] border border-[#2A2A2A] rounded-xl px-3 py-2.5 cursor-pointer active:scale-[0.99] transition-transform">
-        <div class="flex items-center justify-between text-[9px] font-mono tracking-wide text-[#8B8F98] mb-1">
-            <span>${warDate(w) || '-'}</span>
-            <span class="text-[8px] font-semibold ${attackers < 15 ? 'text-red-400' : ''}">${attackers}/${(w.members || []).length} attacked</span>
+const raidStats = w => {
+    const members = w.members || [];
+    const attacked = members.filter(m => (m.attacks || 0) > 0).length;
+    const attacks = w.totalAttacks ?? members.reduce((n, m) => n + (m.attacks || 0), 0);
+    const gold = w.capitalTotalLoot ?? members.reduce((n, m) => n + (m.capitalResourcesLooted || 0), 0);
+    const districts = w.enemyDistrictsDestroyed || 0;
+    const progress = members.length ? Math.round(attacked / members.length * 100) : 0;
+    return { members, attacked, attacks, gold, districts, progress };
+};
+
+const raidStat = (icon, label, value, color = 'text-white') => `
+    <div class="flex items-center gap-2 rounded-xl bg-[#252525] px-3 py-2.5 min-w-0">
+        <span class="material-symbols-outlined text-[19px] text-[#D4A72C]">${icon}</span>
+        <div class="min-w-0">
+            <p class="text-[13px] font-bold ${color} truncate">${value}</p>
+            <p class="text-[9px] text-gray-400">${label}</p>
         </div>
-        <div class="grid grid-cols-[1fr_auto_1fr] items-center gap-2">
-            <div class="flex items-center gap-2 min-w-0">
-                <img src="${mine.badgeUrls?.small || ''}" class="w-8 h-8 shrink-0 object-contain" alt="" onerror="this.style.visibility='hidden'">
-                <div class="min-w-0 leading-tight">
-                    <p class="text-xs font-bold text-white truncate">${escapeHtml(mine.name || '')}</p>
-                    <p class="text-[9px] text-[#6B7280]">${fmt(w.totalAttacks)} Atks</p>
+    </div>`;
+
+function renderRaidCard(w, i) {
+    const s = raidStats(w);
+    const targets = raidTargets(w);
+    const clan = state.clan || {};
+
+    return `
+        <div data-raid="${i}" class="bg-[#1E1E1E] border border-[#2A2A2A] rounded-2xl p-3.5 cursor-pointer active:scale-[0.99] transition-transform">
+            <div class="flex items-center justify-between mb-3">
+                <span class="text-[10px] text-gray-400">${warDate(w) || '-'}</span>
+                <span class="flex items-center gap-1 text-[9px] font-semibold text-[#D4A72C]">
+                    RAID WEEKEND
+                    <span class="material-symbols-outlined text-[15px]">chevron_right</span>
+                </span>
+            </div>
+
+            <div class="flex items-center gap-3 mb-3">
+                <img src="${escapeHtml(clan.badgeUrls?.small || '')}" class="w-10 h-10 object-contain shrink-0" alt="">
+                <div class="flex-1 min-w-0">
+                    <p class="text-sm font-bold text-white truncate">${escapeHtml(clan.name || 'Clan')}</p>
+                    <p class="text-[10px] text-gray-400">${s.attacked}/${s.members.length} members participated</p>
+                </div>
+                <div class="text-right shrink-0">
+                    <p class="text-lg font-bold text-[#D4A72C]">${fmt(s.gold)}</p>
+                    <p class="text-[9px] text-gray-400">Capital Gold</p>
                 </div>
             </div>
-            <div class="text-center leading-tight">
-                <p class="text-[9px] font-semibold tracking-widest text-[#8B8F98]">RAID</p>
-                <p class="medieval text-lg font-bold text-[#D4A72C]">${fmt(w.capitalTotalLoot)}</p>
-                <p class="text-[8px] text-[#6B7280]">Capital Gold</p>
-            </div>
-            <div class="min-w-0 leading-tight text-right">
-                <p class="text-xs font-bold text-white">${fmt(w.enemyDistrictsDestroyed)} Districts</p>
-            </div>
-        </div>
-        ${targets.length ? `
-        <div class="mt-2 pt-2 border-t border-[#2A2A2A] flex flex-wrap gap-1.5">
-            ${targets.map((t) => `
-            <span class="flex items-center gap-1 bg-[#252525] px-2 py-0.5 rounded-lg max-w-full">
-                ${t.badge ? `<img src="${t.badge}" class="w-4 h-4 object-contain" alt="" onerror="this.style.display='none'">` : ''}
-                <span class="text-[10px] text-gray-400 truncate">${escapeHtml(t.name)}</span>
-            </span>`).join('')}
-        </div>` : ''}
-    </div>`;
-};
 
-const renderRaidMemberRow = (m, i) => {
-    // Raid data has no TH/role, so look the member up in the clan list
-    const info = (state.clan?.memberList || []).find((c) => c.tag === m.tag) || {};
+            <div class="mb-3">
+                <div class="flex justify-between text-[9px] text-gray-400 mb-1.5">
+                    <span>Participation</span>
+                    <span>${s.progress}%</span>
+                </div>
+                <div class="h-1.5 rounded-full bg-[#333] overflow-hidden">
+                    <div class="h-full rounded-full bg-[#D4A72C] transition-all duration-500" style="width:${s.progress}%"></div>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-2 gap-2">
+                ${raidStat('swords', 'Total Attacks', fmt(s.attacks))}
+                ${raidStat('flag', 'Districts Destroyed', fmt(s.districts))}
+            </div>
+
+            ${targets.length ? `
+                <div class="flex items-center gap-1.5 mt-3 pt-3 border-t border-[#2A2A2A] overflow-x-auto">
+                    ${targets.slice(0, 5).map(t => `
+                        <span class="flex items-center gap-1 bg-[#252525] rounded-lg px-2 py-1 shrink-0">
+                            ${t.badge ? `<img src="${escapeHtml(t.badge)}" class="w-4 h-4" alt="">` : ''}
+                            <span class="text-[9px] text-gray-400 max-w-[90px] truncate">${escapeHtml(t.name)}</span>
+                        </span>`).join('')}
+                    ${targets.length > 5 ? `<span class="text-[9px] text-gray-500">+${targets.length - 5}</span>` : ''}
+                </div>` : ''}
+        </div>`;
+}
+
+function renderRaidMemberRow(m, i) {
+    const info = (state.clan?.memberList || []).find(c => c.tag === m.tag) || {};
     const th = info.townHallLevel;
     const limit = (m.attackLimit || 0) + (m.bonusAttackLimit || 0);
-    const noAttack = !(m.attacks > 0);
-    return `
-    <div class="row-in flex items-center gap-3 px-3 py-2 ${i > 0 ? 'border-t border-[#2A2A2A]' : ''} ${noAttack ? 'opacity-50' : ''}" style="--i:${Math.min(i, 14)}">
-        <span class="w-5 text-[10px] font-mono text-[#6B7280]">${i + 1}</span>
-        ${th ? `<img src="${getTHImage(th)}" class="w-9 h-9 shrink-0 object-contain" alt="TH${th}"
-                     onerror="this.style.visibility='hidden'">` : ''}
-        <div class="min-w-0 flex-1 leading-tight">
-            <p class="text-[12px] font-bold text-white truncate">${escapeHtml(m.name)}</p>
-            <p class="text-[9px] font-semibold tracking-wide uppercase text-[#D4A72C]">
-                ${info.role ? roleName(info.role) : 'Ex-member'}${th ? ` · TH${th}` : ''}
-            </p>
-            <p class="text-[9px] text-[#8B8F98]">${fmt(m.attacks)}/${fmt(limit)} attacks</p>
-        </div>
-        <div class="shrink-0 text-right leading-tight">
-            <p class="text-[13px] font-bold text-[#D4A72C]">${fmt(m.capitalResourcesLooted)}</p>
-            <p class="text-[7px] tracking-wide uppercase text-[#6B7280]">Capital Gold</p>
-        </div>
-    </div>`;
-};
+    const used = m.attacks || 0;
+    const gold = m.capitalResourcesLooted || 0;
 
-// Everyone in one list: attackers first (most gold on top), then members who have not attacked
-const renderRaidDetail = (raid) => {
-    const members = [...(raid.members || [])].sort((a, b) =>
-        ((b.attacks || 0) > 0) - ((a.attacks || 0) > 0)
-        || (b.capitalResourcesLooted || 0) - (a.capitalResourcesLooted || 0)
-        || (b.attacks || 0) - (a.attacks || 0));
-    const attacked = members.filter((m) => (m.attacks || 0) > 0).length;
+    return `
+        <div class="flex items-center gap-3 px-3 py-2.5 ${i ? 'border-t border-[#2A2A2A]' : ''}">
+            <span class="w-5 text-[10px] font-mono text-gray-500">${i + 1}</span>
+            ${th ? `<img src="${getTHImage(th)}" class="w-9 h-9 object-contain shrink-0" alt="TH${th}">` : ''}
+            <div class="flex-1 min-w-0">
+                <p class="text-xs font-bold text-white truncate">${escapeHtml(m.name)}</p>
+                <p class="text-[9px] text-gray-400">${used}/${limit} attacks ${th ? `· TH${th}` : ''}</p>
+            </div>
+            <div class="text-right shrink-0">
+                <p class="text-xs font-bold ${used ? 'text-[#D4A72C]' : 'text-gray-500'}">${fmt(gold)}</p>
+                <p class="text-[8px] text-gray-500">Capital Gold</p>
+            </div>
+        </div>`;
+}
+
+function renderRaidDetail(w) {
+    const s = raidStats(w);
+    const members = [...s.members].sort((a, b) =>
+        (b.capitalResourcesLooted || 0) - (a.capitalResourcesLooted || 0) ||
+        (b.attacks || 0) - (a.attacks || 0)
+    );
 
     return pageCard(`
-        <div class="detail-in">
-        <div class="flex items-center gap-3 mb-3">
+        <div class="flex items-center gap-3 mb-4">
             ${backButton('data-raid-back')}
-            <div class="leading-tight min-w-0">
-                <h2 class="medieval text-lg font-bold text-white uppercase">Raid ${warDate(raid) || ''}</h2>
-                <p class="text-[10px] text-[#8B8F98]">${attacked}/${members.length} members attacked</p>
+            <div class="min-w-0">
+                <h2 class="text-lg font-bold text-white">Raid Weekend</h2>
+                <p class="text-[10px] text-gray-400">${warDate(w) || '-'}</p>
             </div>
         </div>
-        ${members.length
-            ? `<div class="rounded-xl overflow-hidden border border-[#2A2A2A]">${members.map(renderRaidMemberRow).join('')}</div>`
-            : '<p class="text-sm text-gray-400 text-center py-6">No member data.</p>'}
+
+        <div class="rounded-2xl bg-[#1E1E1E] border border-[#2A2A2A] p-3 mb-4">
+            <p class="text-[10px] text-gray-400 mb-1">Total Capital Gold</p>
+            <p class="text-2xl font-bold text-[#D4A72C] mb-3">${fmt(s.gold)}</p>
+            <div class="grid grid-cols-2 gap-2">
+                ${raidStat('swords', 'Total Attacks', fmt(s.attacks))}
+                ${raidStat('flag', 'Districts Destroyed', fmt(s.districts))}
+            </div>
+            <div class="flex justify-between text-[10px] text-gray-400 mt-3 mb-1.5">
+                <span>Participation</span>
+                <span>${s.attacked}/${s.members.length} (${s.progress}%)</span>
+            </div>
+            <div class="h-1.5 rounded-full bg-[#333] overflow-hidden">
+                <div class="h-full rounded-full bg-[#D4A72C]" style="width:${s.progress}%"></div>
+            </div>
+        </div>
+
+        <div class="flex items-center justify-between mb-2">
+            <h3 class="text-xs font-bold text-[#D4A72C] uppercase">Member Contributions</h3>
+            <span class="text-[10px] text-gray-400">${members.length} members</span>
+        </div>
+        <div class="rounded-xl overflow-hidden border border-[#2A2A2A] bg-[#1E1E1E]">
+            ${members.length ? members.map(renderRaidMemberRow).join('') : '<p class="text-xs text-gray-400 p-4 text-center">No member data.</p>'}
         </div>
     `);
-};
-
-const renderRaidList = (weeks) => pageCard(`
-    <div class="flex items-center gap-3 mb-3">
-        <h2 class="medieval text-lg font-bold text-white uppercase">Raids</h2>
-        <span class="text-[11px] text-[#8B8F98] font-mono">${weeks.length}</span>
-    </div>
-    <div class="flex flex-col gap-2">${weeks.map(renderRaidCard).join('')}</div>
-`);
+}
 
 export function renderRaid() {
     const page = document.getElementById('section-raid');
@@ -458,16 +548,27 @@ export function renderRaid() {
         return;
     }
 
-    if (open) {
-        page.innerHTML = renderRaidDetail(open);
-        window.scrollTo(0, 0);
-    } else {
-        page.innerHTML = renderRaidList(weeks);
-    }
+    page.innerHTML = open ? renderRaidDetail(open) : pageCard(`
+        <div class="flex items-center justify-between mb-3">
+            <div>
+                <h2 class="text-lg font-bold text-white">Raid Weekends</h2>
+                <p class="text-[10px] text-gray-400">${weeks.length} raid weekends recorded</p>
+            </div>
+            <span class="material-symbols-outlined text-[#D4A72C] text-[23px]">fort</span>
+        </div>
+        <div class="flex flex-col gap-3">${weeks.map(renderRaidCard).join('')}</div>
+    `);
 
-    page.onclick = (e) => {
-        if (e.target.closest('[data-raid-back]')) { raidSelected = null; renderRaid(); return; }
+    page.onclick = e => {
+        if (e.target.closest('[data-raid-back]')) {
+            raidSelected = null;
+            renderRaid();
+            return;
+        }
         const card = e.target.closest('[data-raid]');
-        if (card) { raidSelected = Number(card.dataset.raid); renderRaid(); }
+        if (card) {
+            raidSelected = Number(card.dataset.raid);
+            renderRaid();
+        }
     };
 }

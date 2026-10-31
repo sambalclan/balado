@@ -48,7 +48,7 @@ function parseCoCTime(value) {
 }
 
 // =====================================================
-// DATABASE
+// DATABASE INITIALIZATION
 // =====================================================
 
 async function init(db) {
@@ -159,6 +159,200 @@ async function history(db, kind, id, payload, now) {
 }
 
 // =====================================================
+// RAID HISTORY PROTECTION
+// =====================================================
+
+function mergeRaidHistory(oldRaid, newRaid) {
+  if (!oldRaid) {
+    return newRaid;
+  }
+
+  const merged = {
+    ...oldRaid,
+    ...newRaid
+  };
+
+  // Keep old member statistics when the API
+  // omits the members array.
+  if (
+    (!Array.isArray(newRaid.members) ||
+      newRaid.members.length === 0) &&
+    Array.isArray(oldRaid.members) &&
+    oldRaid.members.length > 0
+  ) {
+    merged.members = oldRaid.members;
+  }
+
+  // Keep old attack logs when omitted.
+  if (
+    (!Array.isArray(newRaid.attackLog) ||
+      newRaid.attackLog.length === 0) &&
+    Array.isArray(oldRaid.attackLog) &&
+    oldRaid.attackLog.length > 0
+  ) {
+    merged.attackLog = oldRaid.attackLog;
+  }
+
+  // Keep old defense logs when omitted.
+  if (
+    (!Array.isArray(newRaid.defenseLog) ||
+      newRaid.defenseLog.length === 0) &&
+    Array.isArray(oldRaid.defenseLog) &&
+    oldRaid.defenseLog.length > 0
+  ) {
+    merged.defenseLog = oldRaid.defenseLog;
+  }
+
+  return merged;
+}
+
+// Store a Raid record using an atomic SQL upsert.
+//
+// This avoids a race where two scheduled executions
+// read the same old record and overwrite each other.
+//
+// Existing non-empty members, attackLog, and
+// defenseLog are preserved if the new API response
+// omits those arrays or returns empty arrays.
+
+async function saveRaidHistory(db, item, now) {
+  if (!item?.startTime) {
+    return false;
+  }
+
+  const payload = JSON.stringify(item);
+
+  await db.prepare(`
+    INSERT INTO history (
+      kind,
+      record_id,
+      payload,
+      updated_at
+    )
+    VALUES (
+      'raid',
+      ?,
+      ?,
+      ?
+    )
+    ON CONFLICT(kind, record_id)
+    DO UPDATE SET
+      payload = json_patch(
+        history.payload,
+        json_patch(
+          excluded.payload,
+          json_object(
+            'members',
+            CASE
+              WHEN (
+                json_type(excluded.payload, '$.members') IS NULL
+                OR json_type(excluded.payload, '$.members') != 'array'
+                OR json_array_length(
+                  excluded.payload,
+                  '$.members'
+                ) = 0
+              )
+              AND json_type(
+                history.payload,
+                '$.members'
+              ) = 'array'
+              AND json_array_length(
+                history.payload,
+                '$.members'
+              ) > 0
+              THEN json_extract(
+                history.payload,
+                '$.members'
+              )
+              ELSE json_extract(
+                excluded.payload,
+                '$.members'
+              )
+            END,
+
+            'attackLog',
+            CASE
+              WHEN (
+                json_type(
+                  excluded.payload,
+                  '$.attackLog'
+                ) IS NULL
+                OR json_type(
+                  excluded.payload,
+                  '$.attackLog'
+                ) != 'array'
+                OR json_array_length(
+                  excluded.payload,
+                  '$.attackLog'
+                ) = 0
+              )
+              AND json_type(
+                history.payload,
+                '$.attackLog'
+              ) = 'array'
+              AND json_array_length(
+                history.payload,
+                '$.attackLog'
+              ) > 0
+              THEN json_extract(
+                history.payload,
+                '$.attackLog'
+              )
+              ELSE json_extract(
+                excluded.payload,
+                '$.attackLog'
+              )
+            END,
+
+            'defenseLog',
+            CASE
+              WHEN (
+                json_type(
+                  excluded.payload,
+                  '$.defenseLog'
+                ) IS NULL
+                OR json_type(
+                  excluded.payload,
+                  '$.defenseLog'
+                ) != 'array'
+                OR json_array_length(
+                  excluded.payload,
+                  '$.defenseLog'
+                ) = 0
+              )
+              AND json_type(
+                history.payload,
+                '$.defenseLog'
+              ) = 'array'
+              AND json_array_length(
+                history.payload,
+                '$.defenseLog'
+              ) > 0
+              THEN json_extract(
+                history.payload,
+                '$.defenseLog'
+              )
+              ELSE json_extract(
+                excluded.payload,
+                '$.defenseLog'
+              )
+            END
+          )
+        )
+      ),
+      updated_at = excluded.updated_at
+  `)
+    .bind(
+      item.startTime,
+      payload,
+      now
+    )
+    .run();
+
+  return true;
+}
+
+// =====================================================
 // DATABASE READ
 // =====================================================
 
@@ -177,6 +371,11 @@ async function readLatest(db, kind) {
 }
 
 async function readHistory(db, kind, limit = 20) {
+  const orderBy =
+    kind === 'raid'
+      ? 'record_id DESC'
+      : 'updated_at DESC';
+
   const { results } = await db.prepare(`
     SELECT
       record_id,
@@ -184,7 +383,7 @@ async function readHistory(db, kind, limit = 20) {
       updated_at
     FROM history
     WHERE kind = ?
-    ORDER BY updated_at DESC
+    ORDER BY ${orderBy}
     LIMIT ?
   `)
     .bind(kind, limit)
@@ -245,7 +444,7 @@ function matchWarLog(war, log) {
       logEnd - targetEnd
     );
 
-    // Prevent matching a different war
+    // Avoid matching another war
     // against the same opponent.
     if (difference > 600000) {
       continue;
@@ -479,14 +678,37 @@ async function refreshClanWarRaid(env, now) {
               ? raw.items?.[0] ?? null
               : raw;
 
-          await latest(
-            env.DB,
-            kind,
-            data,
-            now
-          );
+          // Protect latest Raid member data too.
+          if (kind === 'raid' && data?.startTime) {
+            const previousLatest = await readLatest(
+              env.DB,
+              'raid'
+            );
 
-          // Save normal war snapshots.
+            const latestRaid =
+              previousLatest?.startTime === data.startTime
+                ? mergeRaidHistory(previousLatest, data)
+                : data;
+
+            await latest(
+              env.DB,
+              'raid',
+              latestRaid,
+              now
+            );
+          } else {
+            await latest(
+              env.DB,
+              kind,
+              data,
+              now
+            );
+          }
+
+          // ===========================================
+          // NORMAL WAR HISTORY
+          // ===========================================
+
           if (
             kind === 'currentwar' &&
             data?.startTime &&
@@ -507,8 +729,7 @@ async function refreshClanWarRaid(env, now) {
               ? JSON.parse(previous.payload)
               : null;
 
-            // Never overwrite finalized war history
-            // with stale preparation/inWar data.
+            // Protect finalized war data.
             if (
               oldWar?.state !== 'warEnded' ||
               data.state === 'warEnded'
@@ -523,21 +744,34 @@ async function refreshClanWarRaid(env, now) {
             }
           }
 
-          // Save raid history.
+          // ===========================================
+          // RAID HISTORY
+          // ===========================================
+
           if (kind === 'raid') {
+            let saved = 0;
+
             for (const item of raw.items || []) {
-              if (!item.startTime) {
+              if (!item?.startTime) {
                 continue;
               }
 
-              await history(
+              const success = await saveRaidHistory(
                 env.DB,
-                'raid',
-                item.startTime,
                 item,
                 now
               );
+
+              if (success) {
+                saved++;
+              }
             }
+
+            return {
+              kind,
+              ok: true,
+              saved
+            };
           }
 
           return {
@@ -571,8 +805,7 @@ async function refreshCwl(env, now) {
     );
 
   } catch (error) {
-    // A 404 is expected when there is no active
-    // CWL league group.
+    // No active CWL group.
     if (error.status === 404) {
       return {
         kind: 'cwl',
@@ -787,7 +1020,9 @@ export default {
             '/api/war/history',
             '/war/history',
             '/api/raid/history',
-            '/api/cwl/history'
+            '/raid/history',
+            '/api/cwl/history',
+            '/cwl/history'
           ]
         });
       }

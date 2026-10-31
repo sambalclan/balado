@@ -1,70 +1,74 @@
-import { roleName, getTHImage, escapeHtml, fmt, renderCombinedChart, warStars, warDate, isEndedWar, pagePanel, backButton } from './constants.js';
+import { escapeHtml, fmt, renderCombinedChart, warStars, warDate, isEndedWar, pagePanel, backButton } from './constants.js';
 import { state, getRaidWeeks } from './state.js';
 import { getLiveLog, LIVE_API_URL } from './api.js';
 import { getWarChartData } from './war.js';
 
-const COLUMNS = [
-    { label: 'No',           get: (m, i) => i + 1 },
-    { label: 'Name',         get: (m) => m.name },
-    { label: 'TH',           get: (m) => m.th ?? '-' },
-    { label: 'Wars',         get: (m) => m.wars },
-    { label: 'Attacks',      get: (m) => `${m.attacks}/${m.attackLimit}` },
-    { label: 'Stars',        get: (m) => m.stars },
-    { label: 'Destruction',  get: (m) => (m.attacks ? Math.round(m.destruction / m.attacks) + '%' : '-') },
-    { label: 'Raid Atks',    get: (m) => `${m.raidAttacks}/${m.raidLimit}` },
-    { label: 'Capital Gold', get: (m) => fmt(m.raidGold) },
-];
-
-const ACCENT = '#d4a017';
+// CONFIG
+const ACCENT = '#D4A72C';
 const FONT = 'Arial, Helvetica, sans-serif';
 const SCALE = 3;
 const L = { pad: 24, cellPad: 12, rowH: 30, headH: 34, headBlock: 88, minWidth: 520 };
 const THEME = { bg: '#ffffff', text: '#111111', sub: '#555555', line: '#c4c4c4', zebra: '#f5f5f5', border: '#d1d5db' };
-
 const shortDate = (d, opts) => d.toLocaleDateString('en-US', opts);
 
+const COLUMNS = [
+    { label: 'No', get: (m, i) => i + 1 },
+    { label: 'Name', get: m => m.name },
+    { label: 'TH', get: m => m.th ?? '-' },
+    { label: 'Wars', get: m => m.wars },
+    { label: 'Attacks', get: m => `${m.attacks}/${m.attackLimit}` },
+    { label: 'Stars', get: m => m.stars },
+    { label: 'Destruction', get: m => m.attacks ? Math.round(m.destruction / m.attacks) + '%' : '-' },
+    { label: 'Raid Atks', get: m => `${m.raidAttacks}/${m.raidLimit}` },
+    { label: 'Capital Gold', get: m => fmt(m.raidGold) }
+];
+
+// MONTHLY REPORT
 function lastMonthRange(now = new Date()) {
     const start = new Date(now.getFullYear(), now.getMonth() - 1, 1);
     const end = new Date(now.getFullYear(), now.getMonth(), 1);
     const lastDay = new Date(end.getTime() - 86400000);
-    const iso = (d) => `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-01`;
+    const iso = d => `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-01`;
     const day = { day: 'numeric', month: 'short' };
-
     return {
-        from: iso(start),
-        to: iso(end),
+        from: iso(start), to: iso(end),
         label: shortDate(start, { month: 'long', year: 'numeric' }),
-        span: `${shortDate(start, day)} - ${shortDate(lastDay, day)}`,
+        span: `${shortDate(start, day)} - ${shortDate(lastDay, day)}`
     };
 }
 
 function collectMonthStats({ from, to }) {
-    const inRange = (rec) => { const d = warDate(rec); return d >= from && d < to; };
-    const wars = state.wars.filter((w) => isEndedWar(w) && inRange(w));
+    const inRange = rec => {
+        const d = warDate(rec);
+        return d >= from && d < to;
+    };
+    const wars = (state.wars || []).filter(w => isEndedWar(w) && inRange(w));
     const raids = getRaidWeeks().filter(inRange);
-
     const rows = new Map();
+
     const row = (tag, name, th) => {
-        if (!rows.has(tag)) {
-            rows.set(tag, { name, th, wars: 0, attacks: 0, attackLimit: 0, stars: 0, destruction: 0, raidAttacks: 0, raidLimit: 0, raidGold: 0 });
-        }
+        if (!rows.has(tag)) rows.set(tag, {
+            name, th, wars: 0, attacks: 0, attackLimit: 0,
+            stars: 0, destruction: 0, raidAttacks: 0,
+            raidLimit: 0, raidGold: 0
+        });
         const r = rows.get(tag);
         if (th && !r.th) r.th = th;
         return r;
     };
 
-    (state.clan?.memberList || []).forEach((m) => row(m.tag, m.name, m.townHallLevel));
+    (state.clan?.memberList || []).forEach(m => row(m.tag, m.name, m.townHallLevel));
 
-    wars.forEach((w) => (w.clan?.members || []).forEach((m) => {
+    wars.forEach(w => (w.clan?.members || []).forEach(m => {
         const r = row(m.tag, m.name, m.townhallLevel ?? m.townHallLevel);
-        r.wars += 1;
+        r.wars++;
         r.attackLimit += w.attacksPerMember || 2;
         r.attacks += (m.attacks || []).length;
         r.stars += warStars(m);
         r.destruction += (m.attacks || []).reduce((n, a) => n + (a.destructionPercentage || 0), 0);
     }));
 
-    raids.forEach((w) => (w.members || []).forEach((m) => {
+    raids.forEach(w => (w.members || []).forEach(m => {
         const r = row(m.tag, m.name);
         r.raidAttacks += m.attacks || 0;
         r.raidLimit += (m.attackLimit || 0) + (m.bonusAttackLimit || 0);
@@ -72,7 +76,9 @@ function collectMonthStats({ from, to }) {
     }));
 
     const list = [...rows.values()].sort((a, b) =>
-        b.stars - a.stars || b.raidGold - a.raidGold || String(a.name).localeCompare(String(b.name)));
+        b.stars - a.stars || b.raidGold - a.raidGold ||
+        String(a.name).localeCompare(String(b.name))
+    );
     return { list, wars: wars.length, raids: raids.length };
 }
 
@@ -80,64 +86,67 @@ function makeMonthReport() {
     const range = lastMonthRange();
     const { list, wars, raids } = collectMonthStats(range);
     const empty = !wars && !raids;
-
     return {
         title: `Statistics ${range.label}`,
-        subtitle: [`${state.clan?.name || ''} · ${range.span} · ${wars} wars, ${raids} raids`, shortDate(new Date(), { dateStyle: 'long' })].join(' · '),
+        subtitle: [
+            `${state.clan?.name || ''} · ${range.span} · ${wars} wars, ${raids} raids`,
+            shortDate(new Date(), { dateStyle: 'long' })
+        ].join(' · '),
         note: empty ? `No war or raid data for ${range.label}.` : '',
         logoUrl: state.clan?.badgeUrls?.medium || '',
-        headers: COLUMNS.map((c) => c.label),
-        rows: empty ? [] : list.map((m, i) => COLUMNS.map((c) => String(c.get(m, i) ?? ''))),
+        headers: COLUMNS.map(c => c.label),
+        rows: empty ? [] : list.map((m, i) => COLUMNS.map(c => String(c.get(m, i) ?? '')))
     };
 }
 
 function loadImage(url) {
-    return new Promise((resolve) => {
+    return new Promise(resolve => {
         if (!url) return resolve(null);
         const img = new Image();
+        let settled = false;
+        const done = value => {
+            if (settled) return;
+            settled = true;
+            resolve(value);
+        };
         img.crossOrigin = 'anonymous';
-        img.onload = () => resolve(img);
-        img.onerror = () => resolve(null);
-        setTimeout(() => resolve(null), 4000);
+        img.onload = () => done(img);
+        img.onerror = () => done(null);
+        setTimeout(() => done(null), 4000);
         img.src = url;
     });
 }
 
 function measureColumns({ headers, rows }) {
     const ctx = document.createElement('canvas').getContext('2d');
-
     return headers.map((header, col) => {
         ctx.font = 'bold 14px ' + FONT;
         let widest = ctx.measureText(header).width;
         ctx.font = '14px ' + FONT;
-        rows.forEach((row) => { widest = Math.max(widest, ctx.measureText(row[col]).width); });
+        rows.forEach(row => { widest = Math.max(widest, ctx.measureText(row[col]).width); });
         return Math.ceil(widest) + L.cellPad * 2;
     });
 }
 
 function pickScale(height) {
     let scale = SCALE;
-    while (height * scale > 16000 && scale > 1) scale -= 1;
+    while (height * scale > 16000 && scale > 1) scale--;
     return scale;
 }
 
 function drawHeader(ctx, report, width, logo) {
     const { pad } = L;
     let textX = pad;
-
     if (logo) {
         ctx.drawImage(logo, pad, pad, 56, 56);
         textX = pad + 70;
     }
-
     ctx.fillStyle = THEME.text;
     ctx.font = 'bold 24px ' + FONT;
     ctx.fillText(report.title, textX, pad + 26);
-
     ctx.fillStyle = THEME.sub;
     ctx.font = '14px ' + FONT;
     ctx.fillText(report.subtitle, textX, pad + 50);
-
     ctx.fillStyle = ACCENT;
     ctx.fillRect(pad, pad + 66, width - pad * 2, 3);
 }
@@ -147,6 +156,7 @@ function drawTable(ctx, { headers, rows }, widths, top) {
     const tableW = widths.reduce((a, b) => a + b, 0);
     const bodyTop = top + headH;
     const bottom = bodyTop + rows.length * rowH;
+
     const drawRow = (cells, y) => {
         let x = pad;
         cells.forEach((cell, col) => {
@@ -164,7 +174,7 @@ function drawTable(ctx, { headers, rows }, widths, top) {
     ctx.font = '14px ' + FONT;
     rows.forEach((row, i) => {
         const y = bodyTop + i * rowH;
-        if (i % 2 === 1) {
+        if (i % 2) {
             ctx.fillStyle = THEME.zebra;
             ctx.fillRect(pad, y, tableW, rowH);
         }
@@ -182,7 +192,6 @@ function drawTable(ctx, { headers, rows }, widths, top) {
         x += w;
     });
     ctx.fillRect(pad + tableW - 1, bodyTop, 1, bottom - bodyTop);
-
     ctx.strokeStyle = THEME.border;
     ctx.lineWidth = 1;
     ctx.strokeRect(pad + 0.5, top + 0.5, tableW - 1, bottom - top - 1);
@@ -191,34 +200,30 @@ function drawTable(ctx, { headers, rows }, widths, top) {
 async function createReportImage() {
     const report = makeMonthReport();
     const { pad, rowH, headH, headBlock, minWidth } = L;
-
     const logo = await loadImage(report.logoUrl);
     const widths = measureColumns(report);
     const width = Math.max(minWidth, widths.reduce((a, b) => a + b, 0) + pad * 2);
     const tableH = report.rows.length ? headH + report.rows.length * rowH : 60;
     const height = pad + headBlock + tableH + 12 + pad;
     const scale = pickScale(height);
-
     const canvas = document.createElement('canvas');
+
     canvas.width = Math.round(width * scale);
     canvas.height = Math.round(height * scale);
     const ctx = canvas.getContext('2d');
     ctx.scale(scale, scale);
-
     ctx.fillStyle = THEME.bg;
     ctx.fillRect(0, 0, width, height);
     drawHeader(ctx, report, width, logo);
 
     const top = pad + headBlock;
-    if (report.rows.length) {
-        drawTable(ctx, report, widths, top);
-    } else {
+    if (report.rows.length) drawTable(ctx, report, widths, top);
+    else {
         ctx.fillStyle = THEME.sub;
         ctx.font = '14px ' + FONT;
         ctx.textAlign = 'center';
         ctx.fillText(report.note, width / 2, top + 30);
     }
-
     return { dataUrl: canvas.toDataURL('image/jpeg', 0.92), title: report.title };
 }
 
@@ -234,25 +239,14 @@ async function downloadReport() {
     }
 }
 
-const reportButtonHtml = () => `
-    <button type="button" data-report
-            class="w-full flex items-center gap-3 px-3 py-3 bg-[#1E1E1E] border border-[#3A3A3A] rounded-xl
-                   text-left active:scale-[0.99] transition-transform">
-        <span class="material-symbols-outlined text-[26px] text-[#D4A72C]">calendar_month</span>
-        <div class="leading-tight">
-            <p class="text-sm font-bold text-white">Last Month Statistics</p>
-            <p class="text-[10px] text-[#8B8F98]">All members · ${lastMonthRange().label}</p>
-        </div>
-    </button>
-`;
-
-const muted = (text) => `<p class="text-[11px] text-[#8B8F98] py-1">${text}</p>`;
+// API STATUS
+const muted = text => `<p class="text-[11px] text-[#8B8F98] py-1">${text}</p>`;
 
 const liveLogHtml = () => {
     const rows = getLiveLog();
-    const body = !LIVE_API_URL ? muted('Live API nonaktif (LIVE_API_URL kosong).')
-        : !rows.length ? muted('Belum ada panggilan.')
-        : rows.map((row) => `
+    const body = !LIVE_API_URL ? muted('Live API is disabled.')
+        : !rows.length ? muted('No API requests yet.')
+        : rows.map(row => `
             <div class="flex items-start gap-2 text-[11px] font-mono py-1 border-t border-[#2A2A2A] first:border-t-0">
                 <span class="text-[#8B8F98] shrink-0">${escapeHtml(row.time)}</span>
                 <span class="text-white shrink-0">${escapeHtml(row.path)}</span>
@@ -260,161 +254,304 @@ const liveLogHtml = () => {
             </div>`).join('');
 
     return `
-        <div class="mt-4">
-            <h3 class="text-[11px] font-bold text-[#D4A72C] uppercase mb-1">developer log</h3>
+        <div class="mt-3">
+            <h3 class="text-[11px] font-bold text-[#D4A72C] uppercase mb-1">Developer Log</h3>
             <div class="rounded-xl border border-[#2A2A2A] px-2 py-1">${body}</div>
         </div>`;
 };
 
+const apiHealth = () => {
+    const logs = getLiveLog().filter(x => !/cwl/i.test(x.path || ''));
+    const failed = logs.filter(x => x.status !== 'OK');
+    return {
+        failed: failed.length,
+        total: logs.length,
+        color: failed.length ? '#ef4444' : logs.length ? '#22c55e' : '#8B8F98',
+        label: failed.length ? `${failed.length} API errors` : logs.length ? 'API healthy' : 'Not checked'
+    };
+};
+
+// SETTINGS
 export function renderSettings() {
     const page = document.getElementById('section-settings');
     if (!page) return;
+    const logs = getLiveLog();
+    const health = apiHealth();
+
+    const row = (icon, title, note, attr) => `
+        <button type="button" ${attr} class="w-full flex items-center gap-3 px-3 py-3 text-left hover:bg-white/5 active:bg-white/10">
+            <span class="material-symbols-outlined text-[#D4A72C] text-xl">${icon}</span>
+            <span class="flex-1 min-w-0">
+                <span class="block text-xs font-semibold text-white">${title}</span>
+                <span class="block text-[10px] text-[#8B8F98]">${note}</span>
+            </span>
+            <span class="material-symbols-outlined text-gray-500 text-lg">chevron_right</span>
+        </button>`;
 
     page.innerHTML = pagePanel(`
-        <div class="flex items-center gap-3 mb-3">
+        <div class="flex items-center gap-3 mb-4">
             ${backButton('data-settings-back')}
-            <h2 class="medieval text-lg font-bold text-white uppercase">Settings</h2>
+            <h2 class="text-lg font-bold text-white">Settings</h2>
         </div>
-        <div class="flex flex-col gap-2">${reportButtonHtml()}</div>
-        ${liveLogHtml()}
+        <div class="flex items-center gap-2 mb-3 px-3 py-2 rounded-xl bg-[#222] text-xs">
+            <span class="w-2 h-2 rounded-full" style="background:${health.color}"></span>
+            <span class="text-gray-300">${health.label}</span>
+            <span class="ml-auto text-[10px] text-gray-500">CWL excluded</span>
+        </div>
+        <div class="rounded-xl border border-[#2A2A2A] divide-y divide-[#2A2A2A] overflow-hidden">
+            ${row('download', 'Monthly report', 'Download last month statistics', 'data-settings-report')}
+            ${row('refresh', 'Refresh data', 'Update clan and battle statistics', 'data-settings-refresh')}
+            ${row('terminal', 'API logs', `${logs.length} requests · ${health.label}`, 'data-settings-logs')}
+            <div id="settingsLogPanel" class="hidden px-3 pb-3 max-h-64 overflow-y-auto">${liveLogHtml()}</div>
+        </div>
+        <p class="text-center text-[10px] text-gray-500 mt-4">Clan statistics · Live data may be delayed</p>
     `);
 
-    page.onclick = (e) => {
-        if (e.target.closest('[data-report]')) downloadReport();
+    page.onclick = e => {
+        if (e.target.closest('[data-settings-report]')) downloadReport();
+        else if (e.target.closest('[data-settings-refresh]')) document.getElementById('refreshBtn')?.click();
+        else if (e.target.closest('[data-settings-logs]')) page.querySelector('#settingsLogPanel')?.classList.toggle('hidden');
     };
 }
 
-const renderLabel = (label) => `
+// CLAN HEADER
+const renderLabel = label => `
     <div class="flex items-center gap-1 bg-[#252525] px-2 py-1 rounded-lg">
-        <img src="${label.iconUrls?.small || ''}" class="w-4 h-4" alt="">
-        <span class="text-[10px] text-gray-400">${label.name}</span>
-    </div>
-`;
+        <img src="${escapeHtml(label.iconUrls?.small || '')}" class="w-4 h-4" alt="">
+        <span class="text-[10px] text-gray-400">${escapeHtml(label.name || '')}</span>
+    </div>`;
 
 const iconButton = (id, label, icon, extra = '') => `
-    <button id="${id}" type="button" aria-label="${label}"
-            class="flex items-center justify-center w-9 h-9 rounded-full bg-white/10 hover:bg-white/20
-                   text-gray-200 transition-all duration-300 active:scale-95 ${extra}">
-        <span class="material-symbols-outlined text-[22px]">${icon}</span>
-    </button>
-`;
+    <button id="${id}" type="button" aria-label="${label}" title="${label}"
+        class="relative flex items-center justify-center w-10 h-10 rounded-xl bg-[#242424] border border-[#363636] text-gray-200 hover:border-[#D4A72C]/50 hover:text-[#D4A72C] transition-all duration-200 active:scale-90 ${extra}">
+        <span class="material-symbols-outlined text-[21px]">${icon}</span>
+    </button>`;
 
 function renderClanHeader(clan) {
     const el = document.getElementById('clanHeader');
     if (!el || !clan) return;
+    const health = apiHealth();
 
     el.innerHTML = `
         <div class="flex items-center justify-between gap-3 mb-2">
             <div class="flex items-center gap-3 min-w-0">
-                <img src="${clan.badgeUrls?.medium || ''}"
-                     class="w-10 h-10 md:w-12 md:h-12 shrink-0 rounded-lg" style="filter: drop-shadow(0 0 12px rgba(212, 167, 44, 0.6));" alt="Clan Badge">
+                <img src="${escapeHtml(clan.badgeUrls?.medium || '')}" class="w-10 h-10 md:w-12 md:h-12 shrink-0 rounded-lg" style="filter:drop-shadow(0 0 12px rgba(212,167,44,.6))" alt="Clan Badge">
                 <div class="min-w-0">
                     <h1 class="text-lg md:text-2xl font-bold text-white leading-tight truncate">${escapeHtml(clan.name || 'Unknown Clan')}</h1>
                     <p class="text-xs text-gray-400 font-mono">${escapeHtml(clan.tag || '')}</p>
                 </div>
             </div>
-            <div class="shrink-0 flex items-center gap-1.5">
-                ${iconButton('refreshBtn', 'Refresh data', 'refresh', 'disabled:opacity-60')}
-                ${iconButton('settingsBtn', 'Settings', 'settings', 'hover:rotate-45')}
+            <div class="relative shrink-0 flex items-center gap-1.5">
+                ${iconButton('refreshBtn', 'Refresh data', 'sync', 'disabled:opacity-60')}
+                ${iconButton('settingsBtn', 'Settings', 'tune')}
+                <span aria-label="${health.label}" title="${health.label} (CWL excluded)" class="absolute right-0 top-0 w-2.5 h-2.5 rounded-full border-2 border-[#121212] pointer-events-none" style="background:${health.color}"></span>
             </div>
         </div>
-        <hr class="border-t border-[#2A2A2A]">
-    `;
+        <hr class="border-t border-[#2A2A2A]">`;
 }
 
-const renderRecordTile = (label, value, color) => `
-    <div class="rounded-lg bg-[#252525] px-2 py-2 text-center leading-tight">
-        <p class="text-[8px] font-semibold tracking-wide uppercase text-[#8B8F98]">${label}</p>
-        <p class="text-sm font-bold mt-0.5 ${color}">${value == null ? '-' : fmt(value)}</p>
-    </div>
-`;
-
-const renderPersonRow = (m, index, value, label, color = 'text-[#D4A72C]') => `
-    <div class="flex items-center gap-3 px-3 py-1.5 ${index > 0 ? 'border-t border-[#2A2A2A]' : ''}">
-        <img src="${getTHImage(m.townHallLevel)}" class="w-9 h-9 shrink-0 object-contain"
-             alt="TH${m.townHallLevel}" onerror="this.style.visibility='hidden'">
-        <div class="min-w-0 flex-1 leading-tight">
-            <p class="text-[13px] font-bold text-white truncate">${escapeHtml(m.name)}</p>
-            <p class="text-[9px] font-semibold tracking-wide uppercase text-[#D4A72C]">${roleName(m.role)} · TH${m.townHallLevel}</p>
-        </div>
-        ${value != null ? `
-        <div class="shrink-0 text-right leading-tight">
-            <p class="text-[13px] font-bold ${color}">${value}</p>
-            <p class="text-[7px] tracking-wide uppercase text-[#6B7280]">${label}</p>
-        </div>` : ''}
-    </div>
-`;
-
+// MEMBERSHIP & WAR - SUPPORT 1 DAY
 const renderStatsCard = () => {
     const war = getWarChartData();
+    const history = Array.isArray(state.history) ? state.history : [];
+
+    const members = history
+        .filter(p => p?.date && Number.isFinite(Number(p.members)))
+        .sort((a, b) => String(a.date).localeCompare(String(b.date)))
+        .slice(-7)
+        .map(p => ({ date: p.date, value: Number(p.members) }));
+
+    if (!members.length && Number.isFinite(Number(state.clan?.members))) {
+        members.push({
+            date: new Date().toISOString().slice(0, 10),
+            value: Number(state.clan.members)
+        });
+    }
+
+    const wars = (war.points || [])
+        .filter(p => p?.date && Number.isFinite(Number(p.value)))
+        .slice(-7)
+        .map(p => ({ date: p.date, value: Number(p.value) }));
+
     return renderCombinedChart({
         title: 'Membership & War',
-        subtitle: 'Anggota per hari · bintang per war',
-        a: { name: 'Anggota', color: '#3B82F6', labelColor: '#93C5FD',
-             points: state.history.slice(-7).map((p) => ({ date: p.date, value: p.members })) },
-        b: { name: 'War (bintang)', color: '#EF4444', labelColor: '#FCA5A5', points: war.points },
-        stats: war.stats,
-        note: war.total ? `Ringkasan ${war.total} war selesai` : '',
+        subtitle: `${members.length} membership records · ${wars.length} war records`,
+        a: {
+            name: 'Members',
+            color: '#3B82F6',
+            labelColor: '#93C5FD',
+            points: members
+        },
+        b: {
+            name: 'War Stars',
+            color: '#EF4444',
+            labelColor: '#FCA5A5',
+            points: wars
+        },
+        stats: war.stats || [],
+        note: war.total ? `${war.total} completed wars recorded` : 'Waiting for completed war data'
     });
 };
 
-const renderLeadSection = (title, rows) => rows ? `
-    <div>
-        <h4 class="medieval text-[11px] font-bold text-[#D4A72C] uppercase tracking-wide mb-2">${title}</h4>
-        <div class="rounded-xl overflow-hidden border border-[#2A2A2A]">${rows}</div>
-    </div>
-` : '';
+// COMPACT ENTRY REQUIREMENTS
+function renderEntryRequirements(clan) {
+    const item = (label, value) => `
+        <div class="flex items-center justify-between gap-2 min-w-0">
+            <span class="text-[10px] text-gray-400 truncate">${label}</span>
+            <span class="text-[10px] font-semibold text-white text-right">${escapeHtml(String(value))}</span>
+        </div>`;
 
-const GOLD = 'text-[#D4A72C]';
+    const type = { open: 'Open', inviteOnly: 'Invite Only', closed: 'Closed' };
+    const th = clan.requiredTownhallLevel ?? clan.requiredTownHallLevel;
 
-const RANKING = [
-    { score: (m) => m.donations || 0, value: (m) => m.donations, label: 'Donated' },
-    { score: (m) => m.trophies || 0, value: (m) => m.trophies, label: 'Trophies', color: GOLD },
-    { score: (m) => (m.townHallLevel || 0) * 100000 + (m.trophies || 0), value: (m) => `TH${m.townHallLevel}`, label: 'Town Hall', color: GOLD },
-    { score: (m) => m.expLevel || 0, value: (m) => m.expLevel ?? '-', label: 'XP', color: GOLD },
-];
+    return `
+        <div class="rounded-xl bg-[#1E1E1E] border border-[#2A2A2A] p-3">
+            <div class="flex items-center gap-1.5 mb-2">
+                <span class="material-symbols-outlined text-[#D4A72C] text-[16px]">how_to_reg</span>
+                <h3 class="text-[11px] font-bold text-[#D4A72C] uppercase">Entry Requirements</h3>
+            </div>
+            <div class="grid grid-cols-2 gap-x-4 gap-y-2">
+                ${item('Trophies', fmt(clan.requiredTrophies ?? 0))}
+                ${item('Town Hall', th ? `TH ${th}` : '-')}
+                ${item('Builder Trophies', fmt(clan.requiredBuilderBaseTrophies ?? 0))}
+                ${item('Clan Type', type[clan.type] || clan.type || '-')}
+            </div>
+        </div>`;
+}
 
+// COMPACT BATTLE BAR
+const aboutStatBar = (title, wins, losses, draws = 0) => {
+    const total = wins + losses + draws;
+    const pct = n => total ? n / total * 100 : 0;
+
+    return `
+        <div class="flex items-center gap-3">
+            <span class="text-[11px] font-bold text-white w-9 shrink-0">${title}</span>
+            <div class="flex-1 min-w-0">
+                <div class="flex justify-between text-[9px] mb-1">
+                    <span class="text-green-400">${wins}W</span>
+                    <span class="text-gray-400">${draws}D</span>
+                    <span class="text-red-400">${losses}L</span>
+                </div>
+                <div class="flex h-1.5 rounded-full overflow-hidden bg-[#333]">
+                    <div class="bg-green-500" style="width:${pct(wins)}%"></div>
+                    <div class="bg-gray-500" style="width:${pct(draws)}%"></div>
+                    <div class="bg-red-500" style="width:${pct(losses)}%"></div>
+                </div>
+            </div>
+            <span class="text-[10px] font-bold text-[#D4A72C] w-9 text-right">${total ? Math.round(pct(wins)) + '%' : '-'}</span>
+        </div>`;
+};
+
+// WAR RESULTS
+function getWarResults() {
+    const wars = (state.wars || []).filter(isEndedWar);
+    return wars.reduce((a, w) => {
+        const c = w.clan || {};
+        const o = w.opponent || {};
+        const cs = c.stars ?? 0;
+        const os = o.stars ?? 0;
+        const cd = c.destructionPercentage ?? 0;
+        const od = o.destructionPercentage ?? 0;
+
+        if (cs > os || (cs === os && cd > od)) a.wins++;
+        else if (cs < os || (cs === os && cd < od)) a.losses++;
+        else a.draws++;
+        return a;
+    }, { wins: 0, losses: 0, draws: 0 });
+}
+
+// CWL RESULTS
+function getCwlResults() {
+    const cwl = state.cwl;
+    if (!cwl) return null;
+
+    const rounds = Array.isArray(cwl.rounds) ? cwl.rounds : [];
+    const tag = state.clan?.tag;
+    const result = { wins: 0, losses: 0, draws: 0 };
+
+    for (const round of rounds) {
+        const w = round.war || round;
+        if (!isEndedWar(w) || !w.clan || !w.opponent) continue;
+
+        const ours = w.clan.tag === tag ? w.clan : w.opponent.tag === tag ? w.opponent : null;
+        const enemy = ours === w.clan ? w.opponent : w.clan;
+        if (!ours) continue;
+
+        const cs = ours.stars ?? 0;
+        const os = enemy.stars ?? 0;
+        const cd = ours.destructionPercentage ?? 0;
+        const od = enemy.destructionPercentage ?? 0;
+
+        if (cs > os || (cs === os && cd > od)) result.wins++;
+        else if (cs < os || (cs === os && cd < od)) result.losses++;
+        else result.draws++;
+    }
+
+    return result.wins + result.losses + result.draws ? result : null;
+}
+
+// COMPACT BATTLE STATISTICS
+function renderBattleStatistics(clan) {
+    const historical = [clan.warWins, clan.warLosses, clan.warTies].every(Number.isFinite);
+    const war = historical
+        ? { wins: clan.warWins, losses: clan.warLosses, draws: clan.warTies }
+        : getWarResults();
+
+    const cwl = getCwlResults();
+    const raids = getRaidWeeks();
+
+    const attacks = raids.reduce((n, r) =>
+        n + (r.totalAttacks ?? (r.members || []).reduce((sum, m) => sum + (m.attacks || 0), 0)), 0
+    );
+    const districts = raids.reduce((n, r) => n + (r.enemyDistrictsDestroyed || 0), 0);
+
+    return `
+        <div class="rounded-xl bg-[#1E1E1E] border border-[#2A2A2A] p-3">
+            <div class="flex items-center gap-1.5 mb-3">
+                <span class="material-symbols-outlined text-[#D4A72C] text-[16px]">monitoring</span>
+                <h3 class="text-[11px] font-bold text-[#D4A72C] uppercase">Battle Statistics</h3>
+            </div>
+            <div class="space-y-3">
+                ${aboutStatBar('War', war.wins, war.losses, war.draws)}
+                ${cwl ? aboutStatBar('CWL', cwl.wins, cwl.losses, cwl.draws) : `
+                    <div class="flex items-center justify-between">
+                        <span class="text-[11px] font-bold text-white">CWL</span>
+                        <span class="text-[10px] text-gray-500">No results available</span>
+                    </div>`}
+            </div>
+            <div class="flex items-center justify-between gap-2 mt-3 pt-2 border-t border-[#2A2A2A]">
+                <span class="text-[10px] font-semibold text-white">Raid</span>
+                <div class="flex items-center gap-3 text-[10px]">
+                    <span class="text-gray-400">Attacks <b class="text-white">${fmt(attacks)}</b></span>
+                    <span class="text-gray-400">Districts <b class="text-[#D4A72C]">${fmt(districts)}</b></span>
+                </div>
+            </div>
+        </div>`;
+}
+
+// ABOUT
 export function renderAbout(clan) {
     const container = document.getElementById('section-about');
     if (!container || !clan) return;
+
     state.clan = clan;
     renderClanHeader(clan);
 
-    const list = clan.memberList || [];
-    const topBy = (score) => [...list].sort((a, b) => score(b) - score(a))[0];
-
-    const rankingHtml = RANKING.map(({ score, value, label, color }, i) => {
-        const m = topBy(score);
-        return m ? renderPersonRow(m, i, value(m), label, color) : '';
-    }).join('');
-
     container.innerHTML = `
-        <div class="pt-4 pb-3 px-0 md:p-5 w-full flex flex-col gap-4">
-            <div class="w-full overflow-hidden bg-[#1E1E1E] border border-[#2A2A2A] p-3 md:p-6 rounded-xl flex flex-col gap-3">
-                <div class="pb-3 border-b border-[#2A2A2A]">
-                    <div class="text-sm font-bold text-gray-200 mb-1">Description</div>
-                    <div class="text-xs md:text-sm text-gray-300 break-words whitespace-pre-line m-0">${clan.description || ''}</div>
+        <div class="pt-2 pb-3 px-0 md:p-4 w-full flex flex-col gap-2.5">
+            <div class="w-full overflow-hidden bg-[#1E1E1E] border border-[#2A2A2A] p-3 rounded-xl flex flex-col gap-2">
+                <div class="pb-2 border-b border-[#2A2A2A]">
+                    <div class="text-[11px] font-bold text-gray-200 mb-1">Description</div>
+                    <div class="text-[11px] text-gray-300 break-words whitespace-pre-line">${escapeHtml(clan.description || '')}</div>
                 </div>
-
-                <div class="pb-3 border-b border-[#2A2A2A]">
-                    <div class="text-sm font-bold text-gray-200 mb-1.5">Clan Labels</div>
+                <div>
+                    <div class="text-[11px] font-bold text-gray-200 mb-1.5">Clan Labels</div>
                     <div class="flex flex-wrap gap-1.5">${(clan.labels || []).map(renderLabel).join('')}</div>
                 </div>
-
-                <div>
-                    <div class="text-sm font-bold text-gray-200 mb-1.5">War Record</div>
-                    <div class="grid grid-cols-3 gap-2">
-                        ${renderRecordTile('Victories', clan.warWins, 'text-green-500')}
-                        ${renderRecordTile('Defeats', clan.warLosses, 'text-red-500')}
-                        ${renderRecordTile('Draws', clan.warTies, 'text-gray-400')}
-                    </div>
-                </div>
             </div>
-
-            <div class="w-full bg-[#1a1a1a] border border-[#2A2A2A] rounded-xl p-3 flex flex-col gap-4">
-                ${renderLeadSection('Ranking', rankingHtml)}
-            </div>
+            ${renderEntryRequirements(clan)}
+            ${renderBattleStatistics(clan)}
             ${renderStatsCard()}
-        </div>
-    `;
+        </div>`;
 }
