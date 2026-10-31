@@ -2,13 +2,21 @@
     "state": "ongoing",
     "startTime": "20261030T070000.000Z",
     "endTime": "20261102T070000.000Z",
-    "capitalTotalLoot": 27853,
-    "raidsCompleted": 0,
-    "totalAttacks": 11,
-    "enemyDistrictsDestroyed": 2,
+    "capitalTotalLoot": 54800,
+    "raidsCompleted": 1,
+    "totalAttacks": 23,
+    "enemyDistrictsDestroyed": 7,
     "offensiveReward": 0,
     "defensiveReward": 0,
     "members": [
+        {
+            "tag": "#R2YVRJRYY",
+            "name": "Banten fc",
+            "attacks": 6,
+            "attackLimit": 5,
+            "bonusAttackLimit": 1,
+            "capitalResourcesLooted": 12023
+        },
         {
             "tag": "#R0UYQ88YQ",
             "name": "mpruy",
@@ -24,6 +32,14 @@
             "attackLimit": 5,
             "bonusAttackLimit": 0,
             "capitalResourcesLooted": 12120
+        },
+        {
+            "tag": "#GPYC9PYJV",
+            "name": "andi",
+            "attacks": 6,
+            "attackLimit": 5,
+            "bonusAttackLimit": 1,
+            "capitalResourcesLooted": 14924
         }
     ],
     "attackLog": [
@@ -38,28 +54,70 @@
                     "medium": "https://api-assets.clashofclans.com/badges/200/5YkeKEiK76kT5XNMBJVLGZpfEhRQ0J55ozf8uojN3v0.png"
                 }
             },
-            "attackCount": 11,
+            "attackCount": 23,
             "districtCount": 7,
-            "districtsDestroyed": 2,
+            "districtsDestroyed": 7,
             "districts": [
                 {
                     "id": 70000000,
                     "name": "Capital Peak",
                     "districtHallLevel": 7,
-                    "destructionPercent": 0,
-                    "stars": 0,
-                    "attackCount": 0,
-                    "totalLooted": 0
+                    "destructionPercent": 100,
+                    "stars": 3,
+                    "attackCount": 4,
+                    "totalLooted": 10142,
+                    "attacks": [
+                        {
+                            "attacker": {
+                                "tag": "#GPYC9PYJV",
+                                "name": "andi"
+                            },
+                            "destructionPercent": 100,
+                            "stars": 3
+                        },
+                        {
+                            "attacker": {
+                                "tag": "#GPYC9PYJV",
+                                "name": "andi"
+                            },
+                            "destructionPercent": 90,
+                            "stars": 2
+                        },
+                        {
+                            "attacker": {
+                                "tag": "#GPYC9PYJV",
+                                "name": "andi"
+                            },
+                            "destructionPercent": 66,
+                            "stars": 2
+                        },
+                        {
+                            "attacker": {
+                                "tag": "#GPYC9PYJV",
+                                "name": "andi"
+                            },
+                            "destructionPercent": 53,
+                            "stars": 2
+                        }
+                    ]
                 },
                 {
                     "id": 70000001,
                     "name": "Barbarian Camp",
                     "districtHallLevel": 4,
-                    "destructionPercent": 86,
-                    "stars": 2,
-                    "attackCount": 2,
-                    "totalLooted": 7300,
+                    "destructionPercent": 100,
+                    "stars": 3,
+                    "attackCount": 3,
+                    "totalLooted": 9416,
                     "attacks": [
+                        {
+                            "attacker": {
+                                "tag": "#R2YVRJRYY",
+                                "name": "Banten fc"
+                            },
+                            "destructionPercent": 100,
+                            "stars": 3
+                        },
                         {
                             "attacker": {
                                 "tag": "#R0UYQ88YQ",
@@ -82,11 +140,27 @@
                     "id": 70000002,
                     "name": "Wizard Valley",
                     "districtHallLevel": 3,
-                    "destructionPercent": 37,
-                    "stars": 0,
-                    "attackCount": 1,
-                    "totalLooted": 1765,
+                    "destructionPercent": 100,
+                    "stars": 3,
+                    "attackCount": 3,
+                    "totalLooted": 6547,
                     "attacks": [
+                        {
+                            "attacker": {
+                                "tag": "#GPYC9PYJV",
+                                "name": "andi"
+                            },
+                            "destructionPercent": 100,
+                            "stars": 3
+                        },
+                        {
+                            "attacker": {
+                                "tag": "#GPYC9PYJV",
+                                "name": "andi"
+                            },
+                            "destructionPercent": 58,
+                            "stars": 2
+                        },
                         {
                             "attacker": {
                                 "tag": "#GQJGU808G",
@@ -101,11 +175,35 @@
                     "id": 70000003,
                     "name": "Balloon Lagoon",
                     "districtHallLevel": 3,
-                    "destructionPercent": 29,
-                    "stars": 0,
-                    "attackCount": 1,
-                    "totalLooted": 1950,
+                    "destructionPercent": 100,
+                    "stars": 3,
+                    "attackCount": 4,
+                    "totalLooted": 8312,
                     "attacks": [
+                        {
+                            "attacker": {
+                                "tag": "#R2YVRJRYY",
+                                "name": "Banten fc"
+                            },
+                            "destructionPercent": 100,
+                            "stars": 3
+                        },
+                        {
+                            "attacker": {
+                                "tag": "#R2YVRJRYY",
+                                "name": "Banten fc"
+                            },
+                            "destructionPercent": 69,
+                            "stars": 2
+                        },
+                        {
+                            "attacker": {
+                                "tag": "#R2YVRJRYY",
+                                "name": "Banten fc"
+                            },
+                            "destructionPercent": 57,
+                            "stars": 2
+                        },
                         {
                             "attacker": {
                                 "tag": "#GQJGU808G",
@@ -155,11 +253,27 @@
                     "id": 70000005,
                     "name": "Dragon Cliffs",
                     "districtHallLevel": 2,
-                    "destructionPercent": 43,
-                    "stars": 0,
-                    "attackCount": 1,
-                    "totalLooted": 2340,
+                    "destructionPercent": 100,
+                    "stars": 3,
+                    "attackCount": 3,
+                    "totalLooted": 5885,
                     "attacks": [
+                        {
+                            "attacker": {
+                                "tag": "#R2YVRJRYY",
+                                "name": "Banten fc"
+                            },
+                            "destructionPercent": 100,
+                            "stars": 3
+                        },
+                        {
+                            "attacker": {
+                                "tag": "#R2YVRJRYY",
+                                "name": "Banten fc"
+                            },
+                            "destructionPercent": 54,
+                            "stars": 1
+                        },
                         {
                             "attacker": {
                                 "tag": "#GQJGU808G",
@@ -204,6 +318,86 @@
                             "stars": 1
                         }
                     ]
+                }
+            ]
+        },
+        {
+            "defender": {
+                "tag": "#2VC8JC8U",
+                "name": "DARK CLAN_PH\u2122",
+                "level": 20,
+                "badgeUrls": {
+                    "small": "https://api-assets.clashofclans.com/badges/70/omc33-1tgzqeJxjfgBXvGLj2o5_llj65rACjYOELXrE.png",
+                    "large": "https://api-assets.clashofclans.com/badges/512/omc33-1tgzqeJxjfgBXvGLj2o5_llj65rACjYOELXrE.png",
+                    "medium": "https://api-assets.clashofclans.com/badges/200/omc33-1tgzqeJxjfgBXvGLj2o5_llj65rACjYOELXrE.png"
+                }
+            },
+            "attackCount": 0,
+            "districtCount": 7,
+            "districtsDestroyed": 0,
+            "districts": [
+                {
+                    "id": 70000000,
+                    "name": "Capital Peak",
+                    "districtHallLevel": 7,
+                    "destructionPercent": 0,
+                    "stars": 0,
+                    "attackCount": 0,
+                    "totalLooted": 0
+                },
+                {
+                    "id": 70000001,
+                    "name": "Barbarian Camp",
+                    "districtHallLevel": 4,
+                    "destructionPercent": 0,
+                    "stars": 0,
+                    "attackCount": 0,
+                    "totalLooted": 0
+                },
+                {
+                    "id": 70000002,
+                    "name": "Wizard Valley",
+                    "districtHallLevel": 3,
+                    "destructionPercent": 0,
+                    "stars": 0,
+                    "attackCount": 0,
+                    "totalLooted": 0
+                },
+                {
+                    "id": 70000003,
+                    "name": "Balloon Lagoon",
+                    "districtHallLevel": 3,
+                    "destructionPercent": 0,
+                    "stars": 0,
+                    "attackCount": 0,
+                    "totalLooted": 0
+                },
+                {
+                    "id": 70000004,
+                    "name": "Builder's Workshop",
+                    "districtHallLevel": 3,
+                    "destructionPercent": 0,
+                    "stars": 0,
+                    "attackCount": 0,
+                    "totalLooted": 0
+                },
+                {
+                    "id": 70000005,
+                    "name": "Dragon Cliffs",
+                    "districtHallLevel": 2,
+                    "destructionPercent": 0,
+                    "stars": 0,
+                    "attackCount": 0,
+                    "totalLooted": 0
+                },
+                {
+                    "id": 70000006,
+                    "name": "Golem Quarry",
+                    "districtHallLevel": 2,
+                    "destructionPercent": 0,
+                    "stars": 0,
+                    "attackCount": 0,
+                    "totalLooted": 0
                 }
             ]
         }
