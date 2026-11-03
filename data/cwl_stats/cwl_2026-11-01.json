@@ -843,15 +843,25 @@
                     "medium": "https://api-assets.clashofclans.com/badges/200/ZiRrDYeXMT2S8LERVuTa4X4iKwYE2j5xYnBTKAffeKg.png"
                 },
                 "clanLevel": 8,
-                "attacks": 4,
-                "stars": 9,
-                "destructionPercentage": 22.0,
+                "attacks": 7,
+                "stars": 13,
+                "destructionPercentage": 35.13333333333333,
                 "members": [
                     {
                         "tag": "#YQ29C08QC",
                         "name": "Fachrul_Dj",
                         "townhallLevel": 12,
                         "mapPosition": 6,
+                        "attacks": [
+                            {
+                                "attackerTag": "#YQ29C08QC",
+                                "defenderTag": "#YLP0PRPLC",
+                                "stars": 1,
+                                "destructionPercentage": 49,
+                                "order": 11,
+                                "duration": 163
+                            }
+                        ],
                         "opponentAttacks": 0
                     },
                     {
@@ -883,7 +893,15 @@
                         "name": "Christian Rizki",
                         "townhallLevel": 15,
                         "mapPosition": 2,
-                        "opponentAttacks": 0
+                        "opponentAttacks": 1,
+                        "bestOpponentAttack": {
+                            "attackerTag": "#Q2JY0LPLR",
+                            "defenderTag": "#9LU09GYLP",
+                            "stars": 1,
+                            "destructionPercentage": 75,
+                            "order": 12,
+                            "duration": 151
+                        }
                     },
                     {
                         "tag": "#R8JQPQLCY",
@@ -907,6 +925,16 @@
                         "name": "FANY",
                         "townhallLevel": 10,
                         "mapPosition": 12,
+                        "attacks": [
+                            {
+                                "attackerTag": "#R8GU8RJG9",
+                                "defenderTag": "#QR98PU0QJ",
+                                "stars": 1,
+                                "destructionPercentage": 49,
+                                "order": 13,
+                                "duration": 86
+                            }
+                        ],
                         "opponentAttacks": 1,
                         "bestOpponentAttack": {
                             "attackerTag": "#G9CQG8R0Y",
@@ -944,6 +972,16 @@
                         "name": "Alfa Male",
                         "townhallLevel": 13,
                         "mapPosition": 4,
+                        "attacks": [
+                            {
+                                "attackerTag": "#22CC8G9P8",
+                                "defenderTag": "#G989PRQJL",
+                                "stars": 2,
+                                "destructionPercentage": 99,
+                                "order": 10,
+                                "duration": 180
+                            }
+                        ],
                         "opponentAttacks": 0
                     },
                     {
@@ -1043,9 +1081,9 @@
                     "medium": "https://api-assets.clashofclans.com/badges/200/SduuUQLqAXUP6SALWXozMv9RIY-mBQkDPxECOZkap2s.png"
                 },
                 "clanLevel": 11,
-                "attacks": 5,
-                "stars": 15,
-                "destructionPercentage": 33.333333333333336,
+                "attacks": 6,
+                "stars": 16,
+                "destructionPercentage": 38.333333333333336,
                 "members": [
                     {
                         "tag": "#GPCYQG89Y",
@@ -1148,6 +1186,16 @@
                         "name": "redsgom",
                         "townhallLevel": 16,
                         "mapPosition": 2,
+                        "attacks": [
+                            {
+                                "attackerTag": "#Q2JY0LPLR",
+                                "defenderTag": "#9LU09GYLP",
+                                "stars": 1,
+                                "destructionPercentage": 75,
+                                "order": 12,
+                                "duration": 151
+                            }
+                        ],
                         "opponentAttacks": 0
                     },
                     {
@@ -1162,7 +1210,15 @@
                         "name": "PLUNDERER09",
                         "townhallLevel": 13,
                         "mapPosition": 16,
-                        "opponentAttacks": 0
+                        "opponentAttacks": 1,
+                        "bestOpponentAttack": {
+                            "attackerTag": "#YQ29C08QC",
+                            "defenderTag": "#YLP0PRPLC",
+                            "stars": 1,
+                            "destructionPercentage": 49,
+                            "order": 11,
+                            "duration": 163
+                        }
                     },
                     {
                         "tag": "#R9LY8QJC",
@@ -1201,7 +1257,15 @@
                         "name": "Nanzi",
                         "townhallLevel": 13,
                         "mapPosition": 15,
-                        "opponentAttacks": 0
+                        "opponentAttacks": 1,
+                        "bestOpponentAttack": {
+                            "attackerTag": "#22CC8G9P8",
+                            "defenderTag": "#G989PRQJL",
+                            "stars": 2,
+                            "destructionPercentage": 99,
+                            "order": 10,
+                            "duration": 180
+                        }
                     },
                     {
                         "tag": "#QJUYL2L9V",
@@ -1215,7 +1279,15 @@
                         "name": "Skyzo",
                         "townhallLevel": 11,
                         "mapPosition": 18,
-                        "opponentAttacks": 0
+                        "opponentAttacks": 1,
+                        "bestOpponentAttack": {
+                            "attackerTag": "#R8GU8RJG9",
+                            "defenderTag": "#QR98PU0QJ",
+                            "stars": 1,
+                            "destructionPercentage": 49,
+                            "order": 13,
+                            "duration": 86
+                        }
                     },
                     {
                         "tag": "#GQJGU808G",
@@ -1290,7 +1362,15 @@
                         "name": "An_VT",
                         "townhallLevel": 13,
                         "mapPosition": 7,
-                        "opponentAttacks": 0
+                        "opponentAttacks": 1,
+                        "bestOpponentAttack": {
+                            "attackerTag": "#GC0QPQG2J",
+                            "defenderTag": "#YYJC20Q2G",
+                            "stars": 2,
+                            "destructionPercentage": 74,
+                            "order": 4,
+                            "duration": 97
+                        }
                     },
                     {
                         "tag": "#Q20CL0UGG",
@@ -1401,9 +1481,9 @@
                     "medium": "https://api-assets.clashofclans.com/badges/200/u2jEvcfiQ9Y1PfUklxc55lzYDU4oIdTYmN5DVkquytI.png"
                 },
                 "clanLevel": 7,
-                "attacks": 1,
-                "stars": 3,
-                "destructionPercentage": 6.666666666666667,
+                "attacks": 2,
+                "stars": 5,
+                "destructionPercentage": 11.6,
                 "members": [
                     {
                         "tag": "#YQV2PQ2U",
@@ -1438,6 +1518,16 @@
                         "name": "NO MERCY",
                         "townhallLevel": 15,
                         "mapPosition": 2,
+                        "attacks": [
+                            {
+                                "attackerTag": "#GC0QPQG2J",
+                                "defenderTag": "#YYJC20Q2G",
+                                "stars": 2,
+                                "destructionPercentage": 74,
+                                "order": 4,
+                                "duration": 97
+                            }
+                        ],
                         "opponentAttacks": 0
                     },
                     {
@@ -1555,15 +1645,25 @@
                     "medium": "https://api-assets.clashofclans.com/badges/200/-h5RtATqb7CAm_BMXOBDaawbVtpKoRVKPb6gOTUnOcY.png"
                 },
                 "clanLevel": 16,
-                "attacks": 5,
-                "stars": 15,
-                "destructionPercentage": 33.333333333333336,
+                "attacks": 7,
+                "stars": 21,
+                "destructionPercentage": 46.666666666666664,
                 "members": [
                     {
                         "tag": "#9RRPJL9JL",
                         "name": "Linga",
                         "townhallLevel": 18,
                         "mapPosition": 1,
+                        "attacks": [
+                            {
+                                "attackerTag": "#9RRPJL9JL",
+                                "defenderTag": "#QJVULVJ2J",
+                                "stars": 3,
+                                "destructionPercentage": 100,
+                                "order": 6,
+                                "duration": 68
+                            }
+                        ],
                         "opponentAttacks": 0
                     },
                     {
@@ -1712,6 +1812,16 @@
                         "name": "Iyan",
                         "townhallLevel": 18,
                         "mapPosition": 2,
+                        "attacks": [
+                            {
+                                "attackerTag": "#9G9GRJ220",
+                                "defenderTag": "#UCJCGYRR",
+                                "stars": 3,
+                                "destructionPercentage": 100,
+                                "order": 7,
+                                "duration": 124
+                            }
+                        ],
                         "opponentAttacks": 0
                     }
                 ]
@@ -1814,7 +1924,15 @@
                         "name": "بهمن ماهانی",
                         "townhallLevel": 13,
                         "mapPosition": 5,
-                        "opponentAttacks": 0
+                        "opponentAttacks": 1,
+                        "bestOpponentAttack": {
+                            "attackerTag": "#9RRPJL9JL",
+                            "defenderTag": "#QJVULVJ2J",
+                            "stars": 3,
+                            "destructionPercentage": 100,
+                            "order": 6,
+                            "duration": 68
+                        }
                     },
                     {
                         "tag": "#QVCRCCGQ9",
@@ -1842,7 +1960,15 @@
                         "name": "محمدرضا",
                         "townhallLevel": 15,
                         "mapPosition": 2,
-                        "opponentAttacks": 0
+                        "opponentAttacks": 1,
+                        "bestOpponentAttack": {
+                            "attackerTag": "#9G9GRJ220",
+                            "defenderTag": "#UCJCGYRR",
+                            "stars": 3,
+                            "destructionPercentage": 100,
+                            "order": 7,
+                            "duration": 124
+                        }
                     },
                     {
                         "tag": "#QJQ0U8PYL",
@@ -3245,5 +3371,5 @@
             "warStartTime": "20261103T160717.000Z"
         }
     },
-    "fetchedAt": "2026-11-03T01:17:21Z"
+    "fetchedAt": "2026-11-03T08:10:19Z"
 }
