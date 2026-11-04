@@ -2576,7 +2576,7 @@
             "warStartTime": "20261102T114446.000Z"
         },
         "#8RP0P8Y8L": {
-            "state": "inWar",
+            "state": "warEnded",
             "teamSize": 15,
             "preparationStartTime": "20261102T160715.000Z",
             "startTime": "20261103T160713.000Z",
@@ -2986,7 +2986,7 @@
             "warStartTime": "20261103T160713.000Z"
         },
         "#8RP0P8LLJ": {
-            "state": "inWar",
+            "state": "warEnded",
             "teamSize": 15,
             "preparationStartTime": "20261102T160717.000Z",
             "startTime": "20261103T160715.000Z",
@@ -3486,7 +3486,7 @@
             "warStartTime": "20261103T160715.000Z"
         },
         "#8RP0P8QC0": {
-            "state": "inWar",
+            "state": "warEnded",
             "teamSize": 15,
             "preparationStartTime": "20261102T160717.000Z",
             "startTime": "20261103T160715.000Z",
@@ -4016,7 +4016,7 @@
             "warStartTime": "20261103T160715.000Z"
         },
         "#8RP0P8R2P": {
-            "state": "inWar",
+            "state": "warEnded",
             "teamSize": 15,
             "preparationStartTime": "20261102T160719.000Z",
             "startTime": "20261103T160717.000Z",
@@ -4710,7 +4710,7 @@
             "warStartTime": "20261104T202006.000Z"
         },
         "#8RP929UCP": {
-            "state": "preparation",
+            "state": "inWar",
             "teamSize": 15,
             "preparationStartTime": "20261103T195448.000Z",
             "startTime": "20261104T202020.000Z",
@@ -5454,5 +5454,5 @@
             "warStartTime": "20261104T202045.000Z"
         }
     },
-    "fetchedAt": "2026-11-04T16:27:21Z"
+    "fetchedAt": "2026-11-04T22:02:50Z"
 }
