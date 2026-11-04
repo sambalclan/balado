@@ -2995,7 +2995,15 @@
                         "name": "alaa",
                         "townhallLevel": 11,
                         "mapPosition": 12,
-                        "opponentAttacks": 0
+                        "opponentAttacks": 1,
+                        "bestOpponentAttack": {
+                            "attackerTag": "#G9CQG8R0Y",
+                            "defenderTag": "#QRY8LGRUY",
+                            "stars": 3,
+                            "destructionPercentage": 100,
+                            "order": 8,
+                            "duration": 147
+                        }
                     },
                     {
                         "tag": "#L0P0VY20L",
@@ -3033,14 +3041,30 @@
                         "name": "احمد الغريري",
                         "townhallLevel": 13,
                         "mapPosition": 9,
-                        "opponentAttacks": 0
+                        "opponentAttacks": 1,
+                        "bestOpponentAttack": {
+                            "attackerTag": "#GVL2QP9JV",
+                            "defenderTag": "#Q8QL8YQ92",
+                            "stars": 3,
+                            "destructionPercentage": 100,
+                            "order": 6,
+                            "duration": 82
+                        }
                     },
                     {
                         "tag": "#2QJ9VG2L0",
                         "name": "الغالب",
                         "townhallLevel": 13,
                         "mapPosition": 8,
-                        "opponentAttacks": 0
+                        "opponentAttacks": 1,
+                        "bestOpponentAttack": {
+                            "attackerTag": "#R2YVRJRYY",
+                            "defenderTag": "#2QJ9VG2L0",
+                            "stars": 2,
+                            "destructionPercentage": 85,
+                            "order": 7,
+                            "duration": 180
+                        }
                     },
                     {
                         "tag": "#YL9L02PRP",
@@ -3064,7 +3088,15 @@
                         "name": "mohamde 3",
                         "townhallLevel": 13,
                         "mapPosition": 7,
-                        "opponentAttacks": 0
+                        "opponentAttacks": 1,
+                        "bestOpponentAttack": {
+                            "attackerTag": "#GPCYQG89Y",
+                            "defenderTag": "#YQ92YYRLJ",
+                            "stars": 3,
+                            "destructionPercentage": 100,
+                            "order": 9,
+                            "duration": 160
+                        }
                     },
                     {
                         "tag": "#Y2RVJCCP0",
@@ -3094,15 +3126,25 @@
                     "medium": "https://api-assets.clashofclans.com/badges/200/SduuUQLqAXUP6SALWXozMv9RIY-mBQkDPxECOZkap2s.png"
                 },
                 "clanLevel": 11,
-                "attacks": 2,
-                "stars": 6,
-                "destructionPercentage": 13.333333333333334,
+                "attacks": 6,
+                "stars": 17,
+                "destructionPercentage": 39.0,
                 "members": [
                     {
                         "tag": "#GPCYQG89Y",
                         "name": "kutur18",
                         "townhallLevel": 16,
                         "mapPosition": 10,
+                        "attacks": [
+                            {
+                                "attackerTag": "#GPCYQG89Y",
+                                "defenderTag": "#YQ92YYRLJ",
+                                "stars": 3,
+                                "destructionPercentage": 100,
+                                "order": 9,
+                                "duration": 160
+                            }
+                        ],
                         "opponentAttacks": 0
                     },
                     {
@@ -3110,6 +3152,16 @@
                         "name": "Banten fc",
                         "townhallLevel": 15,
                         "mapPosition": 13,
+                        "attacks": [
+                            {
+                                "attackerTag": "#R2YVRJRYY",
+                                "defenderTag": "#2QJ9VG2L0",
+                                "stars": 2,
+                                "destructionPercentage": 85,
+                                "order": 7,
+                                "duration": 180
+                            }
+                        ],
                         "opponentAttacks": 0
                     },
                     {
@@ -3124,6 +3176,16 @@
                         "name": "kaco",
                         "townhallLevel": 13,
                         "mapPosition": 14,
+                        "attacks": [
+                            {
+                                "attackerTag": "#GVL2QP9JV",
+                                "defenderTag": "#Q8QL8YQ92",
+                                "stars": 3,
+                                "destructionPercentage": 100,
+                                "order": 6,
+                                "duration": 82
+                            }
+                        ],
                         "opponentAttacks": 0
                     },
                     {
@@ -3191,6 +3253,16 @@
                         "name": "Malz",
                         "townhallLevel": 12,
                         "mapPosition": 17,
+                        "attacks": [
+                            {
+                                "attackerTag": "#G9CQG8R0Y",
+                                "defenderTag": "#QRY8LGRUY",
+                                "stars": 3,
+                                "destructionPercentage": 100,
+                                "order": 8,
+                                "duration": 147
+                            }
+                        ],
                         "opponentAttacks": 1,
                         "bestOpponentAttack": {
                             "attackerTag": "#Y2RVJCCP0",
@@ -3266,9 +3338,9 @@
                     "medium": "https://api-assets.clashofclans.com/badges/200/ZiRrDYeXMT2S8LERVuTa4X4iKwYE2j5xYnBTKAffeKg.png"
                 },
                 "clanLevel": 8,
-                "attacks": 1,
-                "stars": 3,
-                "destructionPercentage": 6.666666666666667,
+                "attacks": 2,
+                "stars": 5,
+                "destructionPercentage": 11.466666666666667,
                 "members": [
                     {
                         "tag": "#YQ29C08QC",
@@ -3290,6 +3362,16 @@
                         "name": "tkuda_cuki",
                         "townhallLevel": 10,
                         "mapPosition": 10,
+                        "attacks": [
+                            {
+                                "attackerTag": "#GRV8YQG20",
+                                "defenderTag": "#GRRPP8JJ0",
+                                "stars": 2,
+                                "destructionPercentage": 72,
+                                "order": 4,
+                                "duration": 105
+                            }
+                        ],
                         "opponentAttacks": 0
                     },
                     {
@@ -3474,7 +3556,15 @@
                         "name": "Akash",
                         "townhallLevel": 10,
                         "mapPosition": 24,
-                        "opponentAttacks": 0
+                        "opponentAttacks": 1,
+                        "bestOpponentAttack": {
+                            "attackerTag": "#GRV8YQG20",
+                            "defenderTag": "#GRRPP8JJ0",
+                            "stars": 2,
+                            "destructionPercentage": 72,
+                            "order": 4,
+                            "duration": 105
+                        }
                     },
                     {
                         "tag": "#GPP2LLUQR",
@@ -4902,5 +4992,5 @@
             "warStartTime": "20261104T195448.000Z"
         }
     },
-    "fetchedAt": "2026-11-03T21:46:18Z"
+    "fetchedAt": "2026-11-04T01:46:36Z"
 }
