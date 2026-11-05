@@ -4467,7 +4467,7 @@
             "warStartTime": "20261103T160717.000Z"
         },
         "#8RP929CQ0": {
-            "state": "inWar",
+            "state": "warEnded",
             "teamSize": 15,
             "preparationStartTime": "20261103T195446.000Z",
             "startTime": "20261104T202006.000Z",
@@ -4967,7 +4967,7 @@
             "warStartTime": "20261104T202006.000Z"
         },
         "#8RP929UCP": {
-            "state": "inWar",
+            "state": "warEnded",
             "teamSize": 15,
             "preparationStartTime": "20261103T195448.000Z",
             "startTime": "20261104T202020.000Z",
@@ -5127,7 +5127,15 @@
                                 "duration": 146
                             }
                         ],
-                        "opponentAttacks": 0
+                        "opponentAttacks": 1,
+                        "bestOpponentAttack": {
+                            "attackerTag": "#LGJG8CUC8",
+                            "defenderTag": "#QYU9CCQ28",
+                            "stars": 3,
+                            "destructionPercentage": 100,
+                            "order": 16,
+                            "duration": 132
+                        }
                     },
                     {
                         "tag": "#YLP0PRPLC",
@@ -5247,9 +5255,9 @@
                     "medium": "https://api-assets.clashofclans.com/badges/200/u2jEvcfiQ9Y1PfUklxc55lzYDU4oIdTYmN5DVkquytI.png"
                 },
                 "clanLevel": 7,
-                "attacks": 2,
-                "stars": 5,
-                "destructionPercentage": 12.6,
+                "attacks": 3,
+                "stars": 8,
+                "destructionPercentage": 19.266666666666666,
                 "members": [
                     {
                         "tag": "#YQV2PQ2U",
@@ -5470,6 +5478,16 @@
                         "name": "Hrithul",
                         "townhallLevel": 15,
                         "mapPosition": 1,
+                        "attacks": [
+                            {
+                                "attackerTag": "#LGJG8CUC8",
+                                "defenderTag": "#QYU9CCQ28",
+                                "stars": 3,
+                                "destructionPercentage": 100,
+                                "order": 16,
+                                "duration": 132
+                            }
+                        ],
                         "opponentAttacks": 1,
                         "bestOpponentAttack": {
                             "attackerTag": "#QJUYL2L9V",
@@ -5485,7 +5503,7 @@
             "warStartTime": "20261104T202020.000Z"
         },
         "#8RP92P02G": {
-            "state": "inWar",
+            "state": "warEnded",
             "teamSize": 15,
             "preparationStartTime": "20261103T195449.000Z",
             "startTime": "20261104T202031.000Z",
@@ -5499,15 +5517,25 @@
                     "medium": "https://api-assets.clashofclans.com/badges/200/dHumVpYEsvlq_S3UagfOrLVfVY-naca2aXaZZuvKIgQ.png"
                 },
                 "clanLevel": 18,
-                "attacks": 0,
-                "stars": 0,
-                "destructionPercentage": 0.0,
+                "attacks": 3,
+                "stars": 9,
+                "destructionPercentage": 20.0,
                 "members": [
                     {
                         "tag": "#GCPPUYJ09",
                         "name": "bobik",
                         "townhallLevel": 8,
                         "mapPosition": 15,
+                        "attacks": [
+                            {
+                                "attackerTag": "#GCPPUYJ09",
+                                "defenderTag": "#G20PQ9L0L",
+                                "stars": 3,
+                                "destructionPercentage": 100,
+                                "order": 1,
+                                "duration": 20
+                            }
+                        ],
                         "opponentAttacks": 0
                     },
                     {
@@ -5592,6 +5620,16 @@
                         "name": "فارس",
                         "townhallLevel": 15,
                         "mapPosition": 2,
+                        "attacks": [
+                            {
+                                "attackerTag": "#YL9L02PRP",
+                                "defenderTag": "#L2V9P8LJU",
+                                "stars": 3,
+                                "destructionPercentage": 100,
+                                "order": 3,
+                                "duration": 62
+                            }
+                        ],
                         "opponentAttacks": 0
                     },
                     {
@@ -5606,6 +5644,16 @@
                         "name": "modi",
                         "townhallLevel": 14,
                         "mapPosition": 6,
+                        "attacks": [
+                            {
+                                "attackerTag": "#Y2RVJCCP0",
+                                "defenderTag": "#QVUJP2CQR",
+                                "stars": 3,
+                                "destructionPercentage": 100,
+                                "order": 2,
+                                "duration": 65
+                            }
+                        ],
                         "opponentAttacks": 0
                     }
                 ]
@@ -5628,7 +5676,15 @@
                         "name": "سورنا2",
                         "townhallLevel": 12,
                         "mapPosition": 8,
-                        "opponentAttacks": 0
+                        "opponentAttacks": 1,
+                        "bestOpponentAttack": {
+                            "attackerTag": "#Y2RVJCCP0",
+                            "defenderTag": "#QVUJP2CQR",
+                            "stars": 3,
+                            "destructionPercentage": 100,
+                            "order": 2,
+                            "duration": 65
+                        }
                     },
                     {
                         "tag": "#G0YR899LQ",
@@ -5677,7 +5733,15 @@
                         "name": "amir ali",
                         "townhallLevel": 4,
                         "mapPosition": 14,
-                        "opponentAttacks": 0
+                        "opponentAttacks": 1,
+                        "bestOpponentAttack": {
+                            "attackerTag": "#GCPPUYJ09",
+                            "defenderTag": "#G20PQ9L0L",
+                            "stars": 3,
+                            "destructionPercentage": 100,
+                            "order": 1,
+                            "duration": 20
+                        }
                     },
                     {
                         "tag": "#QJVULVJ2J",
@@ -5698,7 +5762,15 @@
                         "name": "m.torkzade 6",
                         "townhallLevel": 13,
                         "mapPosition": 7,
-                        "opponentAttacks": 0
+                        "opponentAttacks": 1,
+                        "bestOpponentAttack": {
+                            "attackerTag": "#YL9L02PRP",
+                            "defenderTag": "#L2V9P8LJU",
+                            "stars": 3,
+                            "destructionPercentage": 100,
+                            "order": 3,
+                            "duration": 62
+                        }
                     },
                     {
                         "tag": "#99CUG8UQG",
@@ -5733,7 +5805,7 @@
             "warStartTime": "20261104T202031.000Z"
         },
         "#8RP92P2YU": {
-            "state": "inWar",
+            "state": "warEnded",
             "teamSize": 15,
             "preparationStartTime": "20261103T195450.000Z",
             "startTime": "20261104T202045.000Z",
@@ -7289,5 +7361,5 @@
             "warStartTime": "20261106T092636.000Z"
         }
     },
-    "fetchedAt": "2026-11-05T17:39:51Z"
+    "fetchedAt": "2026-11-05T22:51:10Z"
 }
