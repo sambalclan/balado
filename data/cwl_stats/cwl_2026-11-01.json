@@ -6915,7 +6915,15 @@
                         "name": "thuật",
                         "townhallLevel": 13,
                         "mapPosition": 9,
-                        "opponentAttacks": 0
+                        "opponentAttacks": 1,
+                        "bestOpponentAttack": {
+                            "attackerTag": "#GVL2QP9JV",
+                            "defenderTag": "#QRCL9Y9GQ",
+                            "stars": 3,
+                            "destructionPercentage": 100,
+                            "order": 8,
+                            "duration": 99
+                        }
                     },
                     {
                         "tag": "#GLVC90JYV",
@@ -6969,7 +6977,15 @@
                         "name": "An_VT",
                         "townhallLevel": 13,
                         "mapPosition": 7,
-                        "opponentAttacks": 0
+                        "opponentAttacks": 1,
+                        "bestOpponentAttack": {
+                            "attackerTag": "#90LUURLPV",
+                            "defenderTag": "#YYJC20Q2G",
+                            "stars": 3,
+                            "destructionPercentage": 100,
+                            "order": 7,
+                            "duration": 142
+                        }
                     },
                     {
                         "tag": "#Q20CL0UGG",
@@ -7078,9 +7094,9 @@
                     "medium": "https://api-assets.clashofclans.com/badges/200/SduuUQLqAXUP6SALWXozMv9RIY-mBQkDPxECOZkap2s.png"
                 },
                 "clanLevel": 11,
-                "attacks": 4,
-                "stars": 9,
-                "destructionPercentage": 25.066666666666666,
+                "attacks": 6,
+                "stars": 15,
+                "destructionPercentage": 38.4,
                 "members": [
                     {
                         "tag": "#R2YVRJRYY",
@@ -7119,6 +7135,16 @@
                         "name": "ezza1990",
                         "townhallLevel": 16,
                         "mapPosition": 8,
+                        "attacks": [
+                            {
+                                "attackerTag": "#90LUURLPV",
+                                "defenderTag": "#YYJC20Q2G",
+                                "stars": 3,
+                                "destructionPercentage": 100,
+                                "order": 7,
+                                "duration": 142
+                            }
+                        ],
                         "opponentAttacks": 0
                     },
                     {
@@ -7126,6 +7152,16 @@
                         "name": "kaco",
                         "townhallLevel": 13,
                         "mapPosition": 14,
+                        "attacks": [
+                            {
+                                "attackerTag": "#GVL2QP9JV",
+                                "defenderTag": "#QRCL9Y9GQ",
+                                "stars": 3,
+                                "destructionPercentage": 100,
+                                "order": 8,
+                                "duration": 99
+                            }
+                        ],
                         "opponentAttacks": 0
                     },
                     {
@@ -8970,5 +9006,5 @@
             "warStartTime": "20261107T111004.000Z"
         }
     },
-    "fetchedAt": "2026-11-06T17:40:45Z"
+    "fetchedAt": "2026-11-06T22:23:54Z"
 }
