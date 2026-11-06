@@ -1,0 +1,156 @@
+{
+    "state": "ongoing",
+    "startTime": "20261106T070000.000Z",
+    "endTime": "20261109T070000.000Z",
+    "capitalTotalLoot": 14473,
+    "raidsCompleted": 0,
+    "totalAttacks": 6,
+    "enemyDistrictsDestroyed": 2,
+    "offensiveReward": 0,
+    "defensiveReward": 0,
+    "members": [
+        {
+            "tag": "#R0UYQ88YQ",
+            "name": "mpruy",
+            "attacks": 6,
+            "attackLimit": 5,
+            "bonusAttackLimit": 1,
+            "capitalResourcesLooted": 14473
+        }
+    ],
+    "attackLog": [
+        {
+            "defender": {
+                "tag": "#JU0J9G9R",
+                "name": "BATTLE ROAD.UND",
+                "level": 13,
+                "badgeUrls": {
+                    "small": "https://api-assets.clashofclans.com/badges/70/QoM1Vmg5tGwc9Wmv1Qjtdj3LHycpJc13Y7Sa82Bjups.png",
+                    "large": "https://api-assets.clashofclans.com/badges/512/QoM1Vmg5tGwc9Wmv1Qjtdj3LHycpJc13Y7Sa82Bjups.png",
+                    "medium": "https://api-assets.clashofclans.com/badges/200/QoM1Vmg5tGwc9Wmv1Qjtdj3LHycpJc13Y7Sa82Bjups.png"
+                }
+            },
+            "attackCount": 6,
+            "districtCount": 7,
+            "districtsDestroyed": 2,
+            "districts": [
+                {
+                    "id": 70000000,
+                    "name": "Capital Peak",
+                    "districtHallLevel": 7,
+                    "destructionPercent": 0,
+                    "stars": 0,
+                    "attackCount": 0,
+                    "totalLooted": 0
+                },
+                {
+                    "id": 70000001,
+                    "name": "Barbarian Camp",
+                    "districtHallLevel": 4,
+                    "destructionPercent": 0,
+                    "stars": 0,
+                    "attackCount": 0,
+                    "totalLooted": 0
+                },
+                {
+                    "id": 70000002,
+                    "name": "Wizard Valley",
+                    "districtHallLevel": 3,
+                    "destructionPercent": 0,
+                    "stars": 0,
+                    "attackCount": 0,
+                    "totalLooted": 0
+                },
+                {
+                    "id": 70000003,
+                    "name": "Balloon Lagoon",
+                    "districtHallLevel": 3,
+                    "destructionPercent": 100,
+                    "stars": 3,
+                    "attackCount": 4,
+                    "totalLooted": 7924,
+                    "attacks": [
+                        {
+                            "attacker": {
+                                "tag": "#R0UYQ88YQ",
+                                "name": "mpruy"
+                            },
+                            "destructionPercent": 100,
+                            "stars": 3
+                        },
+                        {
+                            "attacker": {
+                                "tag": "#R0UYQ88YQ",
+                                "name": "mpruy"
+                            },
+                            "destructionPercent": 79,
+                            "stars": 2
+                        },
+                        {
+                            "attacker": {
+                                "tag": "#R0UYQ88YQ",
+                                "name": "mpruy"
+                            },
+                            "destructionPercent": 71,
+                            "stars": 2
+                        },
+                        {
+                            "attacker": {
+                                "tag": "#R0UYQ88YQ",
+                                "name": "mpruy"
+                            },
+                            "destructionPercent": 47,
+                            "stars": 0
+                        }
+                    ]
+                },
+                {
+                    "id": 70000004,
+                    "name": "Builder's Workshop",
+                    "districtHallLevel": 3,
+                    "destructionPercent": 0,
+                    "stars": 0,
+                    "attackCount": 0,
+                    "totalLooted": 0
+                },
+                {
+                    "id": 70000005,
+                    "name": "Dragon Cliffs",
+                    "districtHallLevel": 2,
+                    "destructionPercent": 0,
+                    "stars": 0,
+                    "attackCount": 0,
+                    "totalLooted": 0
+                },
+                {
+                    "id": 70000006,
+                    "name": "Golem Quarry",
+                    "districtHallLevel": 2,
+                    "destructionPercent": 100,
+                    "stars": 3,
+                    "attackCount": 2,
+                    "totalLooted": 6549,
+                    "attacks": [
+                        {
+                            "attacker": {
+                                "tag": "#R0UYQ88YQ",
+                                "name": "mpruy"
+                            },
+                            "destructionPercent": 100,
+                            "stars": 3
+                        },
+                        {
+                            "attacker": {
+                                "tag": "#R0UYQ88YQ",
+                                "name": "mpruy"
+                            },
+                            "destructionPercent": 58,
+                            "stars": 2
+                        }
+                    ]
+                }
+            ]
+        }
+    ],
+    "defenseLog": []
+}
