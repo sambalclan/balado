@@ -75,10 +75,11 @@ async function history(kind) {
 
 const fileName = (kind, data) => `${kind}_${data.startTime}.json`;
 
-async function combinedIndex(kind, current) {
+// useHistory = false: no saved history from the worker (Raid is live only)
+async function combinedIndex(kind, current, useHistory = true) {
     const [files, saved, live] = await Promise.all([
         index(kind).catch(() => []),
-        history(kind),
+        useHistory ? history(kind) : [],
         current()
     ]);
 
@@ -89,11 +90,11 @@ async function combinedIndex(kind, current) {
     ])].sort().reverse();
 }
 
-async function combinedData(kind, filename, current) {
+async function combinedData(kind, filename, current, useHistory = true) {
     const live = await current();
     if (live && fileName(kind, live) === filename) return live;
 
-    const saved = await history(kind);
+    const saved = useHistory ? await history(kind) : [];
     return saved.find(x => fileName(kind, x) === filename)
         || stats(kind, filename);
 }
@@ -138,8 +139,8 @@ export const fetchWarData = file => combinedData('war', file, currentWar);
 export const fetchLatestRaid = async () =>
     await currentRaid() || latest('raid');
 
-export const fetchRaidIndex = () => combinedIndex('raid', currentRaid);
-export const fetchRaidData = file => combinedData('raid', file, currentRaid);
+export const fetchRaidIndex = () => combinedIndex('raid', currentRaid, false);
+export const fetchRaidData = file => combinedData('raid', file, currentRaid, false);
 
 export function fetchActivity() {
     if (Date.now() - activityTime >= ACTIVITY_TTL) {
@@ -151,3 +152,11 @@ export function fetchActivity() {
 
 export const fetchLatestCwl = async () =>
     await fetchLive('/cwl') || latest('cwl');
+
+// Saved CWL wars (one entry per round). Returns null when the request fails,
+// so the caller can keep the data it already has.
+export async function fetchCwlWars() {
+    const data = await fetchLive('/api/cwl/wars?limit=100');
+    if (!data) return null;
+    return (data.items || []).map(x => x.data).filter(x => x?.war);
+}

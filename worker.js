@@ -420,6 +420,20 @@ async function getClan(env) {
 }
 
 // =====================================================
+// RAID - LIVE FROM API, NO D1 STORAGE
+// Latest capital raid weekend only. No history is kept.
+// =====================================================
+
+async function getRaid(env) {
+  const data = await coc(
+    env,
+    `/clans/${encodeURIComponent(TAG)}/capitalraidseasons?limit=1`
+  );
+
+  return data?.items?.[0] || null;
+}
+
+// =====================================================
 // CURRENT WAR - D1 STORAGE
 // =====================================================
 
@@ -692,7 +706,7 @@ export default {
       if (path === '/') {
         return json({
           name: 'Balado API',
-          mode: 'War Regular + CWL',
+          mode: 'War Regular + CWL + Raid (live)',
           endpoints: [
             '/health',
             '/clan',
@@ -703,7 +717,9 @@ export default {
             '/cwl',
             '/api/cwl',
             '/cwl/wars',
-            '/api/cwl/wars'
+            '/api/cwl/wars',
+            '/raid',
+            '/api/raid'
           ]
         });
       }
@@ -720,7 +736,8 @@ export default {
             'war_history',
             'war_finalize',
             'cwl',
-            'cwl_wars'
+            'cwl_wars',
+            'raid_live'
           ]
         });
       }
@@ -774,6 +791,22 @@ export default {
             limit
           )
         );
+      }
+
+      // RAID - LIVE API, NO D1
+      if (
+        path === '/raid' ||
+        path === '/api/raid'
+      ) {
+        const raid = await getRaid(env);
+
+        if (raid === null) {
+          return json({
+            error: 'No raid data'
+          }, 404);
+        }
+
+        return json(raid);
       }
 
       // CWL GROUP - LATEST D1

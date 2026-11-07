@@ -1,5 +1,5 @@
 import { escapeHtml, fmt, renderCombinedChart, warStars, warDate, isEndedWar, pagePanel, backButton } from './constants.js';
-import { state, getRaidWeeks } from './state.js';
+import { state, getRaidWeeks, getCwlRounds } from './state.js';
 import { getLiveLog, LIVE_API_URL } from './api.js';
 import { getWarChartData } from './war.js';
 
@@ -462,26 +462,17 @@ function getWarResults() {
 }
 
 // CWL RESULTS
+// Rounds are normalized by getCwlRounds(): w.clan is always our clan.
 function getCwlResults() {
-    const cwl = state.cwl;
-    if (!cwl) return null;
-
-    const rounds = Array.isArray(cwl.rounds) ? cwl.rounds : [];
-    const tag = state.clan?.tag;
     const result = { wins: 0, losses: 0, draws: 0 };
 
-    for (const round of rounds) {
-        const w = round.war || round;
+    for (const w of getCwlRounds()) {
         if (!isEndedWar(w) || !w.clan || !w.opponent) continue;
 
-        const ours = w.clan.tag === tag ? w.clan : w.opponent.tag === tag ? w.opponent : null;
-        const enemy = ours === w.clan ? w.opponent : w.clan;
-        if (!ours) continue;
-
-        const cs = ours.stars ?? 0;
-        const os = enemy.stars ?? 0;
-        const cd = ours.destructionPercentage ?? 0;
-        const od = enemy.destructionPercentage ?? 0;
+        const cs = w.clan.stars ?? 0;
+        const os = w.opponent.stars ?? 0;
+        const cd = w.clan.destructionPercentage ?? 0;
+        const od = w.opponent.destructionPercentage ?? 0;
 
         if (cs > os || (cs === os && cd > od)) result.wins++;
         else if (cs < os || (cs === os && cd < od)) result.losses++;

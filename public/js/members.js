@@ -1,4 +1,4 @@
-import { state, getRaidWeeks } from './state.js';
+import { state, getRaidWeeks, getCwlRounds, getCwlMemberStats } from './state.js';
 import {
     roleMap, roleWeight, roleName, getTHImage, escapeHtml, warDate, fmt, dayLabel,
     isEndedWar, warStars, pageShell, pageCard, renderPillTabs, setPillActive,
@@ -226,9 +226,10 @@ const raidValues = () => {
 };
 
 const cwlValues = () => {
-    const cwl = state.cwl;
-    if (!cwl || cwl.season !== seasonDate().slice(0, 7)) return null;
-    return new Map((cwl.members || []).map((m) => [m.tag, m.stars || 0]));
+    const stats = getCwlMemberStats();
+    const season = String(getCwlRounds()[0]?.__season || '').slice(0, 7);
+    if (!stats.size || season !== seasonDate().slice(0, 7)) return null;
+    return new Map([...stats].map(([tag, m]) => [tag, m.stars]));
 };
 
 const CATEGORIES = [

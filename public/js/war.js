@@ -3,7 +3,7 @@ import {
     renderAreaChart, dayLabel, isEndedWar, warStars, pageCard,
     emptyCard, backButton, renderPillTabs, setPillActive
 } from './constants.js';
-import { state, getRaidWeeks } from './state.js';
+import { state, getRaidWeeks, getCwlRounds, getCwlMemberStats } from './state.js';
 
 // WAR
 let warFilter = 'all';
@@ -248,7 +248,7 @@ function renderWarScoreboard(w, r) {
         </div>`;
 }
 
-function renderWarDetail(w) {
+function renderWarDetail(w, opts = {}) {
     const r = warResult(w);
     const ended = r.key !== 'ongoing';
     const max = w.attacksPerMember || 2;
@@ -271,14 +271,14 @@ function renderWarDetail(w) {
 
     return pageCard(`
         <div class="flex items-center gap-3 mb-3">
-            ${backButton('data-war-back')}
+            ${backButton(opts.backAttr || 'data-war-back')}
             <div class="min-w-0">
-                <h2 class="text-lg font-bold text-white truncate">vs ${escapeHtml(w.opponent?.name || 'Opponent')}</h2>
-                <p class="text-[10px] text-gray-400">${members.length} members · ${max} attacks each</p>
+                <h2 class="text-lg font-bold text-white truncate">${escapeHtml(opts.heading || `vs ${w.opponent?.name || 'Opponent'}`)}</h2>
+                <p class="text-[10px] text-gray-400">${members.length} members · ${max} attack${max > 1 ? 's' : ''} each</p>
             </div>
         </div>
         ${renderWarScoreboard(w, r)}
-        <div class="mb-3">${warCountdownHtml(w)}</div>
+        <div class="mb-3">${opts.countdown ?? warCountdownHtml(w)}</div>
         <div class="grid grid-cols-4 gap-2 mb-4">
             ${stat('Attacks', `${used}/${members.length * max}`)}
             ${stat('Stars', stars)}
@@ -350,44 +350,203 @@ export function renderWar(wars) {
 }
 
 // CWL
+// getCwlRounds() returns one entry per saved round of the latest season.
+// Our clan is always w.clan there, even when the API listed it as the opponent.
+let cwlSelected = null; // round number of the open war
+let cwlView = 'rounds';
+let cwlCountdownTimer = null;
+
+const CWL_VIEWS = [
+    { id: 'rounds', label: 'Rounds' },
+    { id: 'members', label: 'Members' }
+];
+
+function cwlCountdownHtml(w) {
+    const timer = warCountdown(w);
+    if (!timer) return '';
+
+    return `
+        <div class="flex items-center justify-center gap-1.5 mt-2 text-[10px] text-[#D4A72C]" data-cwl-countdown="${w.__round}">
+            <span class="material-symbols-outlined text-[14px]">timer</span>
+            <span class="text-[#A0A0A0]">${timer.label}</span>
+            <span class="font-mono font-bold tabular-nums" data-cwl-time>${timer.time}</span>
+        </div>`;
+}
+
+function startCwlCountdown(container) {
+    clearInterval(cwlCountdownTimer);
+
+    const update = () => {
+        if (!container.isConnected) return clearInterval(cwlCountdownTimer);
+
+        const rounds = getCwlRounds();
+        container.querySelectorAll('[data-cwl-countdown]').forEach(el => {
+            const w = rounds.find(x => x.__round === Number(el.dataset.cwlCountdown));
+            const timer = w && warCountdown(w);
+            if (!timer) return el.remove();
+
+            const time = el.querySelector('[data-cwl-time]');
+            if (time) time.textContent = timer.time;
+        });
+    };
+
+    update();
+    cwlCountdownTimer = setInterval(update, 1000);
+}
+
+function cwlSummary(rounds) {
+    const done = rounds.filter(isEndedWar);
+    const count = key => done.filter(w => warResult(w).key === key).length;
+    const stars = rounds.reduce((n, w) => n + (w.clan?.stars || 0), 0);
+    const avg = done.length ? (done.reduce((n, w) => n + (w.clan?.stars || 0), 0) / done.length).toFixed(1) : '-';
+
+    return [
+        { label: 'Record (W-L-D)', value: `${count('victory')}-${count('defeat')}-${count('draw')}`, color: 'text-[#D4A72C]' },
+        { label: 'Total stars', value: stars, color: 'text-white' },
+        { label: 'Avg stars', value: avg, color: 'text-white' }
+    ];
+}
+
+function renderCwlCard(w) {
+    const c = w.clan || {};
+    const o = w.opponent || {};
+    const r = warResult(w);
+    const max = warAttacksMax(w);
+    const pct = v => (v || 0).toFixed(1) + '%';
+
+    return `
+        <div data-cwl-open="${w.__round}" class="bg-[#1E1E1E] border border-[#2A2A2A] rounded-xl px-3 py-3 cursor-pointer active:scale-[0.99] transition-transform">
+            <div class="flex items-center justify-between text-[9px] font-mono text-[#8B8F98] mb-2">
+                <span><span class="font-bold text-[#D4A72C] tracking-wide">ROUND ${w.__round}</span> · ${warDate(w) || '-'}</span>
+                <span class="material-symbols-outlined text-[14px]">chevron_right</span>
+            </div>
+            <div class="grid grid-cols-[1fr_auto_1fr] items-center gap-2">
+                <div class="flex items-center gap-2 min-w-0">
+                    <img src="${escapeHtml(c.badgeUrls?.small || '')}" class="w-8 h-8 shrink-0 object-contain" alt="">
+                    <div class="min-w-0 leading-tight">
+                        <p class="text-xs font-bold text-white truncate">${escapeHtml(c.name || '')}</p>
+                        <p class="text-[9px] text-[#6B7280]">${warAttacksUsed(c)}/${max} Atks</p>
+                    </div>
+                </div>
+                <div class="text-center leading-tight">
+                    <p class="text-[9px] font-semibold ${r.color}">${r.label}</p>
+                    <p class="medieval text-lg font-bold text-white">${c.stars || 0} - ${o.stars || 0}</p>
+                    <p class="text-[8px] text-[#6B7280]">${pct(c.destructionPercentage)} vs ${pct(o.destructionPercentage)}</p>
+                </div>
+                <div class="flex items-center justify-end gap-2 min-w-0">
+                    <div class="min-w-0 leading-tight text-right">
+                        <p class="text-xs font-bold text-white truncate">${escapeHtml(o.name || 'Opponent')}</p>
+                        <p class="text-[9px] text-[#6B7280]">${warAttacksUsed(o)}/${max} Atks</p>
+                    </div>
+                    <img src="${escapeHtml(o.badgeUrls?.small || '')}" class="w-8 h-8 shrink-0 object-contain" alt="">
+                </div>
+            </div>
+            ${cwlCountdownHtml(w)}
+        </div>`;
+}
+
+function renderCwlMemberRow(m, i) {
+    return `
+        <div class="flex items-center gap-3 px-3 py-2 ${i ? 'border-t border-[#2A2A2A]' : ''}">
+            <span class="w-5 text-[10px] font-mono text-gray-500">${i + 1}</span>
+            ${m.th ? `<img src="${getTHImage(m.th)}" class="w-9 h-9 object-contain shrink-0" alt="TH${m.th}" onerror="this.style.visibility='hidden'">` : ''}
+            <div class="min-w-0 flex-1 leading-tight">
+                <p class="text-xs font-bold text-white truncate">${escapeHtml(m.name)}</p>
+                <p class="text-[9px] text-gray-400">TH${m.th || '-'} · ${m.attacks}/${m.rounds} attacks</p>
+            </div>
+            <span class="text-[11px] font-bold ${m.stars ? 'text-[#D4A72C]' : 'text-gray-500'}">${m.stars}★</span>
+        </div>`;
+}
+
+function renderCwlBody(rounds) {
+    if (cwlView === 'members') {
+        const members = [...getCwlMemberStats().values()]
+            .sort((a, b) => b.stars - a.stars || b.attacks - a.attacks || String(a.name).localeCompare(String(b.name)));
+
+        return members.length
+            ? `<div class="rounded-xl overflow-hidden border border-[#2A2A2A]">${members.map(renderCwlMemberRow).join('')}</div>`
+            : '<p class="text-sm text-gray-500 text-center py-6">No member data yet.</p>';
+    }
+
+    // Newest round first
+    return `<div class="flex flex-col gap-2">${[...rounds].reverse().map(renderCwlCard).join('')}</div>`;
+}
+
 export function renderCwl() {
     const container = document.getElementById('section-cwl');
     if (!container) return;
 
-    if (!state.cwl) {
-        container.innerHTML = emptyCard('CWL data is not available yet.');
+    clearInterval(cwlCountdownTimer);
+
+    const rounds = getCwlRounds();
+    const group = state.cwl;
+    const season = String(rounds[0]?.__season || group?.season || '-').slice(0, 7);
+
+    if (!rounds.length) {
+        container.innerHTML = group
+            ? pageCard(`
+                <div class="flex items-center gap-3 mb-3">
+                    <h2 class="medieval text-lg font-bold text-white uppercase">CWL</h2>
+                    <span class="text-[11px] text-gray-400">${escapeHtml(season)}</span>
+                </div>
+                ${emptyCard('No CWL wars saved yet.')}`)
+            : emptyCard('CWL data is not available yet.');
         return;
     }
 
-    const cwl = state.cwl;
-    const rounds = cwl.rounds || [];
-    const members = cwl.clan?.members || [];
+    const open = cwlSelected !== null ? rounds.find(w => w.__round === cwlSelected) : null;
+    if (!open) cwlSelected = null;
 
-    const renderMember = (m, i) => {
-        const stars = rounds.reduce((n, r) => n + (r.attacks?.find(a => a.attackerTag === m.tag)?.stars || 0), 0);
-        const attacks = rounds.filter(r => r.attacks?.some(a => a.attackerTag === m.tag)).length;
-
-        return `
-            <div class="flex items-center gap-3 px-3 py-2 ${i ? 'border-t border-[#2A2A2A]' : ''}">
-                <img src="${getTHImage(m.townHallLevel)}" class="w-9 h-9 object-contain" alt="">
-                <div class="min-w-0 flex-1">
-                    <p class="text-xs font-bold text-white truncate">${escapeHtml(m.name)}</p>
-                    <p class="text-[9px] text-gray-400">TH${m.townHallLevel}</p>
-                </div>
-                <span class="text-[10px] font-bold text-[#D4A72C]">${stars}★ · ${attacks}/${rounds.length}</span>
+    if (open) {
+        container.innerHTML = renderWarDetail(open, {
+            backAttr: 'data-cwl-back',
+            heading: `Round ${open.__round} · vs ${open.opponent?.name || 'Opponent'}`,
+            countdown: cwlCountdownHtml(open)
+        });
+        startCwlCountdown(container);
+        window.scrollTo(0, 0);
+    } else {
+        const total = group?.rounds?.length || rounds.length;
+        const tile = ({ label, value, color }) => `
+            <div class="rounded-lg bg-[#141414] border border-[#2A2A2A] px-2 py-1.5 text-center leading-tight">
+                <p class="text-[13px] font-bold ${color}">${value}</p>
+                <p class="text-[7px] tracking-wide uppercase text-[#6B7280] mt-0.5">${label}</p>
             </div>`;
-    };
 
-    container.innerHTML = pageCard(`
-        <div class="flex items-center gap-3 mb-3">
-            <h2 class="text-lg font-bold text-white">CWL</h2>
-            <span class="text-[11px] text-gray-400">${escapeHtml(cwl.season || '-')}</span>
-        </div>
-        <div class="rounded-xl overflow-hidden border border-[#2A2A2A]">
-            ${members.map(renderMember).join('')}
-        </div>
-        <p class="text-[10px] text-gray-400 mt-3">${rounds.length} rounds</p>
-    `);
+        container.innerHTML = pageCard(`
+            <div class="flex items-center gap-3 mb-3">
+                <h2 class="medieval text-lg font-bold text-white uppercase">CWL</h2>
+                <span class="text-[11px] text-gray-400">${escapeHtml(season)} · ${rounds.length} / ${total} rounds</span>
+            </div>
+            <div class="grid grid-cols-3 gap-1.5 mb-3">${cwlSummary(rounds).map(tile).join('')}</div>
+            ${renderPillTabs('data-cwl-view', CWL_VIEWS, cwlView)}
+            <div id="cwlBody">${renderCwlBody(rounds)}</div>
+        `);
+        startCwlCountdown(container);
+    }
+
+    container.onclick = e => {
+        if (e.target.closest('[data-cwl-back]')) {
+            cwlSelected = null;
+            renderCwl();
+            return;
+        }
+
+        const tab = e.target.closest('[data-cwl-view]');
+        if (tab) {
+            cwlView = tab.dataset.cwlView;
+            setPillActive(tab.closest('.pill-tabs'), 'data-cwl-view', cwlView);
+            container.querySelector('#cwlBody').innerHTML = renderCwlBody(getCwlRounds());
+            startCwlCountdown(container);
+            return;
+        }
+
+        const card = e.target.closest('[data-cwl-open]');
+        if (card) {
+            cwlSelected = Number(card.dataset.cwlOpen);
+            renderCwl();
+        }
+    };
 }
 
 // RAID

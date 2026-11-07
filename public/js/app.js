@@ -1,5 +1,5 @@
-import { fetchClanData, fetchClanHistory, fetchLatestRaid, fetchLatestCwl, fetchWarIndex, fetchWarData, fetchRaidIndex, fetchRaidData, clearLiveCache } from './api.js';
-import { setWarData, setClanHistory, setRaidData, setRaids, setCwlData } from './state.js';
+import { fetchClanData, fetchClanHistory, fetchLatestRaid, fetchLatestCwl, fetchCwlWars, fetchWarIndex, fetchWarData, fetchRaidIndex, fetchRaidData, clearLiveCache } from './api.js';
+import { setWarData, setClanHistory, setRaidData, setRaids, setCwlData, setCwlWars } from './state.js';
 import { renderPillTabs, setPillActive } from './constants.js';
 import { renderAbout, renderSettings } from './render.js';
 import { renderMembers } from './members.js';
@@ -134,6 +134,15 @@ async function loadRaidWeeks() {
     renderRaid();
 }
 
+// Saved CWL wars (one per round); keeps the old data when the request fails
+async function loadCwlWars() {
+    try {
+        const wars = await fetchCwlWars();
+        if (wars) setCwlWars(wars);
+    } catch { /* keep old data */ }
+    renderCwl();
+}
+
 // ═══ Init ══════════════════════════════════════════════════════════════
 // About and Members both show data that loads in the background
 const renderClanViews = () => {
@@ -160,7 +169,7 @@ async function refreshAll() {
     try {
         const [clan, raid, cwl] = await Promise.allSettled([
             fetchClanData(), fetchLatestRaid(), fetchLatestCwl(),
-            loadRaidWeeks(), loadWarData(), // these render their own pages
+            loadRaidWeeks(), loadWarData(), loadCwlWars(), // these render their own pages
         ]);
         // Keep the old data when a request fails
         if (clan.status === 'fulfilled' && clan.value) latestClanData = clan.value;
@@ -192,6 +201,7 @@ async function init() {
             renderClanViews();
         });
         loadRaidWeeks().then(renderClanViews);
+        loadCwlWars().then(renderClanViews);
 
         await loadWarData();
         renderClanViews();
