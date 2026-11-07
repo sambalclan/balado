@@ -2,10 +2,10 @@
     "state": "ongoing",
     "startTime": "20261106T070000.000Z",
     "endTime": "20261109T070000.000Z",
-    "capitalTotalLoot": 57721,
+    "capitalTotalLoot": 88293,
     "raidsCompleted": 1,
-    "totalAttacks": 27,
-    "enemyDistrictsDestroyed": 7,
+    "totalAttacks": 39,
+    "enemyDistrictsDestroyed": 11,
     "offensiveReward": 0,
     "defensiveReward": 0,
     "members": [
@@ -48,6 +48,22 @@
             "attackLimit": 5,
             "bonusAttackLimit": 1,
             "capitalResourcesLooted": 5853
+        },
+        {
+            "tag": "#G989PRQJL",
+            "name": "Nanzi",
+            "attacks": 6,
+            "attackLimit": 5,
+            "bonusAttackLimit": 1,
+            "capitalResourcesLooted": 16271
+        },
+        {
+            "tag": "#QJUYL2L9V",
+            "name": "Zysss ur clown",
+            "attacks": 6,
+            "attackLimit": 5,
+            "bonusAttackLimit": 1,
+            "capitalResourcesLooted": 14301
         },
         {
             "tag": "#GQJGU808G",
@@ -380,9 +396,9 @@
                     "medium": "https://api-assets.clashofclans.com/badges/200/Mknqr2wlg28pVXfRMy_fAMkgkDBV6su5OhQz9oz-z0s.png"
                 }
             },
-            "attackCount": 1,
+            "attackCount": 13,
             "districtCount": 7,
-            "districtsDestroyed": 0,
+            "districtsDestroyed": 4,
             "districts": [
                 {
                     "id": 70000000,
@@ -406,47 +422,151 @@
                     "id": 70000002,
                     "name": "Wizard Valley",
                     "districtHallLevel": 3,
-                    "destructionPercent": 0,
-                    "stars": 0,
-                    "attackCount": 0,
-                    "totalLooted": 0
+                    "destructionPercent": 100,
+                    "stars": 3,
+                    "attackCount": 3,
+                    "totalLooted": 7020,
+                    "attacks": [
+                        {
+                            "attacker": {
+                                "tag": "#QJUYL2L9V",
+                                "name": "Zysss ur clown"
+                            },
+                            "destructionPercent": 100,
+                            "stars": 3
+                        },
+                        {
+                            "attacker": {
+                                "tag": "#QJUYL2L9V",
+                                "name": "Zysss ur clown"
+                            },
+                            "destructionPercent": 86,
+                            "stars": 2
+                        },
+                        {
+                            "attacker": {
+                                "tag": "#QJUYL2L9V",
+                                "name": "Zysss ur clown"
+                            },
+                            "destructionPercent": 51,
+                            "stars": 1
+                        }
+                    ]
                 },
                 {
                     "id": 70000003,
                     "name": "Balloon Lagoon",
                     "districtHallLevel": 3,
-                    "destructionPercent": 0,
-                    "stars": 0,
-                    "attackCount": 0,
-                    "totalLooted": 0
+                    "destructionPercent": 100,
+                    "stars": 3,
+                    "attackCount": 3,
+                    "totalLooted": 8120,
+                    "attacks": [
+                        {
+                            "attacker": {
+                                "tag": "#G989PRQJL",
+                                "name": "Nanzi"
+                            },
+                            "destructionPercent": 100,
+                            "stars": 3
+                        },
+                        {
+                            "attacker": {
+                                "tag": "#G989PRQJL",
+                                "name": "Nanzi"
+                            },
+                            "destructionPercent": 72,
+                            "stars": 2
+                        },
+                        {
+                            "attacker": {
+                                "tag": "#G989PRQJL",
+                                "name": "Nanzi"
+                            },
+                            "destructionPercent": 40,
+                            "stars": 1
+                        }
+                    ]
                 },
                 {
                     "id": 70000004,
                     "name": "Builder's Workshop",
                     "districtHallLevel": 3,
-                    "destructionPercent": 0,
-                    "stars": 0,
-                    "attackCount": 0,
-                    "totalLooted": 0
+                    "destructionPercent": 100,
+                    "stars": 3,
+                    "attackCount": 3,
+                    "totalLooted": 8466,
+                    "attacks": [
+                        {
+                            "attacker": {
+                                "tag": "#QJUYL2L9V",
+                                "name": "Zysss ur clown"
+                            },
+                            "destructionPercent": 100,
+                            "stars": 3
+                        },
+                        {
+                            "attacker": {
+                                "tag": "#QJUYL2L9V",
+                                "name": "Zysss ur clown"
+                            },
+                            "destructionPercent": 90,
+                            "stars": 2
+                        },
+                        {
+                            "attacker": {
+                                "tag": "#G989PRQJL",
+                                "name": "Nanzi"
+                            },
+                            "destructionPercent": 31,
+                            "stars": 0
+                        }
+                    ]
                 },
                 {
                     "id": 70000005,
                     "name": "Dragon Cliffs",
                     "districtHallLevel": 2,
-                    "destructionPercent": 0,
+                    "destructionPercent": 31,
                     "stars": 0,
-                    "attackCount": 0,
-                    "totalLooted": 0
+                    "attackCount": 1,
+                    "totalLooted": 1525,
+                    "attacks": [
+                        {
+                            "attacker": {
+                                "tag": "#QJUYL2L9V",
+                                "name": "Zysss ur clown"
+                            },
+                            "destructionPercent": 31,
+                            "stars": 0
+                        }
+                    ]
                 },
                 {
                     "id": 70000006,
                     "name": "Golem Quarry",
                     "districtHallLevel": 2,
-                    "destructionPercent": 34,
-                    "stars": 0,
-                    "attackCount": 1,
-                    "totalLooted": 1530,
+                    "destructionPercent": 100,
+                    "stars": 3,
+                    "attackCount": 3,
+                    "totalLooted": 6971,
                     "attacks": [
+                        {
+                            "attacker": {
+                                "tag": "#G989PRQJL",
+                                "name": "Nanzi"
+                            },
+                            "destructionPercent": 100,
+                            "stars": 3
+                        },
+                        {
+                            "attacker": {
+                                "tag": "#G989PRQJL",
+                                "name": "Nanzi"
+                            },
+                            "destructionPercent": 76,
+                            "stars": 2
+                        },
                         {
                             "attacker": {
                                 "tag": "#GPCYQG89Y",
