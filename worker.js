@@ -1,3 +1,4 @@
+
 const BASE = 'https://cocproxy.royaleapi.dev/v1';
 const TAG = '#2RVRP900V';
 
@@ -8,23 +9,25 @@ const CORS = {
   'Cache-Control': 'no-store'
 };
 
-const json = (value, status = 200) => {
-  return new Response(JSON.stringify(value), {
+const json = (value, status = 200) => new Response(
+  JSON.stringify(value),
+  {
     status,
     headers: {
       ...CORS,
       'Content-Type': 'application/json; charset=utf-8'
     }
-  });
-};
+  }
+);
 
 const message = e => String(e?.message || e);
 
-const tagKey = tag => {
-  return String(tag || '')
-    .replace(/^#/, '')
-    .toUpperCase();
-};
+const tagKey = tag =>
+  String(tag || '').replace(/^#/, '').toUpperCase();
+
+// =====================================================
+// TIME
+// =====================================================
 
 function parseCoCTime(value) {
   if (!value) return NaN;
@@ -33,9 +36,7 @@ function parseCoCTime(value) {
     /^(\d{4})(\d{2})(\d{2})T(\d{2})(\d{2})(\d{2})(?:\.\d+)?Z$/
   );
 
-  if (!match) {
-    return Date.parse(value);
-  }
+  if (!match) return Date.parse(value);
 
   return Date.UTC(
     Number(match[1]),
@@ -48,7 +49,7 @@ function parseCoCTime(value) {
 }
 
 // =====================================================
-// DATABASE
+// DATABASE - WAR REGULAR ONLY
 // =====================================================
 
 async function init(db) {
@@ -103,7 +104,6 @@ async function coc(env, path) {
     );
 
     error.status = response.status;
-
     throw error;
   }
 
@@ -116,22 +116,14 @@ async function coc(env, path) {
 
 async function latest(db, kind, payload, now) {
   await db.prepare(`
-    INSERT INTO latest (
-      kind,
-      payload,
-      updated_at
-    )
+    INSERT INTO latest (kind, payload, updated_at)
     VALUES (?, ?, ?)
     ON CONFLICT(kind)
     DO UPDATE SET
       payload = excluded.payload,
       updated_at = excluded.updated_at
   `)
-    .bind(
-      kind,
-      JSON.stringify(payload),
-      now
-    )
+    .bind(kind, JSON.stringify(payload), now)
     .run();
 }
 
@@ -149,12 +141,7 @@ async function history(db, kind, id, payload, now) {
       payload = excluded.payload,
       updated_at = excluded.updated_at
   `)
-    .bind(
-      kind,
-      id,
-      JSON.stringify(payload),
-      now
-    )
+    .bind(kind, id, JSON.stringify(payload), now)
     .run();
 }
 
@@ -171,9 +158,7 @@ async function readLatest(db, kind) {
     .bind(kind)
     .first();
 
-  return row
-    ? JSON.parse(row.payload)
-    : null;
+  return row ? JSON.parse(row.payload) : null;
 }
 
 async function readHistory(db, kind, limit = 20) {
@@ -213,9 +198,7 @@ function matchWarLog(war, log) {
 
   const targetEnd = parseCoCTime(war.endTime);
 
-  if (!Number.isFinite(targetEnd)) {
-    return null;
-  }
+  if (!Number.isFinite(targetEnd)) return null;
 
   for (const entry of log?.items || []) {
     const clanTag = tagKey(entry.clan?.tag);
@@ -231,23 +214,13 @@ function matchWarLog(war, log) {
         clanTag === opponentTag
       );
 
-    if (!sameTeams) {
-      continue;
-    }
+    if (!sameTeams) continue;
 
     const logEnd = parseCoCTime(entry.endTime);
 
-    if (!Number.isFinite(logEnd)) {
-      continue;
-    }
+    if (!Number.isFinite(logEnd)) continue;
 
-    const difference = Math.abs(
-      logEnd - targetEnd
-    );
-
-    // Prevent matching a different war
-    // against the same opponent.
-    if (difference > 600000) {
+    if (Math.abs(logEnd - targetEnd) > 600000) {
       continue;
     }
 
@@ -279,13 +252,8 @@ function calculateWarResult(clan, opponent) {
   const clanStars = Number(clan?.stars ?? 0);
   const enemyStars = Number(opponent?.stars ?? 0);
 
-  if (clanStars > enemyStars) {
-    return 'win';
-  }
-
-  if (clanStars < enemyStars) {
-    return 'lose';
-  }
+  if (clanStars > enemyStars) return 'win';
+  if (clanStars < enemyStars) return 'lose';
 
   const clanDestruction = Number(
     clan?.destructionPercentage ?? 0
@@ -295,13 +263,8 @@ function calculateWarResult(clan, opponent) {
     opponent?.destructionPercentage ?? 0
   );
 
-  if (clanDestruction > enemyDestruction) {
-    return 'win';
-  }
-
-  if (clanDestruction < enemyDestruction) {
-    return 'lose';
-  }
+  if (clanDestruction > enemyDestruction) return 'win';
+  if (clanDestruction < enemyDestruction) return 'lose';
 
   return 'tie';
 }
@@ -312,9 +275,7 @@ function calculateWarResult(clan, opponent) {
 
 async function finalizeWar(env, now) {
   const { results } = await env.DB.prepare(`
-    SELECT
-      record_id,
-      payload
+    SELECT record_id, payload
     FROM history
     WHERE kind = 'war'
     ORDER BY updated_at DESC
@@ -329,13 +290,8 @@ async function finalizeWar(env, now) {
     .filter(row => {
       const war = row.data;
 
-      if (!war?.startTime) {
-        return false;
-      }
-
-      if (war.state === 'warEnded') {
-        return false;
-      }
+      if (!war?.startTime) return false;
+      if (war.state === 'warEnded') return false;
 
       const endTime = parseCoCTime(war.endTime);
 
@@ -374,14 +330,9 @@ async function finalizeWar(env, now) {
   let finalized = 0;
 
   for (const row of pending) {
-    const matched = matchWarLog(
-      row.data,
-      warLog
-    );
+    const matched = matchWarLog(row.data, warLog);
 
-    if (!matched) {
-      continue;
-    }
+    if (!matched) continue;
 
     const oldWar = row.data;
 
@@ -417,20 +368,12 @@ async function finalizeWar(env, now) {
         oldWar.opponent?.destructionPercentage
     };
 
-    const finalResult = calculateWarResult(
-      clan,
-      opponent
-    );
-
     const finalWar = {
       ...oldWar,
-
       state: 'warEnded',
-
       clan,
       opponent,
-
-      finalResult,
+      finalResult: calculateWarResult(clan, opponent),
       finalSource: 'warlog'
     };
 
@@ -441,6 +384,18 @@ async function finalizeWar(env, now) {
       finalWar,
       now
     );
+
+    // Update latest current war if it is the same war.
+    const current = await readLatest(env.DB, 'currentwar');
+
+    if (current?.startTime === oldWar.startTime) {
+      await latest(
+        env.DB,
+        'currentwar',
+        finalWar,
+        now
+      );
+    }
 
     finalized++;
   }
@@ -454,251 +409,86 @@ async function finalizeWar(env, now) {
 }
 
 // =====================================================
-// CLAN, CURRENT WAR, RAID
+// CLAN - DIRECT API, NO D1 STORAGE
 // =====================================================
 
-async function refreshClanWarRaid(env, now) {
-  const tag = encodeURIComponent(TAG);
-
-  const paths = {
-    clan: `/clans/${tag}`,
-
-    currentwar: `/clans/${tag}/currentwar`,
-
-    raid: `/clans/${tag}/capitalraidseasons?limit=5`
-  };
-
-  return Promise.all(
-    Object.entries(paths).map(
-      async ([kind, path]) => {
-        try {
-          const raw = await coc(env, path);
-
-          const data =
-            kind === 'raid'
-              ? raw.items?.[0] ?? null
-              : raw;
-
-          await latest(
-            env.DB,
-            kind,
-            data,
-            now
-          );
-
-          // Save normal war snapshots.
-          if (
-            kind === 'currentwar' &&
-            data?.startTime &&
-            data.state !== 'notInWar'
-          ) {
-            const id = `${TAG}:${data.startTime}`;
-
-            const previous = await env.DB.prepare(`
-              SELECT payload
-              FROM history
-              WHERE kind = 'war'
-              AND record_id = ?
-            `)
-              .bind(id)
-              .first();
-
-            const oldWar = previous
-              ? JSON.parse(previous.payload)
-              : null;
-
-            // Never overwrite finalized war history
-            // with stale preparation/inWar data.
-            if (
-              oldWar?.state !== 'warEnded' ||
-              data.state === 'warEnded'
-            ) {
-              await history(
-                env.DB,
-                'war',
-                id,
-                data,
-                now
-              );
-            }
-          }
-
-          // Save raid history.
-          if (kind === 'raid') {
-            for (const item of raw.items || []) {
-              if (!item.startTime) {
-                continue;
-              }
-
-              await history(
-                env.DB,
-                'raid',
-                item.startTime,
-                item,
-                now
-              );
-            }
-          }
-
-          return {
-            kind,
-            ok: true
-          };
-
-        } catch (error) {
-          return {
-            kind,
-            ok: false,
-            error: message(error)
-          };
-        }
-      }
-    )
+async function getClan(env) {
+  return coc(
+    env,
+    `/clans/${encodeURIComponent(TAG)}`
   );
 }
 
 // =====================================================
-// CWL
+// CURRENT WAR - D1 STORAGE
 // =====================================================
 
-async function refreshCwl(env, now) {
-  let group;
-
+async function refreshCurrentWar(env, now) {
   try {
-    group = await coc(
+    const data = await coc(
       env,
-      `/clans/${encodeURIComponent(TAG)}/currentwar/leaguegroup`
+      `/clans/${encodeURIComponent(TAG)}/currentwar`
     );
 
-  } catch (error) {
-    // A 404 is expected when there is no active
-    // CWL league group.
-    if (error.status === 404) {
-      return {
-        kind: 'cwl',
-        ok: true,
-        skipped: true,
-        reason: 'No active CWL group'
-      };
-    }
+    await latest(
+      env.DB,
+      'currentwar',
+      data,
+      now
+    );
 
-    throw error;
-  }
+    // Save regular war snapshots.
+    if (
+      data?.startTime &&
+      data.state !== 'notInWar'
+    ) {
+      const id = `${TAG}:${data.startTime}`;
 
-  if (!group || !Array.isArray(group.rounds)) {
-    return {
-      kind: 'cwl',
-      ok: true,
-      skipped: true,
-      reason: 'CWL group data unavailable'
-    };
-  }
+      const previous = await env.DB.prepare(`
+        SELECT payload
+        FROM history
+        WHERE kind = 'war'
+        AND record_id = ?
+      `)
+        .bind(id)
+        .first();
 
-  await latest(
-    env.DB,
-    'cwl_group',
-    group,
-    now
-  );
+      const oldWar = previous
+        ? JSON.parse(previous.payload)
+        : null;
 
-  const season = group.season || 'unknown';
-
-  await history(
-    env.DB,
-    'cwl_group',
-    season,
-    group,
-    now
-  );
-
-  const rounds = [];
-
-  let saved = 0;
-
-  for (
-    let i = 0;
-    i < group.rounds.length;
-    i++
-  ) {
-    const tags =
-      group.rounds[i]?.warTags || [];
-
-    let ownWar = null;
-
-    for (const warTag of tags) {
+      // Never overwrite finalized war.
       if (
-        !warTag ||
-        warTag === '#0'
+        oldWar?.state !== 'warEnded' ||
+        data.state === 'warEnded'
       ) {
-        continue;
-      }
-
-      try {
-        const war = await coc(
-          env,
-          `/clanwarleagues/wars/${encodeURIComponent(warTag)}`
-        );
-
-        const isOurWar =
-          tagKey(war.clan?.tag) === tagKey(TAG) ||
-          tagKey(war.opponent?.tag) === tagKey(TAG);
-
-        if (!isOurWar) {
-          continue;
-        }
-
-        ownWar = war;
-
         await history(
           env.DB,
-          'cwl',
-          `${season}:round_${i + 1}`,
-          war,
+          'war',
+          id,
+          data,
           now
-        );
-
-        saved++;
-
-        break;
-
-      } catch (error) {
-        console.warn(
-          'CWL war unavailable',
-          warTag,
-          message(error)
         );
       }
     }
 
-    rounds.push({
-      round: i + 1,
-      war: ownWar
-    });
+    return {
+      kind: 'currentwar',
+      ok: true,
+      state: data?.state || 'unknown'
+    };
+
+  } catch (error) {
+    return {
+      kind: 'currentwar',
+      ok: false,
+      error: message(error)
+    };
   }
-
-  const data = {
-    season,
-    state: group.state,
-    group,
-    rounds
-  };
-
-  await latest(
-    env.DB,
-    'cwl',
-    data,
-    now
-  );
-
-  return {
-    kind: 'cwl',
-    ok: true,
-    savedRounds: saved
-  };
 }
 
 // =====================================================
-// REFRESH ALL
+// REFRESH WAR REGULAR
 // =====================================================
 
 async function refreshAll(env) {
@@ -706,28 +496,23 @@ async function refreshAll(env) {
 
   const now = new Date().toISOString();
 
-  const base = await refreshClanWarRaid(
+  const current = await refreshCurrentWar(
     env,
     now
   );
 
-  const extras = await Promise.all([
-    finalizeWar(env, now).catch(error => ({
-      kind: 'war_finalize',
-      ok: false,
-      error: message(error)
-    })),
-
-    refreshCwl(env, now).catch(error => ({
-      kind: 'cwl',
-      ok: false,
-      error: message(error)
-    }))
-  ]);
+  const finalized = await finalizeWar(
+    env,
+    now
+  ).catch(error => ({
+    kind: 'war_finalize',
+    ok: false,
+    error: message(error)
+  }));
 
   const results = [
-    ...base,
-    ...extras
+    current,
+    finalized
   ];
 
   return {
@@ -768,96 +553,83 @@ export default {
         }, 500);
       }
 
+      if (!env.COC_API_TOKEN) {
+        return json({
+          error: 'COC_API_TOKEN missing'
+        }, 500);
+      }
+
       const url = new URL(request.url);
 
       const path =
         url.pathname.replace(/\/$/, '') || '/';
 
+      await init(env.DB);
+
+      // ROOT
       if (path === '/') {
         return json({
           name: 'Balado API',
-
+          mode: 'War Regular',
           endpoints: [
             '/health',
             '/clan',
             '/currentwar',
-            '/raid',
-            '/cwl',
-            '/cwl/groups',
-            '/api/war/history',
+            '/api/currentwar',
             '/war/history',
-            '/api/raid/history',
-            '/api/cwl/history'
+            '/api/war/history'
           ]
         });
       }
 
-      await init(env.DB);
-
-      // ===============================================
       // HEALTH
-      // ===============================================
-
       if (path === '/health') {
         return json({
           status: 'ok',
           d1: true,
-          apiTokenConfigured: !!env.COC_API_TOKEN
+          apiTokenConfigured: true,
+          features: [
+            'clan',
+            'currentwar',
+            'war_history',
+            'live_history',
+            'war_finalize'
+          ]
         });
       }
 
-      // ===============================================
-      // LATEST DATA ROUTES
-      // ===============================================
+      // CLAN - DIRECT API
+      if (
+        path === '/clan' ||
+        path === '/api/clan'
+      ) {
+        return json(await getClan(env));
+      }
 
-      const routes = {
-        '/clan': 'clan',
-        '/currentwar': 'currentwar',
-        '/raid': 'raid',
-        '/cwl': 'cwl',
-        '/cwl/groups': 'cwl_group',
-
-        '/api/clan': 'clan',
-        '/api/currentwar': 'currentwar',
-        '/api/raid': 'raid',
-        '/api/cwl': 'cwl'
-      };
-
-      const route = routes[path];
-
-      if (route) {
+      // CURRENT WAR - LATEST D1
+      if (
+        path === '/currentwar' ||
+        path === '/api/currentwar'
+      ) {
         const data = await readLatest(
           env.DB,
-          route
+          'currentwar'
         );
 
         if (data === null) {
           return json({
-            error: 'No saved data yet'
+            error: 'No saved war data yet'
           }, 404);
         }
 
         return json(data);
       }
 
-      // ===============================================
-      // HISTORY ROUTES
-      // ===============================================
-
-      const historyRoutes = {
-        '/api/war/history': 'war',
-        '/war/history': 'war',
-
-        '/api/raid/history': 'raid',
-        '/raid/history': 'raid',
-
-        '/api/cwl/history': 'cwl',
-        '/cwl/history': 'cwl'
-      };
-
-      const kind = historyRoutes[path];
-
-      if (kind) {
+      // WAR HISTORY - D1
+      if (
+        path === '/war/history' ||
+        path === '/api/war/history'
+      ) {
         const requestedLimit = Number.parseInt(
           url.searchParams.get('limit') || '20',
           10
@@ -865,39 +637,30 @@ export default {
 
         const limit = Math.min(
           100,
-          Math.max(
-            1,
-            requestedLimit || 20
+          Math.max(1, requestedLimit || 20)
+        );
+
+        return json(
+          await readHistory(
+            env.DB,
+            'war',
+            limit
           )
         );
-
-        const data = await readHistory(
-          env.DB,
-          kind,
-          limit
-        );
-
-        return json(data);
       }
 
-      // ===============================================
       // NOT FOUND
-      // ===============================================
-
       return json({
         error: 'Not found'
       }, 404);
 
     } catch (error) {
-      console.error(
-        'Request error',
-        error
-      );
+      console.error('Request error', error);
 
       return json({
         error: 'Request failed',
         detail: message(error)
-      }, 500);
+      }, error.status || 500);
     }
   },
 
@@ -914,23 +677,18 @@ export default {
       const result = await refreshAll(env);
 
       console.log(
-        'Balado scheduled refresh',
+        'Balado War Refresh',
         JSON.stringify(result)
       );
 
-      const coreFailures = result.results.filter(
-        item =>
-          !item.ok &&
-          ![
-            'cwl',
-            'war_finalize'
-          ].includes(item.kind)
+      const failures = result.results.filter(
+        item => !item.ok && item.kind === 'currentwar'
       );
 
-      if (coreFailures.length > 0) {
+      if (failures.length > 0) {
         throw new Error(
-          'Core refresh failed: ' +
-          JSON.stringify(coreFailures)
+          'War refresh failed: ' +
+          JSON.stringify(failures)
         );
       }
 
