@@ -488,7 +488,123 @@ async function refreshCurrentWar(env, now) {
 }
 
 // =====================================================
-// REFRESH WAR REGULAR
+// CWL - CLAN WAR LEAGUE (D1 STORAGE)
+// kind 'cwlgroup' = latest group (table latest)
+// kind 'cwlwar'   = war per warTag (table history)
+// =====================================================
+
+async function refreshCwl(env, now) {
+  try {
+    let group;
+
+    try {
+      group = await coc(
+        env,
+        `/clans/${encodeURIComponent(TAG)}/currentwar/leaguegroup`
+      );
+    } catch (error) {
+      // 404 = clan is not in a CWL right now
+      if (error.status === 404) {
+        return {
+          kind: 'cwl',
+          ok: true,
+          state: 'notInWar'
+        };
+      }
+
+      throw error;
+    }
+
+    await latest(env.DB, 'cwlgroup', group, now);
+
+    // Load already saved CWL wars so ended ones are not fetched again.
+    const { results } = await env.DB.prepare(`
+      SELECT record_id, payload
+      FROM history
+      WHERE kind = 'cwlwar'
+      ORDER BY updated_at DESC
+      LIMIT 100
+    `).all();
+
+    const saved = new Map(
+      results.map(row => [
+        row.record_id,
+        JSON.parse(row.payload)
+      ])
+    );
+
+    const ownTag = tagKey(TAG);
+
+    let fetched = 0;
+    let stored = 0;
+
+    for (const [index, round] of (group?.rounds || []).entries()) {
+      for (const warTag of round?.warTags || []) {
+        if (!warTag || warTag === '#0') continue;
+
+        if (saved.get(warTag)?.war?.state === 'warEnded') {
+          continue;
+        }
+
+        // Safety limit for subrequests per run.
+        if (fetched >= 30) break;
+
+        fetched++;
+
+        let war;
+
+        try {
+          war = await coc(
+            env,
+            `/clanwarleagues/wars/${encodeURIComponent(warTag)}`
+          );
+        } catch (error) {
+          continue;
+        }
+
+        const involvesUs =
+          tagKey(war?.clan?.tag) === ownTag ||
+          tagKey(war?.opponent?.tag) === ownTag;
+
+        if (!involvesUs) continue;
+
+        await history(
+          env.DB,
+          'cwlwar',
+          warTag,
+          {
+            season: group.season,
+            round: index + 1,
+            warTag,
+            war
+          },
+          now
+        );
+
+        stored++;
+      }
+    }
+
+    return {
+      kind: 'cwl',
+      ok: true,
+      state: group?.state || 'unknown',
+      season: group?.season,
+      fetched,
+      stored
+    };
+
+  } catch (error) {
+    return {
+      kind: 'cwl',
+      ok: false,
+      error: message(error)
+    };
+  }
+}
+
+// =====================================================
+// REFRESH WAR REGULAR + CWL
 // =====================================================
 
 async function refreshAll(env) {
@@ -510,9 +626,15 @@ async function refreshAll(env) {
     error: message(error)
   }));
 
+  const cwl = await refreshCwl(
+    env,
+    now
+  );
+
   const results = [
     current,
-    finalized
+    finalized,
+    cwl
   ];
 
   return {
@@ -570,14 +692,18 @@ export default {
       if (path === '/') {
         return json({
           name: 'Balado API',
-          mode: 'War Regular',
+          mode: 'War Regular + CWL',
           endpoints: [
             '/health',
             '/clan',
             '/currentwar',
             '/api/currentwar',
             '/war/history',
-            '/api/war/history'
+            '/api/war/history',
+            '/cwl',
+            '/api/cwl',
+            '/cwl/wars',
+            '/api/cwl/wars'
           ]
         });
       }
@@ -592,8 +718,9 @@ export default {
             'clan',
             'currentwar',
             'war_history',
-            'live_history',
-            'war_finalize'
+            'war_finalize',
+            'cwl',
+            'cwl_wars'
           ]
         });
       }
@@ -644,6 +771,49 @@ export default {
           await readHistory(
             env.DB,
             'war',
+            limit
+          )
+        );
+      }
+
+      // CWL GROUP - LATEST D1
+      if (
+        path === '/cwl' ||
+        path === '/api/cwl'
+      ) {
+        const data = await readLatest(
+          env.DB,
+          'cwlgroup'
+        );
+
+        if (data === null) {
+          return json({
+            error: 'No saved CWL data yet'
+          }, 404);
+        }
+
+        return json(data);
+      }
+
+      // CWL WARS - D1
+      if (
+        path === '/cwl/wars' ||
+        path === '/api/cwl/wars'
+      ) {
+        const requestedLimit = Number.parseInt(
+          url.searchParams.get('limit') || '20',
+          10
+        );
+
+        const limit = Math.min(
+          100,
+          Math.max(1, requestedLimit || 20)
+        );
+
+        return json(
+          await readHistory(
+            env.DB,
+            'cwlwar',
             limit
           )
         );
