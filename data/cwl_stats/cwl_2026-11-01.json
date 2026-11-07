@@ -7038,7 +7038,15 @@
                         "name": "HiệpGà",
                         "townhallLevel": 12,
                         "mapPosition": 12,
-                        "opponentAttacks": 0
+                        "opponentAttacks": 1,
+                        "bestOpponentAttack": {
+                            "attackerTag": "#G9CQG8R0Y",
+                            "defenderTag": "#QURGVVJ8R",
+                            "stars": 3,
+                            "destructionPercentage": 100,
+                            "order": 9,
+                            "duration": 110
+                        }
                     },
                     {
                         "tag": "#R0CVYRG9R",
@@ -7094,9 +7102,9 @@
                     "medium": "https://api-assets.clashofclans.com/badges/200/SduuUQLqAXUP6SALWXozMv9RIY-mBQkDPxECOZkap2s.png"
                 },
                 "clanLevel": 11,
-                "attacks": 6,
-                "stars": 15,
-                "destructionPercentage": 38.4,
+                "attacks": 7,
+                "stars": 18,
+                "destructionPercentage": 45.06666666666667,
                 "members": [
                     {
                         "tag": "#R2YVRJRYY",
@@ -7239,6 +7247,16 @@
                         "name": "Malz",
                         "townhallLevel": 13,
                         "mapPosition": 17,
+                        "attacks": [
+                            {
+                                "attackerTag": "#G9CQG8R0Y",
+                                "defenderTag": "#QURGVVJ8R",
+                                "stars": 3,
+                                "destructionPercentage": 100,
+                                "order": 9,
+                                "duration": 110
+                            }
+                        ],
                         "opponentAttacks": 0
                     },
                     {
@@ -7298,9 +7316,9 @@
                     "medium": "https://api-assets.clashofclans.com/badges/200/dHumVpYEsvlq_S3UagfOrLVfVY-naca2aXaZZuvKIgQ.png"
                 },
                 "clanLevel": 18,
-                "attacks": 3,
-                "stars": 9,
-                "destructionPercentage": 20.0,
+                "attacks": 4,
+                "stars": 12,
+                "destructionPercentage": 26.666666666666668,
                 "members": [
                     {
                         "tag": "#GCPPUYJ09",
@@ -7404,6 +7422,16 @@
                         "name": "الاسكندر",
                         "townhallLevel": 11,
                         "mapPosition": 13,
+                        "attacks": [
+                            {
+                                "attackerTag": "#QV09CY8PC",
+                                "defenderTag": "#GLLCPPY2Y",
+                                "stars": 3,
+                                "destructionPercentage": 100,
+                                "order": 10,
+                                "duration": 33
+                            }
+                        ],
                         "opponentAttacks": 1,
                         "bestOpponentAttack": {
                             "attackerTag": "#LLVQ0R0PL",
@@ -7568,7 +7596,15 @@
                         "name": "abishek",
                         "townhallLevel": 9,
                         "mapPosition": 14,
-                        "opponentAttacks": 0
+                        "opponentAttacks": 1,
+                        "bestOpponentAttack": {
+                            "attackerTag": "#QV09CY8PC",
+                            "defenderTag": "#GLLCPPY2Y",
+                            "stars": 3,
+                            "destructionPercentage": 100,
+                            "order": 10,
+                            "duration": 33
+                        }
                     },
                     {
                         "tag": "#QLR0YVU28",
@@ -9006,5 +9042,5 @@
             "warStartTime": "20261107T111004.000Z"
         }
     },
-    "fetchedAt": "2026-11-06T22:23:54Z"
+    "fetchedAt": "2026-11-07T02:06:57Z"
 }

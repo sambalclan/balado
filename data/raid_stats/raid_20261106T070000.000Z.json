@@ -2,10 +2,10 @@
     "state": "ongoing",
     "startTime": "20261106T070000.000Z",
     "endTime": "20261109T070000.000Z",
-    "capitalTotalLoot": 14473,
+    "capitalTotalLoot": 31301,
     "raidsCompleted": 0,
-    "totalAttacks": 6,
-    "enemyDistrictsDestroyed": 2,
+    "totalAttacks": 13,
+    "enemyDistrictsDestroyed": 3,
     "offensiveReward": 0,
     "defensiveReward": 0,
     "members": [
@@ -16,6 +16,30 @@
             "attackLimit": 5,
             "bonusAttackLimit": 1,
             "capitalResourcesLooted": 14473
+        },
+        {
+            "tag": "#QYU9CCQ28",
+            "name": "Oni Mask",
+            "attacks": 1,
+            "attackLimit": 5,
+            "bonusAttackLimit": 1,
+            "capitalResourcesLooted": 2198
+        },
+        {
+            "tag": "#G9CQG8R0Y",
+            "name": "Malz",
+            "attacks": 1,
+            "attackLimit": 5,
+            "bonusAttackLimit": 0,
+            "capitalResourcesLooted": 3025
+        },
+        {
+            "tag": "#GQJGU808G",
+            "name": "Kodok",
+            "attacks": 5,
+            "attackLimit": 5,
+            "bonusAttackLimit": 0,
+            "capitalResourcesLooted": 11605
         }
     ],
     "attackLog": [
@@ -30,9 +54,9 @@
                     "medium": "https://api-assets.clashofclans.com/badges/200/QoM1Vmg5tGwc9Wmv1Qjtdj3LHycpJc13Y7Sa82Bjups.png"
                 }
             },
-            "attackCount": 6,
+            "attackCount": 13,
             "districtCount": 7,
-            "districtsDestroyed": 2,
+            "districtsDestroyed": 3,
             "districts": [
                 {
                     "id": 70000000,
@@ -47,19 +71,63 @@
                     "id": 70000001,
                     "name": "Barbarian Camp",
                     "districtHallLevel": 4,
-                    "destructionPercent": 0,
-                    "stars": 0,
-                    "attackCount": 0,
-                    "totalLooted": 0
+                    "destructionPercent": 71,
+                    "stars": 2,
+                    "attackCount": 2,
+                    "totalLooted": 6155,
+                    "attacks": [
+                        {
+                            "attacker": {
+                                "tag": "#G9CQG8R0Y",
+                                "name": "Malz"
+                            },
+                            "destructionPercent": 71,
+                            "stars": 2
+                        },
+                        {
+                            "attacker": {
+                                "tag": "#GQJGU808G",
+                                "name": "Kodok"
+                            },
+                            "destructionPercent": 40,
+                            "stars": 1
+                        }
+                    ]
                 },
                 {
                     "id": 70000002,
                     "name": "Wizard Valley",
                     "districtHallLevel": 3,
-                    "destructionPercent": 0,
-                    "stars": 0,
-                    "attackCount": 0,
-                    "totalLooted": 0
+                    "destructionPercent": 100,
+                    "stars": 3,
+                    "attackCount": 3,
+                    "totalLooted": 7083,
+                    "attacks": [
+                        {
+                            "attacker": {
+                                "tag": "#QYU9CCQ28",
+                                "name": "Oni Mask"
+                            },
+                            "destructionPercent": 100,
+                            "stars": 3
+                        },
+                        {
+                            "attacker": {
+                                "tag": "#GQJGU808G",
+                                "name": "Kodok"
+                            },
+                            "destructionPercent": 71,
+                            "stars": 2
+                        },
+                        {
+                            "attacker": {
+                                "tag": "#GQJGU808G",
+                                "name": "Kodok"
+                            },
+                            "destructionPercent": 43,
+                            "stars": 0
+                        }
+                    ]
                 },
                 {
                     "id": 70000003,
@@ -108,19 +176,39 @@
                     "id": 70000004,
                     "name": "Builder's Workshop",
                     "districtHallLevel": 3,
-                    "destructionPercent": 0,
+                    "destructionPercent": 35,
                     "stars": 0,
-                    "attackCount": 0,
-                    "totalLooted": 0
+                    "attackCount": 1,
+                    "totalLooted": 2740,
+                    "attacks": [
+                        {
+                            "attacker": {
+                                "tag": "#GQJGU808G",
+                                "name": "Kodok"
+                            },
+                            "destructionPercent": 35,
+                            "stars": 0
+                        }
+                    ]
                 },
                 {
                     "id": 70000005,
                     "name": "Dragon Cliffs",
                     "districtHallLevel": 2,
-                    "destructionPercent": 0,
+                    "destructionPercent": 18,
                     "stars": 0,
-                    "attackCount": 0,
-                    "totalLooted": 0
+                    "attackCount": 1,
+                    "totalLooted": 850,
+                    "attacks": [
+                        {
+                            "attacker": {
+                                "tag": "#GQJGU808G",
+                                "name": "Kodok"
+                            },
+                            "destructionPercent": 18,
+                            "stars": 0
+                        }
+                    ]
                 },
                 {
                     "id": 70000006,
