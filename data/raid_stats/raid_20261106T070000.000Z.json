@@ -2,13 +2,21 @@
     "state": "ongoing",
     "startTime": "20261106T070000.000Z",
     "endTime": "20261109T070000.000Z",
-    "capitalTotalLoot": 31301,
+    "capitalTotalLoot": 48158,
     "raidsCompleted": 0,
-    "totalAttacks": 13,
-    "enemyDistrictsDestroyed": 3,
+    "totalAttacks": 22,
+    "enemyDistrictsDestroyed": 6,
     "offensiveReward": 0,
     "defensiveReward": 0,
     "members": [
+        {
+            "tag": "#GPCYQG89Y",
+            "name": "kutur18",
+            "attacks": 2,
+            "attackLimit": 5,
+            "bonusAttackLimit": 0,
+            "capitalResourcesLooted": 4915
+        },
         {
             "tag": "#R0UYQ88YQ",
             "name": "mpruy",
@@ -28,10 +36,10 @@
         {
             "tag": "#G9CQG8R0Y",
             "name": "Malz",
-            "attacks": 1,
+            "attacks": 2,
             "attackLimit": 5,
-            "bonusAttackLimit": 0,
-            "capitalResourcesLooted": 3025
+            "bonusAttackLimit": 1,
+            "capitalResourcesLooted": 5853
         },
         {
             "tag": "#GQJGU808G",
@@ -40,6 +48,14 @@
             "attackLimit": 5,
             "bonusAttackLimit": 0,
             "capitalResourcesLooted": 11605
+        },
+        {
+            "tag": "#GPYC9PYJV",
+            "name": "andi",
+            "attacks": 6,
+            "attackLimit": 5,
+            "bonusAttackLimit": 1,
+            "capitalResourcesLooted": 9114
         }
     ],
     "attackLog": [
@@ -54,28 +70,54 @@
                     "medium": "https://api-assets.clashofclans.com/badges/200/QoM1Vmg5tGwc9Wmv1Qjtdj3LHycpJc13Y7Sa82Bjups.png"
                 }
             },
-            "attackCount": 13,
+            "attackCount": 22,
             "districtCount": 7,
-            "districtsDestroyed": 3,
+            "districtsDestroyed": 6,
             "districts": [
                 {
                     "id": 70000000,
                     "name": "Capital Peak",
                     "districtHallLevel": 7,
-                    "destructionPercent": 0,
+                    "destructionPercent": 31,
                     "stars": 0,
-                    "attackCount": 0,
-                    "totalLooted": 0
+                    "attackCount": 2,
+                    "totalLooted": 2435,
+                    "attacks": [
+                        {
+                            "attacker": {
+                                "tag": "#GPYC9PYJV",
+                                "name": "andi"
+                            },
+                            "destructionPercent": 31,
+                            "stars": 0
+                        },
+                        {
+                            "attacker": {
+                                "tag": "#GPYC9PYJV",
+                                "name": "andi"
+                            },
+                            "destructionPercent": 21,
+                            "stars": 0
+                        }
+                    ]
                 },
                 {
                     "id": 70000001,
                     "name": "Barbarian Camp",
                     "districtHallLevel": 4,
-                    "destructionPercent": 71,
-                    "stars": 2,
-                    "attackCount": 2,
-                    "totalLooted": 6155,
+                    "destructionPercent": 100,
+                    "stars": 3,
+                    "attackCount": 3,
+                    "totalLooted": 8983,
                     "attacks": [
+                        {
+                            "attacker": {
+                                "tag": "#G9CQG8R0Y",
+                                "name": "Malz"
+                            },
+                            "destructionPercent": 100,
+                            "stars": 3
+                        },
                         {
                             "attacker": {
                                 "tag": "#G9CQG8R0Y",
@@ -176,11 +218,35 @@
                     "id": 70000004,
                     "name": "Builder's Workshop",
                     "districtHallLevel": 3,
-                    "destructionPercent": 35,
-                    "stars": 0,
-                    "attackCount": 1,
-                    "totalLooted": 2740,
+                    "destructionPercent": 100,
+                    "stars": 3,
+                    "attackCount": 4,
+                    "totalLooted": 8561,
                     "attacks": [
+                        {
+                            "attacker": {
+                                "tag": "#GPYC9PYJV",
+                                "name": "andi"
+                            },
+                            "destructionPercent": 100,
+                            "stars": 3
+                        },
+                        {
+                            "attacker": {
+                                "tag": "#GPCYQG89Y",
+                                "name": "kutur18"
+                            },
+                            "destructionPercent": 97,
+                            "stars": 2
+                        },
+                        {
+                            "attacker": {
+                                "tag": "#GPCYQG89Y",
+                                "name": "kutur18"
+                            },
+                            "destructionPercent": 73,
+                            "stars": 2
+                        },
                         {
                             "attacker": {
                                 "tag": "#GQJGU808G",
@@ -195,11 +261,35 @@
                     "id": 70000005,
                     "name": "Dragon Cliffs",
                     "districtHallLevel": 2,
-                    "destructionPercent": 18,
-                    "stars": 0,
-                    "attackCount": 1,
-                    "totalLooted": 850,
+                    "destructionPercent": 100,
+                    "stars": 3,
+                    "attackCount": 4,
+                    "totalLooted": 6623,
                     "attacks": [
+                        {
+                            "attacker": {
+                                "tag": "#GPYC9PYJV",
+                                "name": "andi"
+                            },
+                            "destructionPercent": 100,
+                            "stars": 3
+                        },
+                        {
+                            "attacker": {
+                                "tag": "#GPYC9PYJV",
+                                "name": "andi"
+                            },
+                            "destructionPercent": 75,
+                            "stars": 2
+                        },
+                        {
+                            "attacker": {
+                                "tag": "#GPYC9PYJV",
+                                "name": "andi"
+                            },
+                            "destructionPercent": 35,
+                            "stars": 0
+                        },
                         {
                             "attacker": {
                                 "tag": "#GQJGU808G",
