@@ -2,10 +2,10 @@
     "state": "ongoing",
     "startTime": "20261030T070000.000Z",
     "endTime": "20261102T070000.000Z",
-    "capitalTotalLoot": 54800,
+    "capitalTotalLoot": 91913,
     "raidsCompleted": 1,
-    "totalAttacks": 23,
-    "enemyDistrictsDestroyed": 7,
+    "totalAttacks": 38,
+    "enemyDistrictsDestroyed": 10,
     "offensiveReward": 0,
     "defensiveReward": 0,
     "members": [
@@ -18,12 +18,36 @@
             "capitalResourcesLooted": 12023
         },
         {
+            "tag": "#GVL2QP9JV",
+            "name": "kaco",
+            "attacks": 3,
+            "attackLimit": 5,
+            "bonusAttackLimit": 0,
+            "capitalResourcesLooted": 9945
+        },
+        {
             "tag": "#R0UYQ88YQ",
             "name": "mpruy",
             "attacks": 6,
             "attackLimit": 5,
             "bonusAttackLimit": 1,
             "capitalResourcesLooted": 15733
+        },
+        {
+            "tag": "#QYU9CCQ28",
+            "name": "Oni Mask",
+            "attacks": 6,
+            "attackLimit": 5,
+            "bonusAttackLimit": 1,
+            "capitalResourcesLooted": 15054
+        },
+        {
+            "tag": "#QVC0GRYPY",
+            "name": "KURODENSHIN",
+            "attacks": 6,
+            "attackLimit": 5,
+            "bonusAttackLimit": 1,
+            "capitalResourcesLooted": 12114
         },
         {
             "tag": "#GQJGU808G",
@@ -332,9 +356,9 @@
                     "medium": "https://api-assets.clashofclans.com/badges/200/omc33-1tgzqeJxjfgBXvGLj2o5_llj65rACjYOELXrE.png"
                 }
             },
-            "attackCount": 0,
+            "attackCount": 15,
             "districtCount": 7,
-            "districtsDestroyed": 0,
+            "districtsDestroyed": 3,
             "districts": [
                 {
                     "id": 70000000,
@@ -349,37 +373,149 @@
                     "id": 70000001,
                     "name": "Barbarian Camp",
                     "districtHallLevel": 4,
-                    "destructionPercent": 0,
-                    "stars": 0,
-                    "attackCount": 0,
-                    "totalLooted": 0
+                    "destructionPercent": 100,
+                    "stars": 3,
+                    "attackCount": 3,
+                    "totalLooted": 9454,
+                    "attacks": [
+                        {
+                            "attacker": {
+                                "tag": "#QYU9CCQ28",
+                                "name": "Oni Mask"
+                            },
+                            "destructionPercent": 100,
+                            "stars": 3
+                        },
+                        {
+                            "attacker": {
+                                "tag": "#QYU9CCQ28",
+                                "name": "Oni Mask"
+                            },
+                            "destructionPercent": 66,
+                            "stars": 2
+                        },
+                        {
+                            "attacker": {
+                                "tag": "#QYU9CCQ28",
+                                "name": "Oni Mask"
+                            },
+                            "destructionPercent": 34,
+                            "stars": 0
+                        }
+                    ]
                 },
                 {
                     "id": 70000002,
                     "name": "Wizard Valley",
                     "districtHallLevel": 3,
-                    "destructionPercent": 0,
-                    "stars": 0,
-                    "attackCount": 0,
-                    "totalLooted": 0
+                    "destructionPercent": 100,
+                    "stars": 3,
+                    "attackCount": 5,
+                    "totalLooted": 7089,
+                    "attacks": [
+                        {
+                            "attacker": {
+                                "tag": "#QVC0GRYPY",
+                                "name": "KURODENSHIN"
+                            },
+                            "destructionPercent": 100,
+                            "stars": 3
+                        },
+                        {
+                            "attacker": {
+                                "tag": "#QVC0GRYPY",
+                                "name": "KURODENSHIN"
+                            },
+                            "destructionPercent": 86,
+                            "stars": 2
+                        },
+                        {
+                            "attacker": {
+                                "tag": "#QYU9CCQ28",
+                                "name": "Oni Mask"
+                            },
+                            "destructionPercent": 86,
+                            "stars": 2
+                        },
+                        {
+                            "attacker": {
+                                "tag": "#QYU9CCQ28",
+                                "name": "Oni Mask"
+                            },
+                            "destructionPercent": 86,
+                            "stars": 2
+                        },
+                        {
+                            "attacker": {
+                                "tag": "#QYU9CCQ28",
+                                "name": "Oni Mask"
+                            },
+                            "destructionPercent": 38,
+                            "stars": 0
+                        }
+                    ]
                 },
                 {
                     "id": 70000003,
                     "name": "Balloon Lagoon",
                     "districtHallLevel": 3,
-                    "destructionPercent": 0,
-                    "stars": 0,
-                    "attackCount": 0,
-                    "totalLooted": 0
+                    "destructionPercent": 100,
+                    "stars": 3,
+                    "attackCount": 3,
+                    "totalLooted": 7945,
+                    "attacks": [
+                        {
+                            "attacker": {
+                                "tag": "#QVC0GRYPY",
+                                "name": "KURODENSHIN"
+                            },
+                            "destructionPercent": 100,
+                            "stars": 3
+                        },
+                        {
+                            "attacker": {
+                                "tag": "#QVC0GRYPY",
+                                "name": "KURODENSHIN"
+                            },
+                            "destructionPercent": 96,
+                            "stars": 2
+                        },
+                        {
+                            "attacker": {
+                                "tag": "#QVC0GRYPY",
+                                "name": "KURODENSHIN"
+                            },
+                            "destructionPercent": 41,
+                            "stars": 0
+                        }
+                    ]
                 },
                 {
                     "id": 70000004,
                     "name": "Builder's Workshop",
                     "districtHallLevel": 3,
-                    "destructionPercent": 0,
-                    "stars": 0,
-                    "attackCount": 0,
-                    "totalLooted": 0
+                    "destructionPercent": 97,
+                    "stars": 2,
+                    "attackCount": 2,
+                    "totalLooted": 6475,
+                    "attacks": [
+                        {
+                            "attacker": {
+                                "tag": "#GVL2QP9JV",
+                                "name": "kaco"
+                            },
+                            "destructionPercent": 97,
+                            "stars": 2
+                        },
+                        {
+                            "attacker": {
+                                "tag": "#GVL2QP9JV",
+                                "name": "kaco"
+                            },
+                            "destructionPercent": 57,
+                            "stars": 2
+                        }
+                    ]
                 },
                 {
                     "id": 70000005,
@@ -394,10 +530,28 @@
                     "id": 70000006,
                     "name": "Golem Quarry",
                     "districtHallLevel": 2,
-                    "destructionPercent": 0,
-                    "stars": 0,
-                    "attackCount": 0,
-                    "totalLooted": 0
+                    "destructionPercent": 95,
+                    "stars": 2,
+                    "attackCount": 2,
+                    "totalLooted": 6150,
+                    "attacks": [
+                        {
+                            "attacker": {
+                                "tag": "#GVL2QP9JV",
+                                "name": "kaco"
+                            },
+                            "destructionPercent": 95,
+                            "stars": 2
+                        },
+                        {
+                            "attacker": {
+                                "tag": "#QVC0GRYPY",
+                                "name": "KURODENSHIN"
+                            },
+                            "destructionPercent": 36,
+                            "stars": 1
+                        }
+                    ]
                 }
             ]
         }
