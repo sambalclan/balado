@@ -2,20 +2,28 @@
     "state": "ongoing",
     "startTime": "20261106T070000.000Z",
     "endTime": "20261109T070000.000Z",
-    "capitalTotalLoot": 48158,
-    "raidsCompleted": 0,
-    "totalAttacks": 22,
-    "enemyDistrictsDestroyed": 6,
+    "capitalTotalLoot": 57721,
+    "raidsCompleted": 1,
+    "totalAttacks": 27,
+    "enemyDistrictsDestroyed": 7,
     "offensiveReward": 0,
     "defensiveReward": 0,
     "members": [
         {
             "tag": "#GPCYQG89Y",
             "name": "kutur18",
-            "attacks": 2,
+            "attacks": 6,
+            "attackLimit": 5,
+            "bonusAttackLimit": 1,
+            "capitalResourcesLooted": 11998
+        },
+        {
+            "tag": "#GVL2QP9JV",
+            "name": "kaco",
+            "attacks": 1,
             "attackLimit": 5,
             "bonusAttackLimit": 0,
-            "capitalResourcesLooted": 4915
+            "capitalResourcesLooted": 2480
         },
         {
             "tag": "#R0UYQ88YQ",
@@ -70,19 +78,51 @@
                     "medium": "https://api-assets.clashofclans.com/badges/200/QoM1Vmg5tGwc9Wmv1Qjtdj3LHycpJc13Y7Sa82Bjups.png"
                 }
             },
-            "attackCount": 22,
+            "attackCount": 26,
             "districtCount": 7,
-            "districtsDestroyed": 6,
+            "districtsDestroyed": 7,
             "districts": [
                 {
                     "id": 70000000,
                     "name": "Capital Peak",
                     "districtHallLevel": 7,
-                    "destructionPercent": 31,
-                    "stars": 0,
-                    "attackCount": 2,
-                    "totalLooted": 2435,
+                    "destructionPercent": 100,
+                    "stars": 3,
+                    "attackCount": 6,
+                    "totalLooted": 10468,
                     "attacks": [
+                        {
+                            "attacker": {
+                                "tag": "#GPCYQG89Y",
+                                "name": "kutur18"
+                            },
+                            "destructionPercent": 100,
+                            "stars": 3
+                        },
+                        {
+                            "attacker": {
+                                "tag": "#GPCYQG89Y",
+                                "name": "kutur18"
+                            },
+                            "destructionPercent": 93,
+                            "stars": 2
+                        },
+                        {
+                            "attacker": {
+                                "tag": "#GPCYQG89Y",
+                                "name": "kutur18"
+                            },
+                            "destructionPercent": 69,
+                            "stars": 2
+                        },
+                        {
+                            "attacker": {
+                                "tag": "#GVL2QP9JV",
+                                "name": "kaco"
+                            },
+                            "destructionPercent": 47,
+                            "stars": 1
+                        },
                         {
                             "attacker": {
                                 "tag": "#GPYC9PYJV",
@@ -324,6 +364,96 @@
                             },
                             "destructionPercent": 58,
                             "stars": 2
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "defender": {
+                "tag": "#2LP02CJUP",
+                "name": "MEGATECH",
+                "level": 11,
+                "badgeUrls": {
+                    "small": "https://api-assets.clashofclans.com/badges/70/Mknqr2wlg28pVXfRMy_fAMkgkDBV6su5OhQz9oz-z0s.png",
+                    "large": "https://api-assets.clashofclans.com/badges/512/Mknqr2wlg28pVXfRMy_fAMkgkDBV6su5OhQz9oz-z0s.png",
+                    "medium": "https://api-assets.clashofclans.com/badges/200/Mknqr2wlg28pVXfRMy_fAMkgkDBV6su5OhQz9oz-z0s.png"
+                }
+            },
+            "attackCount": 1,
+            "districtCount": 7,
+            "districtsDestroyed": 0,
+            "districts": [
+                {
+                    "id": 70000000,
+                    "name": "Capital Peak",
+                    "districtHallLevel": 7,
+                    "destructionPercent": 0,
+                    "stars": 0,
+                    "attackCount": 0,
+                    "totalLooted": 0
+                },
+                {
+                    "id": 70000001,
+                    "name": "Barbarian Camp",
+                    "districtHallLevel": 4,
+                    "destructionPercent": 0,
+                    "stars": 0,
+                    "attackCount": 0,
+                    "totalLooted": 0
+                },
+                {
+                    "id": 70000002,
+                    "name": "Wizard Valley",
+                    "districtHallLevel": 3,
+                    "destructionPercent": 0,
+                    "stars": 0,
+                    "attackCount": 0,
+                    "totalLooted": 0
+                },
+                {
+                    "id": 70000003,
+                    "name": "Balloon Lagoon",
+                    "districtHallLevel": 3,
+                    "destructionPercent": 0,
+                    "stars": 0,
+                    "attackCount": 0,
+                    "totalLooted": 0
+                },
+                {
+                    "id": 70000004,
+                    "name": "Builder's Workshop",
+                    "districtHallLevel": 3,
+                    "destructionPercent": 0,
+                    "stars": 0,
+                    "attackCount": 0,
+                    "totalLooted": 0
+                },
+                {
+                    "id": 70000005,
+                    "name": "Dragon Cliffs",
+                    "districtHallLevel": 2,
+                    "destructionPercent": 0,
+                    "stars": 0,
+                    "attackCount": 0,
+                    "totalLooted": 0
+                },
+                {
+                    "id": 70000006,
+                    "name": "Golem Quarry",
+                    "districtHallLevel": 2,
+                    "destructionPercent": 34,
+                    "stars": 0,
+                    "attackCount": 1,
+                    "totalLooted": 1530,
+                    "attacks": [
+                        {
+                            "attacker": {
+                                "tag": "#GPCYQG89Y",
+                                "name": "kutur18"
+                            },
+                            "destructionPercent": 34,
+                            "stars": 0
                         }
                     ]
                 }
