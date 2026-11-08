@@ -2,10 +2,10 @@
     "state": "ongoing",
     "startTime": "20261106T070000.000Z",
     "endTime": "20261109T070000.000Z",
-    "capitalTotalLoot": 101399,
+    "capitalTotalLoot": 104809,
     "raidsCompleted": 1,
-    "totalAttacks": 46,
-    "enemyDistrictsDestroyed": 12,
+    "totalAttacks": 48,
+    "enemyDistrictsDestroyed": 13,
     "offensiveReward": 0,
     "defensiveReward": 0,
     "members": [
@@ -28,10 +28,10 @@
         {
             "tag": "#GVL2QP9JV",
             "name": "kaco",
-            "attacks": 1,
+            "attacks": 3,
             "attackLimit": 5,
-            "bonusAttackLimit": 0,
-            "capitalResourcesLooted": 2480
+            "bonusAttackLimit": 1,
+            "capitalResourcesLooted": 5890
         },
         {
             "tag": "#R0UYQ88YQ",
@@ -404,28 +404,46 @@
                     "medium": "https://api-assets.clashofclans.com/badges/200/Mknqr2wlg28pVXfRMy_fAMkgkDBV6su5OhQz9oz-z0s.png"
                 }
             },
-            "attackCount": 20,
+            "attackCount": 22,
             "districtCount": 7,
-            "districtsDestroyed": 5,
+            "districtsDestroyed": 6,
             "districts": [
                 {
                     "id": 70000000,
                     "name": "Capital Peak",
                     "districtHallLevel": 7,
-                    "destructionPercent": 0,
+                    "destructionPercent": 29,
                     "stars": 0,
-                    "attackCount": 0,
-                    "totalLooted": 0
+                    "attackCount": 1,
+                    "totalLooted": 1800,
+                    "attacks": [
+                        {
+                            "attacker": {
+                                "tag": "#GVL2QP9JV",
+                                "name": "kaco"
+                            },
+                            "destructionPercent": 29,
+                            "stars": 0
+                        }
+                    ]
                 },
                 {
                     "id": 70000001,
                     "name": "Barbarian Camp",
                     "districtHallLevel": 4,
-                    "destructionPercent": 90,
-                    "stars": 1,
-                    "attackCount": 4,
-                    "totalLooted": 7815,
+                    "destructionPercent": 100,
+                    "stars": 3,
+                    "attackCount": 5,
+                    "totalLooted": 9425,
                     "attacks": [
+                        {
+                            "attacker": {
+                                "tag": "#GVL2QP9JV",
+                                "name": "kaco"
+                            },
+                            "destructionPercent": 100,
+                            "stars": 3
+                        },
                         {
                             "attacker": {
                                 "tag": "#R2YVRJRYY",
