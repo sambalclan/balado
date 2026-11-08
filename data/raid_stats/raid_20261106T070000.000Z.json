@@ -2,9 +2,9 @@
     "state": "ongoing",
     "startTime": "20261106T070000.000Z",
     "endTime": "20261109T070000.000Z",
-    "capitalTotalLoot": 104809,
+    "capitalTotalLoot": 105689,
     "raidsCompleted": 1,
-    "totalAttacks": 48,
+    "totalAttacks": 49,
     "enemyDistrictsDestroyed": 13,
     "offensiveReward": 0,
     "defensiveReward": 0,
@@ -28,10 +28,10 @@
         {
             "tag": "#GVL2QP9JV",
             "name": "kaco",
-            "attacks": 3,
+            "attacks": 4,
             "attackLimit": 5,
             "bonusAttackLimit": 1,
-            "capitalResourcesLooted": 5890
+            "capitalResourcesLooted": 6770
         },
         {
             "tag": "#R0UYQ88YQ",
@@ -404,7 +404,7 @@
                     "medium": "https://api-assets.clashofclans.com/badges/200/Mknqr2wlg28pVXfRMy_fAMkgkDBV6su5OhQz9oz-z0s.png"
                 }
             },
-            "attackCount": 22,
+            "attackCount": 23,
             "districtCount": 7,
             "districtsDestroyed": 6,
             "districts": [
@@ -412,11 +412,19 @@
                     "id": 70000000,
                     "name": "Capital Peak",
                     "districtHallLevel": 7,
-                    "destructionPercent": 29,
-                    "stars": 0,
-                    "attackCount": 1,
-                    "totalLooted": 1800,
+                    "destructionPercent": 53,
+                    "stars": 1,
+                    "attackCount": 2,
+                    "totalLooted": 2680,
                     "attacks": [
+                        {
+                            "attacker": {
+                                "tag": "#GVL2QP9JV",
+                                "name": "kaco"
+                            },
+                            "destructionPercent": 53,
+                            "stars": 1
+                        },
                         {
                             "attacker": {
                                 "tag": "#GVL2QP9JV",

@@ -10962,9 +10962,9 @@
                     "medium": "https://api-assets.clashofclans.com/badges/200/SduuUQLqAXUP6SALWXozMv9RIY-mBQkDPxECOZkap2s.png"
                 },
                 "clanLevel": 11,
-                "attacks": 6,
-                "stars": 18,
-                "destructionPercentage": 40.0,
+                "attacks": 8,
+                "stars": 22,
+                "destructionPercentage": 51.266666666666666,
                 "members": [
                     {
                         "tag": "#R2YVRJRYY",
@@ -11018,6 +11018,16 @@
                         "name": "kaco",
                         "townhallLevel": 13,
                         "mapPosition": 14,
+                        "attacks": [
+                            {
+                                "attackerTag": "#GVL2QP9JV",
+                                "defenderTag": "#92YVYGLJR",
+                                "stars": 3,
+                                "destructionPercentage": 100,
+                                "order": 10,
+                                "duration": 84
+                            }
+                        ],
                         "opponentAttacks": 0
                     },
                     {
@@ -11153,6 +11163,16 @@
                         "name": "Kodok",
                         "townhallLevel": 16,
                         "mapPosition": 3,
+                        "attacks": [
+                            {
+                                "attackerTag": "#GQJGU808G",
+                                "defenderTag": "#YGQJP2GVJ",
+                                "stars": 1,
+                                "destructionPercentage": 69,
+                                "order": 11,
+                                "duration": 88
+                            }
+                        ],
                         "opponentAttacks": 0
                     }
                 ]
@@ -11330,7 +11350,15 @@
                         "name": "Purpi",
                         "townhallLevel": 15,
                         "mapPosition": 2,
-                        "opponentAttacks": 0
+                        "opponentAttacks": 1,
+                        "bestOpponentAttack": {
+                            "attackerTag": "#GQJGU808G",
+                            "defenderTag": "#YGQJP2GVJ",
+                            "stars": 1,
+                            "destructionPercentage": 69,
+                            "order": 11,
+                            "duration": 88
+                        }
                     },
                     {
                         "tag": "#GRVJJJJQ0",
@@ -11351,7 +11379,15 @@
                         "name": "Toyter",
                         "townhallLevel": 12,
                         "mapPosition": 10,
-                        "opponentAttacks": 0
+                        "opponentAttacks": 1,
+                        "bestOpponentAttack": {
+                            "attackerTag": "#GVL2QP9JV",
+                            "defenderTag": "#92YVYGLJR",
+                            "stars": 3,
+                            "destructionPercentage": 100,
+                            "order": 10,
+                            "duration": 84
+                        }
                     }
                 ]
             },
@@ -12350,5 +12386,5 @@
             "warStartTime": "20261109T131049.000Z"
         }
     },
-    "fetchedAt": "2026-11-08T19:57:13Z"
+    "fetchedAt": "2026-11-08T23:24:42Z"
 }
