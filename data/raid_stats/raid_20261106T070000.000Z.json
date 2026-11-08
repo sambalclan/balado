@@ -2,10 +2,10 @@
     "state": "ongoing",
     "startTime": "20261106T070000.000Z",
     "endTime": "20261109T070000.000Z",
-    "capitalTotalLoot": 90308,
+    "capitalTotalLoot": 101399,
     "raidsCompleted": 1,
-    "totalAttacks": 40,
-    "enemyDistrictsDestroyed": 11,
+    "totalAttacks": 46,
+    "enemyDistrictsDestroyed": 12,
     "offensiveReward": 0,
     "defensiveReward": 0,
     "members": [
@@ -16,6 +16,14 @@
             "attackLimit": 5,
             "bonusAttackLimit": 1,
             "capitalResourcesLooted": 11998
+        },
+        {
+            "tag": "#R2YVRJRYY",
+            "name": "Banten fc",
+            "attacks": 6,
+            "attackLimit": 5,
+            "bonusAttackLimit": 1,
+            "capitalResourcesLooted": 11091
         },
         {
             "tag": "#GVL2QP9JV",
@@ -396,9 +404,9 @@
                     "medium": "https://api-assets.clashofclans.com/badges/200/Mknqr2wlg28pVXfRMy_fAMkgkDBV6su5OhQz9oz-z0s.png"
                 }
             },
-            "attackCount": 14,
+            "attackCount": 20,
             "districtCount": 7,
-            "districtsDestroyed": 4,
+            "districtsDestroyed": 5,
             "districts": [
                 {
                     "id": 70000000,
@@ -413,10 +421,44 @@
                     "id": 70000001,
                     "name": "Barbarian Camp",
                     "districtHallLevel": 4,
-                    "destructionPercent": 0,
-                    "stars": 0,
-                    "attackCount": 0,
-                    "totalLooted": 0
+                    "destructionPercent": 90,
+                    "stars": 1,
+                    "attackCount": 4,
+                    "totalLooted": 7815,
+                    "attacks": [
+                        {
+                            "attacker": {
+                                "tag": "#R2YVRJRYY",
+                                "name": "Banten fc"
+                            },
+                            "destructionPercent": 90,
+                            "stars": 1
+                        },
+                        {
+                            "attacker": {
+                                "tag": "#R2YVRJRYY",
+                                "name": "Banten fc"
+                            },
+                            "destructionPercent": 66,
+                            "stars": 1
+                        },
+                        {
+                            "attacker": {
+                                "tag": "#R2YVRJRYY",
+                                "name": "Banten fc"
+                            },
+                            "destructionPercent": 52,
+                            "stars": 1
+                        },
+                        {
+                            "attacker": {
+                                "tag": "#R2YVRJRYY",
+                                "name": "Banten fc"
+                            },
+                            "destructionPercent": 26,
+                            "stars": 0
+                        }
+                    ]
                 },
                 {
                     "id": 70000002,
@@ -527,11 +569,27 @@
                     "id": 70000005,
                     "name": "Dragon Cliffs",
                     "districtHallLevel": 2,
-                    "destructionPercent": 52,
-                    "stars": 1,
-                    "attackCount": 2,
-                    "totalLooted": 3540,
+                    "destructionPercent": 100,
+                    "stars": 3,
+                    "attackCount": 4,
+                    "totalLooted": 6816,
                     "attacks": [
+                        {
+                            "attacker": {
+                                "tag": "#R2YVRJRYY",
+                                "name": "Banten fc"
+                            },
+                            "destructionPercent": 100,
+                            "stars": 3
+                        },
+                        {
+                            "attacker": {
+                                "tag": "#R2YVRJRYY",
+                                "name": "Banten fc"
+                            },
+                            "destructionPercent": 87,
+                            "stars": 2
+                        },
                         {
                             "attacker": {
                                 "tag": "#G9CQG8R0Y",
