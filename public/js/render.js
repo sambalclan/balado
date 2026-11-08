@@ -1,4 +1,4 @@
-import { escapeHtml, fmt, renderCombinedChart, warStars, warDate, isEndedWar, pagePanel, backButton } from './constants.js';
+import { escapeHtml, fmt, renderCombinedChart, warStars, warDate, isEndedWar, pagePanel, backButton, getTHImage } from './constants.js';
 import { state, getRaidWeeks, getCwlRounds } from './state.js';
 import { getLiveLog, LIVE_API_URL } from './api.js';
 import { getWarChartData } from './war.js';
@@ -197,8 +197,7 @@ function drawTable(ctx, { headers, rows }, widths, top) {
     ctx.strokeRect(pad + 0.5, top + 0.5, tableW - 1, bottom - top - 1);
 }
 
-async function createReportImage() {
-    const report = makeMonthReport();
+async function createReportImage(report = makeMonthReport()) {
     const { pad, rowH, headH, headBlock, minWidth } = L;
     const logo = await loadImage(report.logoUrl);
     const widths = measureColumns(report);
@@ -227,9 +226,9 @@ async function createReportImage() {
     return { dataUrl: canvas.toDataURL('image/jpeg', 0.92), title: report.title };
 }
 
-async function downloadReport() {
+async function downloadReport(report = makeMonthReport()) {
     try {
-        const { dataUrl, title } = await createReportImage();
+        const { dataUrl, title } = await createReportImage(report);
         const link = document.createElement('a');
         link.href = dataUrl;
         link.download = `${title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '') || 'report'}.jpg`;
@@ -237,6 +236,95 @@ async function downloadReport() {
     } catch (err) {
         alert('Failed to create image: ' + err.message);
     }
+}
+
+// CWL REPORT (IMAGE)
+// Ranks our members by attacks used (most first), then stars.
+// Members without any attack end up at the bottom.
+function collectCwlReport() {
+    const rounds = getCwlRounds();
+    if (!rounds.length) return null;
+
+    const total = Math.max(state.cwl?.rounds?.length || 0, ...rounds.map(w => w.__round));
+    const members = new Map();
+
+    rounds.forEach(w => {
+        const ended = isEndedWar(w);
+        (w.clan?.members || []).forEach(m => {
+            const row = members.get(m.tag) || {
+                name: m.name, th: 0, cells: Array(total).fill(null),
+                stars: 0, attacks: 0, played: 0, destruction: 0
+            };
+            const attack = (m.attacks || [])[0];
+
+            row.th = m.townhallLevel ?? m.townHallLevel ?? row.th;
+            row.name = m.name || row.name;
+
+            let cell;
+            if (attack) {
+                cell = { type: 'attack', stars: attack.stars || 0 };
+                row.attacks++;
+                row.played++;
+                row.stars += attack.stars || 0;
+                row.destruction += attack.destructionPercentage || 0;
+            } else if (ended) {
+                cell = { type: 'missed' };
+                row.played++;
+            } else {
+                cell = { type: 'pending' };
+            }
+
+            if (w.__round >= 1 && w.__round <= total) row.cells[w.__round - 1] = cell;
+            members.set(m.tag, row);
+        });
+    });
+
+    const list = [...members.values()].sort((a, b) =>
+        b.attacks - a.attacks || b.stars - a.stars ||
+        (b.attacks ? b.destruction / b.attacks : 0) - (a.attacks ? a.destruction / a.attacks : 0) ||
+        String(a.name).localeCompare(String(b.name))
+    );
+
+    const record = getCwlResults();
+    return {
+        season: String(rounds[0].__season || state.cwl?.season || '').slice(0, 7),
+        total,
+        list,
+        record: record ? `${record.wins}-${record.losses}-${record.draws}` : '-',
+        stars: rounds.reduce((n, w) => n + (w.clan?.stars || 0), 0),
+        done: rounds.filter(isEndedWar).length
+    };
+}
+
+// Same table image as the Monthly report (white page, gold header, zebra rows)
+function makeCwlReport() {
+    const data = collectCwlReport();
+    if (!data) return null;
+
+    const cell = c => !c ? '-' : c.type === 'attack' ? String(c.stars) : c.type === 'missed' ? 'X' : '-';
+
+    return {
+        title: `CWL Season ${data.season}`,
+        subtitle: [
+            state.clan?.name || '',
+            `${data.done}/${data.total} rounds`,
+            `record ${data.record}`,
+            `${data.stars} stars`,
+            shortDate(new Date(), { dateStyle: 'long' })
+        ].filter(Boolean).join(' · '),
+        note: '',
+        logoUrl: state.clan?.badgeUrls?.medium || '',
+        headers: ['No', 'Name', 'TH', ...Array.from({ length: data.total }, (_, i) => 'R' + (i + 1)), 'Stars', 'Attacks'],
+        rows: data.list.map((m, i) => [
+            i + 1, m.name, m.th || '-', ...m.cells.map(cell), m.stars, `${m.attacks}/${m.played}`
+        ].map(String))
+    };
+}
+
+function downloadCwlReport() {
+    const report = makeCwlReport();
+    if (!report) return alert('No CWL data saved yet.');
+    return downloadReport(report);
 }
 
 // API STATUS
@@ -300,6 +388,7 @@ export function renderSettings() {
         </div>
         <div class="rounded-xl border border-[#2A2A2A] divide-y divide-[#2A2A2A] overflow-hidden">
             ${row('download', 'Monthly report', 'Download last month statistics', 'data-settings-report')}
+            ${row('leaderboard', 'CWL report', 'Download CWL attack ranking as image', 'data-settings-cwl')}
             ${row('refresh', 'Refresh data', 'Update clan and battle statistics', 'data-settings-refresh')}
             ${row('terminal', 'API logs', `${logs.length} requests · ${health.label}`, 'data-settings-logs')}
             <div id="settingsLogPanel" class="hidden px-3 pb-3 max-h-64 overflow-y-auto">${liveLogHtml()}</div>
@@ -309,6 +398,7 @@ export function renderSettings() {
 
     page.onclick = e => {
         if (e.target.closest('[data-settings-report]')) downloadReport();
+        else if (e.target.closest('[data-settings-cwl]')) downloadCwlReport();
         else if (e.target.closest('[data-settings-refresh]')) document.getElementById('refreshBtn')?.click();
         else if (e.target.closest('[data-settings-logs]')) page.querySelector('#settingsLogPanel')?.classList.toggle('hidden');
     };

@@ -447,14 +447,14 @@ function renderCwlCard(w) {
 
 function renderCwlMemberRow(m, i) {
     return `
-        <div class="flex items-center gap-3 px-3 py-2 ${i ? 'border-t border-[#2A2A2A]' : ''}">
-            <span class="w-5 text-[10px] font-mono text-gray-500">${i + 1}</span>
-            ${m.th ? `<img src="${getTHImage(m.th)}" class="w-9 h-9 object-contain shrink-0" alt="TH${m.th}" onerror="this.style.visibility='hidden'">` : ''}
+        <div class="flex items-center gap-2 px-2.5 py-1.5 ${i ? 'border-t border-[#2A2A2A]' : ''}">
+            <span class="w-4 text-[9px] font-mono text-gray-500">${i + 1}</span>
+            ${m.th ? `<img src="${getTHImage(m.th)}" class="w-6 h-6 object-contain shrink-0" alt="TH${m.th}" onerror="this.style.visibility='hidden'">` : ''}
             <div class="min-w-0 flex-1 leading-tight">
-                <p class="text-xs font-bold text-white truncate">${escapeHtml(m.name)}</p>
-                <p class="text-[9px] text-gray-400">TH${m.th || '-'} · ${m.attacks}/${m.rounds} attacks</p>
+                <p class="text-[11px] font-bold text-white truncate">${escapeHtml(m.name)}</p>
+                <p class="text-[8px] text-gray-400">TH${m.th || '-'} · ${m.attacks}/${m.rounds} attacks</p>
             </div>
-            <span class="text-[11px] font-bold ${m.stars ? 'text-[#D4A72C]' : 'text-gray-500'}">${m.stars}★</span>
+            <span class="text-[10px] font-bold ${m.stars ? 'text-[#D4A72C]' : 'text-gray-500'}">${m.stars}★</span>
         </div>`;
 }
 
