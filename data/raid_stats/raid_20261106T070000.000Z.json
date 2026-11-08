@@ -2,9 +2,9 @@
     "state": "ongoing",
     "startTime": "20261106T070000.000Z",
     "endTime": "20261109T070000.000Z",
-    "capitalTotalLoot": 88293,
+    "capitalTotalLoot": 90308,
     "raidsCompleted": 1,
-    "totalAttacks": 39,
+    "totalAttacks": 40,
     "enemyDistrictsDestroyed": 11,
     "offensiveReward": 0,
     "defensiveReward": 0,
@@ -44,10 +44,10 @@
         {
             "tag": "#G9CQG8R0Y",
             "name": "Malz",
-            "attacks": 2,
+            "attacks": 3,
             "attackLimit": 5,
             "bonusAttackLimit": 1,
-            "capitalResourcesLooted": 5853
+            "capitalResourcesLooted": 7868
         },
         {
             "tag": "#G989PRQJL",
@@ -396,7 +396,7 @@
                     "medium": "https://api-assets.clashofclans.com/badges/200/Mknqr2wlg28pVXfRMy_fAMkgkDBV6su5OhQz9oz-z0s.png"
                 }
             },
-            "attackCount": 13,
+            "attackCount": 14,
             "districtCount": 7,
             "districtsDestroyed": 4,
             "districts": [
@@ -527,11 +527,19 @@
                     "id": 70000005,
                     "name": "Dragon Cliffs",
                     "districtHallLevel": 2,
-                    "destructionPercent": 31,
-                    "stars": 0,
-                    "attackCount": 1,
-                    "totalLooted": 1525,
+                    "destructionPercent": 52,
+                    "stars": 1,
+                    "attackCount": 2,
+                    "totalLooted": 3540,
                     "attacks": [
+                        {
+                            "attacker": {
+                                "tag": "#G9CQG8R0Y",
+                                "name": "Malz"
+                            },
+                            "destructionPercent": 52,
+                            "stars": 1
+                        },
                         {
                             "attacker": {
                                 "tag": "#QJUYL2L9V",
