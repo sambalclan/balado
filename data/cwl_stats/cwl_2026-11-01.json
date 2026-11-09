@@ -9948,9 +9948,9 @@
                     "medium": "https://api-assets.clashofclans.com/badges/200/dHumVpYEsvlq_S3UagfOrLVfVY-naca2aXaZZuvKIgQ.png"
                 },
                 "clanLevel": 18,
-                "attacks": 3,
-                "stars": 7,
-                "destructionPercentage": 18.533333333333335,
+                "attacks": 4,
+                "stars": 10,
+                "destructionPercentage": 25.2,
                 "members": [
                     {
                         "tag": "#GCPPUYJ09",
@@ -10030,6 +10030,16 @@
                         "name": "الاسكندر",
                         "townhallLevel": 11,
                         "mapPosition": 13,
+                        "attacks": [
+                            {
+                                "attackerTag": "#QV09CY8PC",
+                                "defenderTag": "#G0U8LJQR2",
+                                "stars": 3,
+                                "destructionPercentage": 100,
+                                "order": 4,
+                                "duration": 63
+                            }
+                        ],
                         "opponentAttacks": 0
                     },
                     {
@@ -10172,7 +10182,15 @@
                         "name": "2565",
                         "townhallLevel": 11,
                         "mapPosition": 14,
-                        "opponentAttacks": 0
+                        "opponentAttacks": 1,
+                        "bestOpponentAttack": {
+                            "attackerTag": "#QV09CY8PC",
+                            "defenderTag": "#G0U8LJQR2",
+                            "stars": 3,
+                            "destructionPercentage": 100,
+                            "order": 4,
+                            "duration": 63
+                        }
                     },
                     {
                         "tag": "#Q9JPCR9PL",
@@ -10250,9 +10268,9 @@
                     "medium": "https://api-assets.clashofclans.com/badges/200/ZiRrDYeXMT2S8LERVuTa4X4iKwYE2j5xYnBTKAffeKg.png"
                 },
                 "clanLevel": 8,
-                "attacks": 5,
-                "stars": 12,
-                "destructionPercentage": 26.266666666666666,
+                "attacks": 6,
+                "stars": 13,
+                "destructionPercentage": 30.333333333333332,
                 "members": [
                     {
                         "tag": "#YQ29C08QC",
@@ -10297,6 +10315,16 @@
                         "name": "12cky RR",
                         "townhallLevel": 10,
                         "mapPosition": 10,
+                        "attacks": [
+                            {
+                                "attackerTag": "#R8JQPQLCY",
+                                "defenderTag": "#LLVQ0R0PL",
+                                "stars": 1,
+                                "destructionPercentage": 61,
+                                "order": 7,
+                                "duration": 114
+                            }
+                        ],
                         "opponentAttacks": 0
                     },
                     {
@@ -10444,7 +10472,15 @@
                         "name": "M I N N A L ⚡",
                         "townhallLevel": 12,
                         "mapPosition": 13,
-                        "opponentAttacks": 0
+                        "opponentAttacks": 1,
+                        "bestOpponentAttack": {
+                            "attackerTag": "#R8JQPQLCY",
+                            "defenderTag": "#LLVQ0R0PL",
+                            "stars": 1,
+                            "destructionPercentage": 61,
+                            "order": 7,
+                            "duration": 114
+                        }
                     },
                     {
                         "tag": "#QY00P2QPV",
@@ -12386,5 +12422,5 @@
             "warStartTime": "20261109T131049.000Z"
         }
     },
-    "fetchedAt": "2026-11-08T23:24:42Z"
+    "fetchedAt": "2026-11-09T02:50:22Z"
 }
