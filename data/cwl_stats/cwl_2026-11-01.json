@@ -11732,9 +11732,9 @@
                     "medium": "https://api-assets.clashofclans.com/badges/200/ZiRrDYeXMT2S8LERVuTa4X4iKwYE2j5xYnBTKAffeKg.png"
                 },
                 "clanLevel": 8,
-                "attacks": 3,
-                "stars": 9,
-                "destructionPercentage": 20.0,
+                "attacks": 5,
+                "stars": 15,
+                "destructionPercentage": 33.333333333333336,
                 "members": [
                     {
                         "tag": "#YQ29C08QC",
@@ -11748,6 +11748,16 @@
                         "name": "tkuda_cuki",
                         "townhallLevel": 11,
                         "mapPosition": 12,
+                        "attacks": [
+                            {
+                                "attackerTag": "#GRV8YQG20",
+                                "defenderTag": "#G0U8LJQR2",
+                                "stars": 3,
+                                "destructionPercentage": 100,
+                                "order": 9,
+                                "duration": 79
+                            }
+                        ],
                         "opponentAttacks": 0
                     },
                     {
@@ -11762,6 +11772,16 @@
                         "name": "Christian Rizki",
                         "townhallLevel": 15,
                         "mapPosition": 2,
+                        "attacks": [
+                            {
+                                "attackerTag": "#9LU09GYLP",
+                                "defenderTag": "#9G20GRRPQ",
+                                "stars": 3,
+                                "destructionPercentage": 100,
+                                "order": 8,
+                                "duration": 148
+                            }
+                        ],
                         "opponentAttacks": 0
                     },
                     {
@@ -12008,7 +12028,15 @@
                         "name": "2565",
                         "townhallLevel": 11,
                         "mapPosition": 14,
-                        "opponentAttacks": 0
+                        "opponentAttacks": 1,
+                        "bestOpponentAttack": {
+                            "attackerTag": "#GRV8YQG20",
+                            "defenderTag": "#G0U8LJQR2",
+                            "stars": 3,
+                            "destructionPercentage": 100,
+                            "order": 9,
+                            "duration": 79
+                        }
                     },
                     {
                         "tag": "#Q9JPCR9PL",
@@ -12085,7 +12113,15 @@
                                 "duration": 90
                             }
                         ],
-                        "opponentAttacks": 0
+                        "opponentAttacks": 1,
+                        "bestOpponentAttack": {
+                            "attackerTag": "#9LU09GYLP",
+                            "defenderTag": "#9G20GRRPQ",
+                            "stars": 3,
+                            "destructionPercentage": 100,
+                            "order": 8,
+                            "duration": 148
+                        }
                     }
                 ]
             },
@@ -12106,9 +12142,9 @@
                     "medium": "https://api-assets.clashofclans.com/badges/200/SduuUQLqAXUP6SALWXozMv9RIY-mBQkDPxECOZkap2s.png"
                 },
                 "clanLevel": 11,
-                "attacks": 3,
-                "stars": 6,
-                "destructionPercentage": 13.333333333333334,
+                "attacks": 7,
+                "stars": 15,
+                "destructionPercentage": 35.733333333333334,
                 "members": [
                     {
                         "tag": "#GPCYQG89Y",
@@ -12154,6 +12190,16 @@
                         "name": "mpruy",
                         "townhallLevel": 11,
                         "mapPosition": 20,
+                        "attacks": [
+                            {
+                                "attackerTag": "#R0UYQ88YQ",
+                                "defenderTag": "#LLVQ0R0PL",
+                                "stars": 2,
+                                "destructionPercentage": 86,
+                                "order": 13,
+                                "duration": 138
+                            }
+                        ],
                         "opponentAttacks": 1,
                         "bestOpponentAttack": {
                             "attackerTag": "#LLVQ0R0PL",
@@ -12208,6 +12254,16 @@
                         "name": "pinduwangga",
                         "townhallLevel": 16,
                         "mapPosition": 5,
+                        "attacks": [
+                            {
+                                "attackerTag": "#QYVQR80PU",
+                                "defenderTag": "#QR0LRUVYY",
+                                "stars": 3,
+                                "destructionPercentage": 100,
+                                "order": 12,
+                                "duration": 153
+                            }
+                        ],
                         "opponentAttacks": 0
                     },
                     {
@@ -12276,6 +12332,16 @@
                         "name": "Kodok",
                         "townhallLevel": 16,
                         "mapPosition": 3,
+                        "attacks": [
+                            {
+                                "attackerTag": "#GQJGU808G",
+                                "defenderTag": "#9G9GRJ220",
+                                "stars": 1,
+                                "destructionPercentage": 50,
+                                "order": 10,
+                                "duration": 70
+                            }
+                        ],
                         "opponentAttacks": 0
                     },
                     {
@@ -12283,6 +12349,16 @@
                         "name": "andi",
                         "townhallLevel": 9,
                         "mapPosition": 24,
+                        "attacks": [
+                            {
+                                "attackerTag": "#GPYC9PYJV",
+                                "defenderTag": "#GLLCPPY2Y",
+                                "stars": 3,
+                                "destructionPercentage": 100,
+                                "order": 11,
+                                "duration": 50
+                            }
+                        ],
                         "opponentAttacks": 1,
                         "bestOpponentAttack": {
                             "attackerTag": "#R9J2PQRP2",
@@ -12340,7 +12416,15 @@
                                 "duration": 90
                             }
                         ],
-                        "opponentAttacks": 0
+                        "opponentAttacks": 1,
+                        "bestOpponentAttack": {
+                            "attackerTag": "#R0UYQ88YQ",
+                            "defenderTag": "#LLVQ0R0PL",
+                            "stars": 2,
+                            "destructionPercentage": 86,
+                            "order": 13,
+                            "duration": 138
+                        }
                     },
                     {
                         "tag": "#QY00P2QPV",
@@ -12386,7 +12470,15 @@
                         "name": "abishek",
                         "townhallLevel": 9,
                         "mapPosition": 14,
-                        "opponentAttacks": 0
+                        "opponentAttacks": 1,
+                        "bestOpponentAttack": {
+                            "attackerTag": "#GPYC9PYJV",
+                            "defenderTag": "#GLLCPPY2Y",
+                            "stars": 3,
+                            "destructionPercentage": 100,
+                            "order": 11,
+                            "duration": 50
+                        }
                     },
                     {
                         "tag": "#QLR0YVU28",
@@ -12427,7 +12519,15 @@
                         "name": "aswini",
                         "townhallLevel": 16,
                         "mapPosition": 4,
-                        "opponentAttacks": 0
+                        "opponentAttacks": 1,
+                        "bestOpponentAttack": {
+                            "attackerTag": "#QYVQR80PU",
+                            "defenderTag": "#QR0LRUVYY",
+                            "stars": 3,
+                            "destructionPercentage": 100,
+                            "order": 12,
+                            "duration": 153
+                        }
                     },
                     {
                         "tag": "#98GQ0LLP8",
@@ -12487,7 +12587,15 @@
                         "name": "Iyan",
                         "townhallLevel": 18,
                         "mapPosition": 2,
-                        "opponentAttacks": 0
+                        "opponentAttacks": 1,
+                        "bestOpponentAttack": {
+                            "attackerTag": "#GQJGU808G",
+                            "defenderTag": "#9G9GRJ220",
+                            "stars": 1,
+                            "destructionPercentage": 50,
+                            "order": 10,
+                            "duration": 70
+                        }
                     }
                 ]
             },
@@ -12783,7 +12891,15 @@
                         "name": "سورنا2",
                         "townhallLevel": 12,
                         "mapPosition": 8,
-                        "opponentAttacks": 0
+                        "opponentAttacks": 1,
+                        "bestOpponentAttack": {
+                            "attackerTag": "#GJRRQUY0Q",
+                            "defenderTag": "#QVUJP2CQR",
+                            "stars": 3,
+                            "destructionPercentage": 100,
+                            "order": 8,
+                            "duration": 50
+                        }
                     },
                     {
                         "tag": "#G0YR899LQ",
@@ -12960,9 +13076,9 @@
                     "medium": "https://api-assets.clashofclans.com/badges/200/to7NE0Jc8iXqQoTbOsZgWQeNaS4AOg6LZrQkmn3j8rk.png"
                 },
                 "clanLevel": 6,
-                "attacks": 2,
-                "stars": 6,
-                "destructionPercentage": 13.333333333333334,
+                "attacks": 3,
+                "stars": 9,
+                "destructionPercentage": 20.0,
                 "members": [
                     {
                         "tag": "#YU09LG2GV",
@@ -13006,6 +13122,16 @@
                         "name": "doubl",
                         "townhallLevel": 14,
                         "mapPosition": 3,
+                        "attacks": [
+                            {
+                                "attackerTag": "#GJRRQUY0Q",
+                                "defenderTag": "#QVUJP2CQR",
+                                "stars": 3,
+                                "destructionPercentage": 100,
+                                "order": 8,
+                                "duration": 50
+                            }
+                        ],
                         "opponentAttacks": 0
                     },
                     {
@@ -13134,5 +13260,5 @@
             "warStartTime": "20261109T131049.000Z"
         }
     },
-    "fetchedAt": "2026-11-09T21:05:39Z"
+    "fetchedAt": "2026-11-10T03:32:11Z"
 }
