@@ -1,5 +1,5 @@
 {
-    "state": "preparation",
+    "state": "inWar",
     "teamSize": 10,
     "attacksPerMember": 2,
     "battleModifier": "none",
@@ -15,15 +15,33 @@
             "medium": "https://api-assets.clashofclans.com/badges/200/SduuUQLqAXUP6SALWXozMv9RIY-mBQkDPxECOZkap2s.png"
         },
         "clanLevel": 11,
-        "attacks": 0,
-        "stars": 0,
-        "destructionPercentage": 0.0,
+        "attacks": 11,
+        "stars": 21,
+        "destructionPercentage": 75.0,
         "members": [
             {
                 "tag": "#R2YVRJRYY",
                 "name": "Banten fc",
                 "townhallLevel": 16,
                 "mapPosition": 7,
+                "attacks": [
+                    {
+                        "attackerTag": "#R2YVRJRYY",
+                        "defenderTag": "#R90YRYJJR",
+                        "stars": 3,
+                        "destructionPercentage": 100,
+                        "order": 6,
+                        "duration": 84
+                    },
+                    {
+                        "attackerTag": "#R2YVRJRYY",
+                        "defenderTag": "#828R9QU09",
+                        "stars": 2,
+                        "destructionPercentage": 78,
+                        "order": 7,
+                        "duration": 149
+                    }
+                ],
                 "opponentAttacks": 0
             },
             {
@@ -59,13 +77,57 @@
                 "name": "Malz",
                 "townhallLevel": 13,
                 "mapPosition": 9,
-                "opponentAttacks": 0
+                "attacks": [
+                    {
+                        "attackerTag": "#G9CQG8R0Y",
+                        "defenderTag": "#R20R89CPP",
+                        "stars": 3,
+                        "destructionPercentage": 100,
+                        "order": 2,
+                        "duration": 73
+                    },
+                    {
+                        "attackerTag": "#G9CQG8R0Y",
+                        "defenderTag": "#RPVPQVQQ8",
+                        "stars": 3,
+                        "destructionPercentage": 100,
+                        "order": 13,
+                        "duration": 144
+                    }
+                ],
+                "opponentAttacks": 1,
+                "bestOpponentAttack": {
+                    "attackerTag": "#R20R89CPP",
+                    "defenderTag": "#G9CQG8R0Y",
+                    "stars": 1,
+                    "destructionPercentage": 53,
+                    "order": 3,
+                    "duration": 88
+                }
             },
             {
                 "tag": "#G989PRQJL",
                 "name": "Nanzi",
                 "townhallLevel": 13,
                 "mapPosition": 8,
+                "attacks": [
+                    {
+                        "attackerTag": "#G989PRQJL",
+                        "defenderTag": "#GGJ29QC8C",
+                        "stars": 3,
+                        "destructionPercentage": 100,
+                        "order": 8,
+                        "duration": 136
+                    },
+                    {
+                        "attackerTag": "#G989PRQJL",
+                        "defenderTag": "#828R9QU09",
+                        "stars": 3,
+                        "destructionPercentage": 100,
+                        "order": 9,
+                        "duration": 129
+                    }
+                ],
                 "opponentAttacks": 0
             },
             {
@@ -73,6 +135,24 @@
                 "name": "Zysss ur clown",
                 "townhallLevel": 15,
                 "mapPosition": 5,
+                "attacks": [
+                    {
+                        "attackerTag": "#QJUYL2L9V",
+                        "defenderTag": "#QQ8RCPL80",
+                        "stars": 2,
+                        "destructionPercentage": 89,
+                        "order": 11,
+                        "duration": 180
+                    },
+                    {
+                        "attackerTag": "#QJUYL2L9V",
+                        "defenderTag": "#9VRV298LL",
+                        "stars": 3,
+                        "destructionPercentage": 100,
+                        "order": 12,
+                        "duration": 144
+                    }
+                ],
                 "opponentAttacks": 0
             },
             {
@@ -80,13 +160,49 @@
                 "name": "Skyzo",
                 "townhallLevel": 11,
                 "mapPosition": 10,
-                "opponentAttacks": 0
+                "attacks": [
+                    {
+                        "attackerTag": "#QR98PU0QJ",
+                        "defenderTag": "#RPVPQVQQ8",
+                        "stars": 1,
+                        "destructionPercentage": 95,
+                        "order": 10,
+                        "duration": 180
+                    }
+                ],
+                "opponentAttacks": 1,
+                "bestOpponentAttack": {
+                    "attackerTag": "#R20R89CPP",
+                    "defenderTag": "#QR98PU0QJ",
+                    "stars": 2,
+                    "destructionPercentage": 75,
+                    "order": 1,
+                    "duration": 107
+                }
             },
             {
                 "tag": "#GQJGU808G",
                 "name": "Kodok",
                 "townhallLevel": 16,
                 "mapPosition": 3,
+                "attacks": [
+                    {
+                        "attackerTag": "#GQJGU808G",
+                        "defenderTag": "#QQ8RCPL80",
+                        "stars": 1,
+                        "destructionPercentage": 84,
+                        "order": 4,
+                        "duration": 91
+                    },
+                    {
+                        "attackerTag": "#GQJGU808G",
+                        "defenderTag": "#8JCP90PVG",
+                        "stars": 1,
+                        "destructionPercentage": 61,
+                        "order": 5,
+                        "duration": 62
+                    }
+                ],
                 "opponentAttacks": 0
             }
         ]
@@ -100,9 +216,9 @@
             "medium": "https://api-assets.clashofclans.com/badges/200/7GCbgu-x2Q-bheFGcySVHlAOr1t1bECgdBcBuvC348M.png"
         },
         "clanLevel": 18,
-        "attacks": 0,
-        "stars": 0,
-        "destructionPercentage": 0.0,
+        "attacks": 2,
+        "stars": 3,
+        "destructionPercentage": 12.8,
         "members": [
             {
                 "tag": "#L9U9RCVJU",
@@ -116,21 +232,45 @@
                 "name": "sahed",
                 "townhallLevel": 16,
                 "mapPosition": 3,
-                "opponentAttacks": 0
+                "opponentAttacks": 2,
+                "bestOpponentAttack": {
+                    "attackerTag": "#QJUYL2L9V",
+                    "defenderTag": "#QQ8RCPL80",
+                    "stars": 2,
+                    "destructionPercentage": 89,
+                    "order": 11,
+                    "duration": 180
+                }
             },
             {
                 "tag": "#GGJ29QC8C",
                 "name": "PatoWary",
                 "townhallLevel": 13,
                 "mapPosition": 8,
-                "opponentAttacks": 0
+                "opponentAttacks": 1,
+                "bestOpponentAttack": {
+                    "attackerTag": "#G989PRQJL",
+                    "defenderTag": "#GGJ29QC8C",
+                    "stars": 3,
+                    "destructionPercentage": 100,
+                    "order": 8,
+                    "duration": 136
+                }
             },
             {
                 "tag": "#9VRV298LL",
                 "name": "PRINCE NISAN",
                 "townhallLevel": 15,
                 "mapPosition": 5,
-                "opponentAttacks": 0
+                "opponentAttacks": 1,
+                "bestOpponentAttack": {
+                    "attackerTag": "#QJUYL2L9V",
+                    "defenderTag": "#9VRV298LL",
+                    "stars": 3,
+                    "destructionPercentage": 100,
+                    "order": 12,
+                    "duration": 144
+                }
             },
             {
                 "tag": "#LC209PGYY",
@@ -144,35 +284,93 @@
                 "name": "utpalrex",
                 "townhallLevel": 16,
                 "mapPosition": 2,
-                "opponentAttacks": 0
+                "opponentAttacks": 1,
+                "bestOpponentAttack": {
+                    "attackerTag": "#GQJGU808G",
+                    "defenderTag": "#8JCP90PVG",
+                    "stars": 1,
+                    "destructionPercentage": 61,
+                    "order": 5,
+                    "duration": 62
+                }
             },
             {
                 "tag": "#R90YRYJJR",
                 "name": "Sojibul Islam",
                 "townhallLevel": 15,
                 "mapPosition": 7,
-                "opponentAttacks": 0
+                "opponentAttacks": 1,
+                "bestOpponentAttack": {
+                    "attackerTag": "#R2YVRJRYY",
+                    "defenderTag": "#R90YRYJJR",
+                    "stars": 3,
+                    "destructionPercentage": 100,
+                    "order": 6,
+                    "duration": 84
+                }
             },
             {
                 "tag": "#RPVPQVQQ8",
                 "name": "SHEHAB KHAN",
                 "townhallLevel": 13,
                 "mapPosition": 10,
-                "opponentAttacks": 0
+                "opponentAttacks": 2,
+                "bestOpponentAttack": {
+                    "attackerTag": "#G9CQG8R0Y",
+                    "defenderTag": "#RPVPQVQQ8",
+                    "stars": 3,
+                    "destructionPercentage": 100,
+                    "order": 13,
+                    "duration": 144
+                }
             },
             {
                 "tag": "#828R9QU09",
                 "name": "\u2606\u2661Mr:Perfect \u2661\u2606",
                 "townhallLevel": 14,
                 "mapPosition": 6,
-                "opponentAttacks": 0
+                "opponentAttacks": 2,
+                "bestOpponentAttack": {
+                    "attackerTag": "#G989PRQJL",
+                    "defenderTag": "#828R9QU09",
+                    "stars": 3,
+                    "destructionPercentage": 100,
+                    "order": 9,
+                    "duration": 129
+                }
             },
             {
                 "tag": "#R20R89CPP",
                 "name": "MOSHIUL",
                 "townhallLevel": 13,
                 "mapPosition": 9,
-                "opponentAttacks": 0
+                "attacks": [
+                    {
+                        "attackerTag": "#R20R89CPP",
+                        "defenderTag": "#QR98PU0QJ",
+                        "stars": 2,
+                        "destructionPercentage": 75,
+                        "order": 1,
+                        "duration": 107
+                    },
+                    {
+                        "attackerTag": "#R20R89CPP",
+                        "defenderTag": "#G9CQG8R0Y",
+                        "stars": 1,
+                        "destructionPercentage": 53,
+                        "order": 3,
+                        "duration": 88
+                    }
+                ],
+                "opponentAttacks": 1,
+                "bestOpponentAttack": {
+                    "attackerTag": "#G9CQG8R0Y",
+                    "defenderTag": "#R20R89CPP",
+                    "stars": 3,
+                    "destructionPercentage": 100,
+                    "order": 2,
+                    "duration": 73
+                }
             }
         ]
     }
