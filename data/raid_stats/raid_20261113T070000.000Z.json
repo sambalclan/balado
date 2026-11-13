@@ -2,10 +2,10 @@
     "state": "ongoing",
     "startTime": "20261113T070000.000Z",
     "endTime": "20261116T070000.000Z",
-    "capitalTotalLoot": 33714,
+    "capitalTotalLoot": 42702,
     "raidsCompleted": 1,
-    "totalAttacks": 14,
-    "enemyDistrictsDestroyed": 4,
+    "totalAttacks": 18,
+    "enemyDistrictsDestroyed": 5,
     "offensiveReward": 0,
     "defensiveReward": 0,
     "members": [
@@ -28,10 +28,10 @@
         {
             "tag": "#GQJGU808G",
             "name": "Kodok",
-            "attacks": 2,
+            "attacks": 6,
             "attackLimit": 5,
-            "bonusAttackLimit": 0,
-            "capitalResourcesLooted": 3115
+            "bonusAttackLimit": 1,
+            "capitalResourcesLooted": 12103
         }
     ],
     "attackLog": [
@@ -46,9 +46,9 @@
                     "medium": "https://api-assets.clashofclans.com/badges/200/aRYhfiXBDZqfIP2fwCtEbnYbgl9mYvd00PsN1P9qkVc.png"
                 }
             },
-            "attackCount": 14,
+            "attackCount": 18,
             "districtCount": 7,
-            "districtsDestroyed": 4,
+            "districtsDestroyed": 5,
             "districts": [
                 {
                     "id": 70000000,
@@ -63,10 +63,36 @@
                     "id": 70000001,
                     "name": "Barbarian Camp",
                     "districtHallLevel": 4,
-                    "destructionPercent": 0,
-                    "stars": 0,
-                    "attackCount": 0,
-                    "totalLooted": 0
+                    "destructionPercent": 76,
+                    "stars": 2,
+                    "attackCount": 3,
+                    "totalLooted": 6290,
+                    "attacks": [
+                        {
+                            "attacker": {
+                                "tag": "#GQJGU808G",
+                                "name": "Kodok"
+                            },
+                            "destructionPercent": 76,
+                            "stars": 2
+                        },
+                        {
+                            "attacker": {
+                                "tag": "#GQJGU808G",
+                                "name": "Kodok"
+                            },
+                            "destructionPercent": 67,
+                            "stars": 2
+                        },
+                        {
+                            "attacker": {
+                                "tag": "#GQJGU808G",
+                                "name": "Kodok"
+                            },
+                            "destructionPercent": 34,
+                            "stars": 1
+                        }
+                    ]
                 },
                 {
                     "id": 70000002,
@@ -177,11 +203,19 @@
                     "id": 70000005,
                     "name": "Dragon Cliffs",
                     "districtHallLevel": 2,
-                    "destructionPercent": 61,
-                    "stars": 2,
-                    "attackCount": 2,
-                    "totalLooted": 3115,
+                    "destructionPercent": 100,
+                    "stars": 3,
+                    "attackCount": 3,
+                    "totalLooted": 5813,
                     "attacks": [
+                        {
+                            "attacker": {
+                                "tag": "#GQJGU808G",
+                                "name": "Kodok"
+                            },
+                            "destructionPercent": 100,
+                            "stars": 3
+                        },
                         {
                             "attacker": {
                                 "tag": "#GQJGU808G",
