@@ -2,10 +2,10 @@
     "state": "ongoing",
     "startTime": "20261113T070000.000Z",
     "endTime": "20261116T070000.000Z",
-    "capitalTotalLoot": 13977,
-    "raidsCompleted": 0,
-    "totalAttacks": 6,
-    "enemyDistrictsDestroyed": 2,
+    "capitalTotalLoot": 33714,
+    "raidsCompleted": 1,
+    "totalAttacks": 14,
+    "enemyDistrictsDestroyed": 4,
     "offensiveReward": 0,
     "defensiveReward": 0,
     "members": [
@@ -16,6 +16,22 @@
             "attackLimit": 5,
             "bonusAttackLimit": 1,
             "capitalResourcesLooted": 13977
+        },
+        {
+            "tag": "#R0UYQ88YQ",
+            "name": "mpruy",
+            "attacks": 6,
+            "attackLimit": 5,
+            "bonusAttackLimit": 1,
+            "capitalResourcesLooted": 16622
+        },
+        {
+            "tag": "#GQJGU808G",
+            "name": "Kodok",
+            "attacks": 2,
+            "attackLimit": 5,
+            "bonusAttackLimit": 0,
+            "capitalResourcesLooted": 3115
         }
     ],
     "attackLog": [
@@ -30,9 +46,9 @@
                     "medium": "https://api-assets.clashofclans.com/badges/200/aRYhfiXBDZqfIP2fwCtEbnYbgl9mYvd00PsN1P9qkVc.png"
                 }
             },
-            "attackCount": 6,
+            "attackCount": 14,
             "districtCount": 7,
-            "districtsDestroyed": 2,
+            "districtsDestroyed": 4,
             "districts": [
                 {
                     "id": 70000000,
@@ -91,28 +107,98 @@
                     "id": 70000003,
                     "name": "Balloon Lagoon",
                     "districtHallLevel": 3,
-                    "destructionPercent": 0,
-                    "stars": 0,
-                    "attackCount": 0,
-                    "totalLooted": 0
+                    "destructionPercent": 100,
+                    "stars": 3,
+                    "attackCount": 3,
+                    "totalLooted": 7992,
+                    "attacks": [
+                        {
+                            "attacker": {
+                                "tag": "#R0UYQ88YQ",
+                                "name": "mpruy"
+                            },
+                            "destructionPercent": 100,
+                            "stars": 3
+                        },
+                        {
+                            "attacker": {
+                                "tag": "#R0UYQ88YQ",
+                                "name": "mpruy"
+                            },
+                            "destructionPercent": 88,
+                            "stars": 2
+                        },
+                        {
+                            "attacker": {
+                                "tag": "#R0UYQ88YQ",
+                                "name": "mpruy"
+                            },
+                            "destructionPercent": 44,
+                            "stars": 1
+                        }
+                    ]
                 },
                 {
                     "id": 70000004,
                     "name": "Builder's Workshop",
                     "districtHallLevel": 3,
-                    "destructionPercent": 0,
-                    "stars": 0,
-                    "attackCount": 0,
-                    "totalLooted": 0
+                    "destructionPercent": 100,
+                    "stars": 3,
+                    "attackCount": 3,
+                    "totalLooted": 8630,
+                    "attacks": [
+                        {
+                            "attacker": {
+                                "tag": "#R0UYQ88YQ",
+                                "name": "mpruy"
+                            },
+                            "destructionPercent": 100,
+                            "stars": 3
+                        },
+                        {
+                            "attacker": {
+                                "tag": "#R0UYQ88YQ",
+                                "name": "mpruy"
+                            },
+                            "destructionPercent": 96,
+                            "stars": 2
+                        },
+                        {
+                            "attacker": {
+                                "tag": "#R0UYQ88YQ",
+                                "name": "mpruy"
+                            },
+                            "destructionPercent": 49,
+                            "stars": 1
+                        }
+                    ]
                 },
                 {
                     "id": 70000005,
                     "name": "Dragon Cliffs",
                     "districtHallLevel": 2,
-                    "destructionPercent": 0,
-                    "stars": 0,
-                    "attackCount": 0,
-                    "totalLooted": 0
+                    "destructionPercent": 61,
+                    "stars": 2,
+                    "attackCount": 2,
+                    "totalLooted": 3115,
+                    "attacks": [
+                        {
+                            "attacker": {
+                                "tag": "#GQJGU808G",
+                                "name": "Kodok"
+                            },
+                            "destructionPercent": 61,
+                            "stars": 2
+                        },
+                        {
+                            "attacker": {
+                                "tag": "#GQJGU808G",
+                                "name": "Kodok"
+                            },
+                            "destructionPercent": 30,
+                            "stars": 0
+                        }
+                    ]
                 },
                 {
                     "id": 70000006,
@@ -164,18 +250,60 @@
                     "medium": "https://api-assets.clashofclans.com/badges/200/KlL3M54fFO2hCW7zfipK834c1umINYB9_1I5zuYvCgY.png"
                 }
             },
-            "attackCount": 18,
+            "attackCount": 26,
             "districtCount": 7,
-            "districtsDestroyed": 5,
+            "districtsDestroyed": 7,
             "districts": [
                 {
                     "id": 70000000,
                     "name": "Capital Peak",
                     "districtHallLevel": 7,
-                    "destructionPercent": 0,
-                    "stars": 0,
-                    "attackCount": 0,
-                    "totalLooted": 0
+                    "destructionPercent": 100,
+                    "stars": 3,
+                    "attackCount": 5,
+                    "totalLooted": 10288,
+                    "attacks": [
+                        {
+                            "attacker": {
+                                "tag": "#QQ9P2V29L",
+                                "name": "yarin"
+                            },
+                            "destructionPercent": 100,
+                            "stars": 3
+                        },
+                        {
+                            "attacker": {
+                                "tag": "#YPYUP89U",
+                                "name": "nahro"
+                            },
+                            "destructionPercent": 89,
+                            "stars": 2
+                        },
+                        {
+                            "attacker": {
+                                "tag": "#YPYUP89U",
+                                "name": "nahro"
+                            },
+                            "destructionPercent": 68,
+                            "stars": 2
+                        },
+                        {
+                            "attacker": {
+                                "tag": "#YPYUP89U",
+                                "name": "nahro"
+                            },
+                            "destructionPercent": 42,
+                            "stars": 1
+                        },
+                        {
+                            "attacker": {
+                                "tag": "#YPYUP89U",
+                                "name": "nahro"
+                            },
+                            "destructionPercent": 35,
+                            "stars": 0
+                        }
+                    ]
                 },
                 {
                     "id": 70000001,
@@ -329,11 +457,35 @@
                     "id": 70000005,
                     "name": "Dragon Cliffs",
                     "districtHallLevel": 2,
-                    "destructionPercent": 24,
-                    "stars": 0,
-                    "attackCount": 2,
-                    "totalLooted": 1305,
+                    "destructionPercent": 100,
+                    "stars": 3,
+                    "attackCount": 5,
+                    "totalLooted": 6349,
                     "attacks": [
+                        {
+                            "attacker": {
+                                "tag": "#YPYUP89U",
+                                "name": "nahro"
+                            },
+                            "destructionPercent": 100,
+                            "stars": 3
+                        },
+                        {
+                            "attacker": {
+                                "tag": "#YPYUP89U",
+                                "name": "nahro"
+                            },
+                            "destructionPercent": 74,
+                            "stars": 2
+                        },
+                        {
+                            "attacker": {
+                                "tag": "#YYC2G98VG",
+                                "name": "Clock10"
+                            },
+                            "destructionPercent": 33,
+                            "stars": 0
+                        },
                         {
                             "attacker": {
                                 "tag": "#LRG20CUCY",

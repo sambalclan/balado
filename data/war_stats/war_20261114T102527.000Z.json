@@ -1,0 +1,109 @@
+{
+    "state": "preparation",
+    "teamSize": 5,
+    "attacksPerMember": 2,
+    "battleModifier": "none",
+    "preparationStartTime": "20261113T112527.000Z",
+    "startTime": "20261114T102527.000Z",
+    "endTime": "20261115T102527.000Z",
+    "clan": {
+        "tag": "#2RVRP900V",
+        "name": "Sambal balado",
+        "badgeUrls": {
+            "small": "https://api-assets.clashofclans.com/badges/70/SduuUQLqAXUP6SALWXozMv9RIY-mBQkDPxECOZkap2s.png",
+            "large": "https://api-assets.clashofclans.com/badges/512/SduuUQLqAXUP6SALWXozMv9RIY-mBQkDPxECOZkap2s.png",
+            "medium": "https://api-assets.clashofclans.com/badges/200/SduuUQLqAXUP6SALWXozMv9RIY-mBQkDPxECOZkap2s.png"
+        },
+        "clanLevel": 11,
+        "attacks": 0,
+        "stars": 0,
+        "destructionPercentage": 0.0,
+        "members": [
+            {
+                "tag": "#R2YVRJRYY",
+                "name": "Banten fc",
+                "townhallLevel": 16,
+                "mapPosition": 5,
+                "opponentAttacks": 0
+            },
+            {
+                "tag": "#90LUURLPV",
+                "name": "ezza1990",
+                "townhallLevel": 16,
+                "mapPosition": 3,
+                "opponentAttacks": 0
+            },
+            {
+                "tag": "#R9LY8QJC",
+                "name": "OKI LOTUS 22",
+                "townhallLevel": 17,
+                "mapPosition": 1,
+                "opponentAttacks": 0
+            },
+            {
+                "tag": "#QJUYL2L9V",
+                "name": "Zysss ur clown",
+                "townhallLevel": 15,
+                "mapPosition": 4,
+                "opponentAttacks": 0
+            },
+            {
+                "tag": "#GQJGU808G",
+                "name": "Kodok",
+                "townhallLevel": 17,
+                "mapPosition": 2,
+                "opponentAttacks": 0
+            }
+        ]
+    },
+    "opponent": {
+        "tag": "#29PRYQRRJ",
+        "name": "The Incredibles",
+        "badgeUrls": {
+            "small": "https://api-assets.clashofclans.com/badges/70/7TKwuNqwjHJqXG_9_GBSWBEwHaUb1hVXu6Mas-v30Vo.png",
+            "large": "https://api-assets.clashofclans.com/badges/512/7TKwuNqwjHJqXG_9_GBSWBEwHaUb1hVXu6Mas-v30Vo.png",
+            "medium": "https://api-assets.clashofclans.com/badges/200/7TKwuNqwjHJqXG_9_GBSWBEwHaUb1hVXu6Mas-v30Vo.png"
+        },
+        "clanLevel": 16,
+        "attacks": 0,
+        "stars": 0,
+        "destructionPercentage": 0.0,
+        "members": [
+            {
+                "tag": "#QC82R82QP",
+                "name": "Doflamingo",
+                "townhallLevel": 17,
+                "mapPosition": 4,
+                "opponentAttacks": 0
+            },
+            {
+                "tag": "#GQ02QQU0R",
+                "name": "KeeL",
+                "townhallLevel": 13,
+                "mapPosition": 5,
+                "opponentAttacks": 0
+            },
+            {
+                "tag": "#YLVGGRY2Q",
+                "name": "ODIN",
+                "townhallLevel": 17,
+                "mapPosition": 1,
+                "opponentAttacks": 0
+            },
+            {
+                "tag": "#GLVLYL2PY",
+                "name": "ananta",
+                "townhallLevel": 16,
+                "mapPosition": 2,
+                "opponentAttacks": 0
+            },
+            {
+                "tag": "#L9Q9PV9QV",
+                "name": "Ace",
+                "townhallLevel": 15,
+                "mapPosition": 3,
+                "opponentAttacks": 0
+            }
+        ]
+    }
+}
