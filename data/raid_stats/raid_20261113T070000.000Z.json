@@ -1,0 +1,393 @@
+{
+    "state": "ongoing",
+    "startTime": "20261113T070000.000Z",
+    "endTime": "20261116T070000.000Z",
+    "capitalTotalLoot": 13977,
+    "raidsCompleted": 0,
+    "totalAttacks": 6,
+    "enemyDistrictsDestroyed": 2,
+    "offensiveReward": 0,
+    "defensiveReward": 0,
+    "members": [
+        {
+            "tag": "#R2YVRJRYY",
+            "name": "Banten fc",
+            "attacks": 6,
+            "attackLimit": 5,
+            "bonusAttackLimit": 1,
+            "capitalResourcesLooted": 13977
+        }
+    ],
+    "attackLog": [
+        {
+            "defender": {
+                "tag": "#2RU9YPUVQ",
+                "name": "\u0627\u0644\u0646\u0633\u0648\u0631",
+                "level": 13,
+                "badgeUrls": {
+                    "small": "https://api-assets.clashofclans.com/badges/70/aRYhfiXBDZqfIP2fwCtEbnYbgl9mYvd00PsN1P9qkVc.png",
+                    "large": "https://api-assets.clashofclans.com/badges/512/aRYhfiXBDZqfIP2fwCtEbnYbgl9mYvd00PsN1P9qkVc.png",
+                    "medium": "https://api-assets.clashofclans.com/badges/200/aRYhfiXBDZqfIP2fwCtEbnYbgl9mYvd00PsN1P9qkVc.png"
+                }
+            },
+            "attackCount": 6,
+            "districtCount": 7,
+            "districtsDestroyed": 2,
+            "districts": [
+                {
+                    "id": 70000000,
+                    "name": "Capital Peak",
+                    "districtHallLevel": 7,
+                    "destructionPercent": 0,
+                    "stars": 0,
+                    "attackCount": 0,
+                    "totalLooted": 0
+                },
+                {
+                    "id": 70000001,
+                    "name": "Barbarian Camp",
+                    "districtHallLevel": 4,
+                    "destructionPercent": 0,
+                    "stars": 0,
+                    "attackCount": 0,
+                    "totalLooted": 0
+                },
+                {
+                    "id": 70000002,
+                    "name": "Wizard Valley",
+                    "districtHallLevel": 3,
+                    "destructionPercent": 100,
+                    "stars": 3,
+                    "attackCount": 3,
+                    "totalLooted": 7036,
+                    "attacks": [
+                        {
+                            "attacker": {
+                                "tag": "#R2YVRJRYY",
+                                "name": "Banten fc"
+                            },
+                            "destructionPercent": 100,
+                            "stars": 3
+                        },
+                        {
+                            "attacker": {
+                                "tag": "#R2YVRJRYY",
+                                "name": "Banten fc"
+                            },
+                            "destructionPercent": 82,
+                            "stars": 2
+                        },
+                        {
+                            "attacker": {
+                                "tag": "#R2YVRJRYY",
+                                "name": "Banten fc"
+                            },
+                            "destructionPercent": 35,
+                            "stars": 0
+                        }
+                    ]
+                },
+                {
+                    "id": 70000003,
+                    "name": "Balloon Lagoon",
+                    "districtHallLevel": 3,
+                    "destructionPercent": 0,
+                    "stars": 0,
+                    "attackCount": 0,
+                    "totalLooted": 0
+                },
+                {
+                    "id": 70000004,
+                    "name": "Builder's Workshop",
+                    "districtHallLevel": 3,
+                    "destructionPercent": 0,
+                    "stars": 0,
+                    "attackCount": 0,
+                    "totalLooted": 0
+                },
+                {
+                    "id": 70000005,
+                    "name": "Dragon Cliffs",
+                    "districtHallLevel": 2,
+                    "destructionPercent": 0,
+                    "stars": 0,
+                    "attackCount": 0,
+                    "totalLooted": 0
+                },
+                {
+                    "id": 70000006,
+                    "name": "Golem Quarry",
+                    "districtHallLevel": 2,
+                    "destructionPercent": 100,
+                    "stars": 3,
+                    "attackCount": 3,
+                    "totalLooted": 6941,
+                    "attacks": [
+                        {
+                            "attacker": {
+                                "tag": "#R2YVRJRYY",
+                                "name": "Banten fc"
+                            },
+                            "destructionPercent": 100,
+                            "stars": 3
+                        },
+                        {
+                            "attacker": {
+                                "tag": "#R2YVRJRYY",
+                                "name": "Banten fc"
+                            },
+                            "destructionPercent": 71,
+                            "stars": 2
+                        },
+                        {
+                            "attacker": {
+                                "tag": "#R2YVRJRYY",
+                                "name": "Banten fc"
+                            },
+                            "destructionPercent": 25,
+                            "stars": 1
+                        }
+                    ]
+                }
+            ]
+        }
+    ],
+    "defenseLog": [
+        {
+            "attacker": {
+                "tag": "#2RJJVP8LY",
+                "name": "Israel",
+                "level": 10,
+                "badgeUrls": {
+                    "small": "https://api-assets.clashofclans.com/badges/70/KlL3M54fFO2hCW7zfipK834c1umINYB9_1I5zuYvCgY.png",
+                    "large": "https://api-assets.clashofclans.com/badges/512/KlL3M54fFO2hCW7zfipK834c1umINYB9_1I5zuYvCgY.png",
+                    "medium": "https://api-assets.clashofclans.com/badges/200/KlL3M54fFO2hCW7zfipK834c1umINYB9_1I5zuYvCgY.png"
+                }
+            },
+            "attackCount": 18,
+            "districtCount": 7,
+            "districtsDestroyed": 5,
+            "districts": [
+                {
+                    "id": 70000000,
+                    "name": "Capital Peak",
+                    "districtHallLevel": 7,
+                    "destructionPercent": 0,
+                    "stars": 0,
+                    "attackCount": 0,
+                    "totalLooted": 0
+                },
+                {
+                    "id": 70000001,
+                    "name": "Barbarian Camp",
+                    "districtHallLevel": 4,
+                    "destructionPercent": 100,
+                    "stars": 3,
+                    "attackCount": 4,
+                    "totalLooted": 8892,
+                    "attacks": [
+                        {
+                            "attacker": {
+                                "tag": "#2GP90QGL",
+                                "name": "peleg"
+                            },
+                            "destructionPercent": 100,
+                            "stars": 3
+                        },
+                        {
+                            "attacker": {
+                                "tag": "#GQG0L2YJJ",
+                                "name": "ZombieRock7"
+                            },
+                            "destructionPercent": 82,
+                            "stars": 1
+                        },
+                        {
+                            "attacker": {
+                                "tag": "#GQG0L2YJJ",
+                                "name": "ZombieRock7"
+                            },
+                            "destructionPercent": 62,
+                            "stars": 1
+                        },
+                        {
+                            "attacker": {
+                                "tag": "#GQG0L2YJJ",
+                                "name": "ZombieRock7"
+                            },
+                            "destructionPercent": 39,
+                            "stars": 0
+                        }
+                    ]
+                },
+                {
+                    "id": 70000002,
+                    "name": "Wizard Valley",
+                    "districtHallLevel": 3,
+                    "destructionPercent": 100,
+                    "stars": 3,
+                    "attackCount": 3,
+                    "totalLooted": 6771,
+                    "attacks": [
+                        {
+                            "attacker": {
+                                "tag": "#LRG20CUCY",
+                                "name": "liroy"
+                            },
+                            "destructionPercent": 100,
+                            "stars": 3
+                        },
+                        {
+                            "attacker": {
+                                "tag": "#LRG20CUCY",
+                                "name": "liroy"
+                            },
+                            "destructionPercent": 76,
+                            "stars": 2
+                        },
+                        {
+                            "attacker": {
+                                "tag": "#R0LCCURV2",
+                                "name": "Israel"
+                            },
+                            "destructionPercent": 40,
+                            "stars": 0
+                        }
+                    ]
+                },
+                {
+                    "id": 70000003,
+                    "name": "Balloon Lagoon",
+                    "districtHallLevel": 3,
+                    "destructionPercent": 100,
+                    "stars": 3,
+                    "attackCount": 3,
+                    "totalLooted": 7907,
+                    "attacks": [
+                        {
+                            "attacker": {
+                                "tag": "#LRG20CUCY",
+                                "name": "liroy"
+                            },
+                            "destructionPercent": 100,
+                            "stars": 3
+                        },
+                        {
+                            "attacker": {
+                                "tag": "#R0LCCURV2",
+                                "name": "Israel"
+                            },
+                            "destructionPercent": 83,
+                            "stars": 2
+                        },
+                        {
+                            "attacker": {
+                                "tag": "#R0LCCURV2",
+                                "name": "Israel"
+                            },
+                            "destructionPercent": 46,
+                            "stars": 1
+                        }
+                    ]
+                },
+                {
+                    "id": 70000004,
+                    "name": "Builder's Workshop",
+                    "districtHallLevel": 3,
+                    "destructionPercent": 100,
+                    "stars": 3,
+                    "attackCount": 3,
+                    "totalLooted": 8731,
+                    "attacks": [
+                        {
+                            "attacker": {
+                                "tag": "#GQG0L2YJJ",
+                                "name": "ZombieRock7"
+                            },
+                            "destructionPercent": 100,
+                            "stars": 3
+                        },
+                        {
+                            "attacker": {
+                                "tag": "#R0JCQVU90",
+                                "name": "itamarIL"
+                            },
+                            "destructionPercent": 88,
+                            "stars": 2
+                        },
+                        {
+                            "attacker": {
+                                "tag": "#R0JCQVU90",
+                                "name": "itamarIL"
+                            },
+                            "destructionPercent": 47,
+                            "stars": 1
+                        }
+                    ]
+                },
+                {
+                    "id": 70000005,
+                    "name": "Dragon Cliffs",
+                    "districtHallLevel": 2,
+                    "destructionPercent": 24,
+                    "stars": 0,
+                    "attackCount": 2,
+                    "totalLooted": 1305,
+                    "attacks": [
+                        {
+                            "attacker": {
+                                "tag": "#LRG20CUCY",
+                                "name": "liroy"
+                            },
+                            "destructionPercent": 24,
+                            "stars": 0
+                        },
+                        {
+                            "attacker": {
+                                "tag": "#LRG20CUCY",
+                                "name": "liroy"
+                            },
+                            "destructionPercent": 0,
+                            "stars": 0
+                        }
+                    ]
+                },
+                {
+                    "id": 70000006,
+                    "name": "Golem Quarry",
+                    "districtHallLevel": 2,
+                    "destructionPercent": 100,
+                    "stars": 3,
+                    "attackCount": 3,
+                    "totalLooted": 6709,
+                    "attacks": [
+                        {
+                            "attacker": {
+                                "tag": "#LRG20CUCY",
+                                "name": "liroy"
+                            },
+                            "destructionPercent": 100,
+                            "stars": 3
+                        },
+                        {
+                            "attacker": {
+                                "tag": "#R0LCCURV2",
+                                "name": "Israel"
+                            },
+                            "destructionPercent": 76,
+                            "stars": 2
+                        },
+                        {
+                            "attacker": {
+                                "tag": "#R0LCCURV2",
+                                "name": "Israel"
+                            },
+                            "destructionPercent": 38,
+                            "stars": 0
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}
