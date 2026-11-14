@@ -2,13 +2,21 @@
     "state": "ongoing",
     "startTime": "20261113T070000.000Z",
     "endTime": "20261116T070000.000Z",
-    "capitalTotalLoot": 57620,
+    "capitalTotalLoot": 60944,
     "raidsCompleted": 2,
-    "totalAttacks": 24,
-    "enemyDistrictsDestroyed": 7,
+    "totalAttacks": 26,
+    "enemyDistrictsDestroyed": 8,
     "offensiveReward": 0,
     "defensiveReward": 0,
     "members": [
+        {
+            "tag": "#GPCYQG89Y",
+            "name": "kutur18",
+            "attacks": 2,
+            "attackLimit": 5,
+            "bonusAttackLimit": 1,
+            "capitalResourcesLooted": 3324
+        },
         {
             "tag": "#R2YVRJRYY",
             "name": "Banten fc",
@@ -332,9 +340,9 @@
                     "medium": "https://api-assets.clashofclans.com/badges/200/Mxl3SUvW9lEzZVBUjc6fRz3Gn7Wen02tOYiQCptq0b8.png"
                 }
             },
-            "attackCount": 1,
+            "attackCount": 3,
             "districtCount": 7,
-            "districtsDestroyed": 0,
+            "districtsDestroyed": 1,
             "districts": [
                 {
                     "id": 70000000,
@@ -394,11 +402,27 @@
                     "id": 70000006,
                     "name": "Golem Quarry",
                     "districtHallLevel": 2,
-                    "destructionPercent": 50,
-                    "stars": 2,
-                    "attackCount": 1,
-                    "totalLooted": 2420,
+                    "destructionPercent": 100,
+                    "stars": 3,
+                    "attackCount": 3,
+                    "totalLooted": 5744,
                     "attacks": [
+                        {
+                            "attacker": {
+                                "tag": "#GPCYQG89Y",
+                                "name": "kutur18"
+                            },
+                            "destructionPercent": 100,
+                            "stars": 3
+                        },
+                        {
+                            "attacker": {
+                                "tag": "#GPCYQG89Y",
+                                "name": "kutur18"
+                            },
+                            "destructionPercent": 78,
+                            "stars": 2
+                        },
                         {
                             "attacker": {
                                 "tag": "#GPYC9PYJV",

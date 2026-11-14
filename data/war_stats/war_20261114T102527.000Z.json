@@ -1,5 +1,5 @@
 {
-    "state": "preparation",
+    "state": "inWar",
     "teamSize": 5,
     "attacksPerMember": 2,
     "battleModifier": "none",
@@ -15,15 +15,25 @@
             "medium": "https://api-assets.clashofclans.com/badges/200/SduuUQLqAXUP6SALWXozMv9RIY-mBQkDPxECOZkap2s.png"
         },
         "clanLevel": 11,
-        "attacks": 0,
-        "stars": 0,
-        "destructionPercentage": 0.0,
+        "attacks": 1,
+        "stars": 2,
+        "destructionPercentage": 13.6,
         "members": [
             {
                 "tag": "#R2YVRJRYY",
                 "name": "Banten fc",
                 "townhallLevel": 16,
                 "mapPosition": 5,
+                "attacks": [
+                    {
+                        "attackerTag": "#R2YVRJRYY",
+                        "defenderTag": "#GQ02QQU0R",
+                        "stars": 2,
+                        "destructionPercentage": 68,
+                        "order": 1,
+                        "duration": 113
+                    }
+                ],
                 "opponentAttacks": 0
             },
             {
@@ -81,7 +91,15 @@
                 "name": "KeeL",
                 "townhallLevel": 13,
                 "mapPosition": 5,
-                "opponentAttacks": 0
+                "opponentAttacks": 1,
+                "bestOpponentAttack": {
+                    "attackerTag": "#R2YVRJRYY",
+                    "defenderTag": "#GQ02QQU0R",
+                    "stars": 2,
+                    "destructionPercentage": 68,
+                    "order": 1,
+                    "duration": 113
+                }
             },
             {
                 "tag": "#YLVGGRY2Q",
