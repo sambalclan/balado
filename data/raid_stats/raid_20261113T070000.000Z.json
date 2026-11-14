@@ -2,20 +2,20 @@
     "state": "ongoing",
     "startTime": "20261113T070000.000Z",
     "endTime": "20261116T070000.000Z",
-    "capitalTotalLoot": 60944,
+    "capitalTotalLoot": 68472,
     "raidsCompleted": 2,
-    "totalAttacks": 26,
-    "enemyDistrictsDestroyed": 8,
+    "totalAttacks": 30,
+    "enemyDistrictsDestroyed": 9,
     "offensiveReward": 0,
     "defensiveReward": 0,
     "members": [
         {
             "tag": "#GPCYQG89Y",
             "name": "kutur18",
-            "attacks": 2,
+            "attacks": 6,
             "attackLimit": 5,
             "bonusAttackLimit": 1,
-            "capitalResourcesLooted": 3324
+            "capitalResourcesLooted": 10852
         },
         {
             "tag": "#R2YVRJRYY",
@@ -340,9 +340,9 @@
                     "medium": "https://api-assets.clashofclans.com/badges/200/Mxl3SUvW9lEzZVBUjc6fRz3Gn7Wen02tOYiQCptq0b8.png"
                 }
             },
-            "attackCount": 3,
+            "attackCount": 7,
             "districtCount": 7,
-            "districtsDestroyed": 1,
+            "districtsDestroyed": 2,
             "districts": [
                 {
                     "id": 70000000,
@@ -375,10 +375,44 @@
                     "id": 70000003,
                     "name": "Balloon Lagoon",
                     "districtHallLevel": 3,
-                    "destructionPercent": 0,
-                    "stars": 0,
-                    "attackCount": 0,
-                    "totalLooted": 0
+                    "destructionPercent": 100,
+                    "stars": 3,
+                    "attackCount": 4,
+                    "totalLooted": 7528,
+                    "attacks": [
+                        {
+                            "attacker": {
+                                "tag": "#GPCYQG89Y",
+                                "name": "kutur18"
+                            },
+                            "destructionPercent": 100,
+                            "stars": 3
+                        },
+                        {
+                            "attacker": {
+                                "tag": "#GPCYQG89Y",
+                                "name": "kutur18"
+                            },
+                            "destructionPercent": 85,
+                            "stars": 2
+                        },
+                        {
+                            "attacker": {
+                                "tag": "#GPCYQG89Y",
+                                "name": "kutur18"
+                            },
+                            "destructionPercent": 54,
+                            "stars": 1
+                        },
+                        {
+                            "attacker": {
+                                "tag": "#GPCYQG89Y",
+                                "name": "kutur18"
+                            },
+                            "destructionPercent": 23,
+                            "stars": 0
+                        }
+                    ]
                 },
                 {
                     "id": 70000004,

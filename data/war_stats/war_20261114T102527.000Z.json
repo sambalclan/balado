@@ -15,9 +15,9 @@
             "medium": "https://api-assets.clashofclans.com/badges/200/SduuUQLqAXUP6SALWXozMv9RIY-mBQkDPxECOZkap2s.png"
         },
         "clanLevel": 11,
-        "attacks": 1,
-        "stars": 2,
-        "destructionPercentage": 13.6,
+        "attacks": 5,
+        "stars": 7,
+        "destructionPercentage": 64.2,
         "members": [
             {
                 "tag": "#R2YVRJRYY",
@@ -32,6 +32,14 @@
                         "destructionPercentage": 68,
                         "order": 1,
                         "duration": 113
+                    },
+                    {
+                        "attackerTag": "#R2YVRJRYY",
+                        "defenderTag": "#QC82R82QP",
+                        "stars": 1,
+                        "destructionPercentage": 54,
+                        "order": 2,
+                        "duration": 102
                     }
                 ],
                 "opponentAttacks": 0
@@ -41,6 +49,16 @@
                 "name": "ezza1990",
                 "townhallLevel": 16,
                 "mapPosition": 3,
+                "attacks": [
+                    {
+                        "attackerTag": "#90LUURLPV",
+                        "defenderTag": "#L9Q9PV9QV",
+                        "stars": 2,
+                        "destructionPercentage": 89,
+                        "order": 3,
+                        "duration": 152
+                    }
+                ],
                 "opponentAttacks": 0
             },
             {
@@ -55,6 +73,24 @@
                 "name": "Zysss ur clown",
                 "townhallLevel": 15,
                 "mapPosition": 4,
+                "attacks": [
+                    {
+                        "attackerTag": "#QJUYL2L9V",
+                        "defenderTag": "#GLVLYL2PY",
+                        "stars": 1,
+                        "destructionPercentage": 78,
+                        "order": 4,
+                        "duration": 131
+                    },
+                    {
+                        "attackerTag": "#QJUYL2L9V",
+                        "defenderTag": "#GQ02QQU0R",
+                        "stars": 3,
+                        "destructionPercentage": 100,
+                        "order": 5,
+                        "duration": 93
+                    }
+                ],
                 "opponentAttacks": 0
             },
             {
@@ -84,21 +120,29 @@
                 "name": "Doflamingo",
                 "townhallLevel": 17,
                 "mapPosition": 4,
-                "opponentAttacks": 0
+                "opponentAttacks": 1,
+                "bestOpponentAttack": {
+                    "attackerTag": "#R2YVRJRYY",
+                    "defenderTag": "#QC82R82QP",
+                    "stars": 1,
+                    "destructionPercentage": 54,
+                    "order": 2,
+                    "duration": 102
+                }
             },
             {
                 "tag": "#GQ02QQU0R",
                 "name": "KeeL",
                 "townhallLevel": 13,
                 "mapPosition": 5,
-                "opponentAttacks": 1,
+                "opponentAttacks": 2,
                 "bestOpponentAttack": {
-                    "attackerTag": "#R2YVRJRYY",
+                    "attackerTag": "#QJUYL2L9V",
                     "defenderTag": "#GQ02QQU0R",
-                    "stars": 2,
-                    "destructionPercentage": 68,
-                    "order": 1,
-                    "duration": 113
+                    "stars": 3,
+                    "destructionPercentage": 100,
+                    "order": 5,
+                    "duration": 93
                 }
             },
             {
@@ -113,14 +157,30 @@
                 "name": "ananta",
                 "townhallLevel": 16,
                 "mapPosition": 2,
-                "opponentAttacks": 0
+                "opponentAttacks": 1,
+                "bestOpponentAttack": {
+                    "attackerTag": "#QJUYL2L9V",
+                    "defenderTag": "#GLVLYL2PY",
+                    "stars": 1,
+                    "destructionPercentage": 78,
+                    "order": 4,
+                    "duration": 131
+                }
             },
             {
                 "tag": "#L9Q9PV9QV",
                 "name": "Ace",
                 "townhallLevel": 15,
                 "mapPosition": 3,
-                "opponentAttacks": 0
+                "opponentAttacks": 1,
+                "bestOpponentAttack": {
+                    "attackerTag": "#90LUURLPV",
+                    "defenderTag": "#L9Q9PV9QV",
+                    "stars": 2,
+                    "destructionPercentage": 89,
+                    "order": 3,
+                    "duration": 152
+                }
             }
         ]
     }
