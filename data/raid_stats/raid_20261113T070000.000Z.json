@@ -2,10 +2,10 @@
     "state": "ongoing",
     "startTime": "20261113T070000.000Z",
     "endTime": "20261116T070000.000Z",
-    "capitalTotalLoot": 42702,
-    "raidsCompleted": 1,
-    "totalAttacks": 18,
-    "enemyDistrictsDestroyed": 5,
+    "capitalTotalLoot": 57620,
+    "raidsCompleted": 2,
+    "totalAttacks": 24,
+    "enemyDistrictsDestroyed": 7,
     "offensiveReward": 0,
     "defensiveReward": 0,
     "members": [
@@ -32,6 +32,14 @@
             "attackLimit": 5,
             "bonusAttackLimit": 1,
             "capitalResourcesLooted": 12103
+        },
+        {
+            "tag": "#GPYC9PYJV",
+            "name": "andi",
+            "attacks": 6,
+            "attackLimit": 5,
+            "bonusAttackLimit": 1,
+            "capitalResourcesLooted": 14918
         }
     ],
     "attackLog": [
@@ -46,28 +54,70 @@
                     "medium": "https://api-assets.clashofclans.com/badges/200/aRYhfiXBDZqfIP2fwCtEbnYbgl9mYvd00PsN1P9qkVc.png"
                 }
             },
-            "attackCount": 18,
+            "attackCount": 23,
             "districtCount": 7,
-            "districtsDestroyed": 5,
+            "districtsDestroyed": 7,
             "districts": [
                 {
                     "id": 70000000,
                     "name": "Capital Peak",
                     "districtHallLevel": 7,
-                    "destructionPercent": 0,
-                    "stars": 0,
-                    "attackCount": 0,
-                    "totalLooted": 0
+                    "destructionPercent": 100,
+                    "stars": 3,
+                    "attackCount": 4,
+                    "totalLooted": 10000,
+                    "attacks": [
+                        {
+                            "attacker": {
+                                "tag": "#GPYC9PYJV",
+                                "name": "andi"
+                            },
+                            "destructionPercent": 100,
+                            "stars": 3
+                        },
+                        {
+                            "attacker": {
+                                "tag": "#GPYC9PYJV",
+                                "name": "andi"
+                            },
+                            "destructionPercent": 86,
+                            "stars": 2
+                        },
+                        {
+                            "attacker": {
+                                "tag": "#GPYC9PYJV",
+                                "name": "andi"
+                            },
+                            "destructionPercent": 64,
+                            "stars": 2
+                        },
+                        {
+                            "attacker": {
+                                "tag": "#GPYC9PYJV",
+                                "name": "andi"
+                            },
+                            "destructionPercent": 52,
+                            "stars": 2
+                        }
+                    ]
                 },
                 {
                     "id": 70000001,
                     "name": "Barbarian Camp",
                     "districtHallLevel": 4,
-                    "destructionPercent": 76,
-                    "stars": 2,
-                    "attackCount": 3,
-                    "totalLooted": 6290,
+                    "destructionPercent": 100,
+                    "stars": 3,
+                    "attackCount": 4,
+                    "totalLooted": 8788,
                     "attacks": [
+                        {
+                            "attacker": {
+                                "tag": "#GPYC9PYJV",
+                                "name": "andi"
+                            },
+                            "destructionPercent": 100,
+                            "stars": 3
+                        },
                         {
                             "attacker": {
                                 "tag": "#GQJGU808G",
@@ -266,6 +316,96 @@
                             },
                             "destructionPercent": 25,
                             "stars": 1
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "defender": {
+                "tag": "#L22G0PJU",
+                "name": "KING OF COC",
+                "level": 16,
+                "badgeUrls": {
+                    "small": "https://api-assets.clashofclans.com/badges/70/Mxl3SUvW9lEzZVBUjc6fRz3Gn7Wen02tOYiQCptq0b8.png",
+                    "large": "https://api-assets.clashofclans.com/badges/512/Mxl3SUvW9lEzZVBUjc6fRz3Gn7Wen02tOYiQCptq0b8.png",
+                    "medium": "https://api-assets.clashofclans.com/badges/200/Mxl3SUvW9lEzZVBUjc6fRz3Gn7Wen02tOYiQCptq0b8.png"
+                }
+            },
+            "attackCount": 1,
+            "districtCount": 7,
+            "districtsDestroyed": 0,
+            "districts": [
+                {
+                    "id": 70000000,
+                    "name": "Capital Peak",
+                    "districtHallLevel": 7,
+                    "destructionPercent": 0,
+                    "stars": 0,
+                    "attackCount": 0,
+                    "totalLooted": 0
+                },
+                {
+                    "id": 70000001,
+                    "name": "Barbarian Camp",
+                    "districtHallLevel": 4,
+                    "destructionPercent": 0,
+                    "stars": 0,
+                    "attackCount": 0,
+                    "totalLooted": 0
+                },
+                {
+                    "id": 70000002,
+                    "name": "Wizard Valley",
+                    "districtHallLevel": 3,
+                    "destructionPercent": 0,
+                    "stars": 0,
+                    "attackCount": 0,
+                    "totalLooted": 0
+                },
+                {
+                    "id": 70000003,
+                    "name": "Balloon Lagoon",
+                    "districtHallLevel": 3,
+                    "destructionPercent": 0,
+                    "stars": 0,
+                    "attackCount": 0,
+                    "totalLooted": 0
+                },
+                {
+                    "id": 70000004,
+                    "name": "Builder's Workshop",
+                    "districtHallLevel": 2,
+                    "destructionPercent": 0,
+                    "stars": 0,
+                    "attackCount": 0,
+                    "totalLooted": 0
+                },
+                {
+                    "id": 70000005,
+                    "name": "Dragon Cliffs",
+                    "districtHallLevel": 2,
+                    "destructionPercent": 0,
+                    "stars": 0,
+                    "attackCount": 0,
+                    "totalLooted": 0
+                },
+                {
+                    "id": 70000006,
+                    "name": "Golem Quarry",
+                    "districtHallLevel": 2,
+                    "destructionPercent": 50,
+                    "stars": 2,
+                    "attackCount": 1,
+                    "totalLooted": 2420,
+                    "attacks": [
+                        {
+                            "attacker": {
+                                "tag": "#GPYC9PYJV",
+                                "name": "andi"
+                            },
+                            "destructionPercent": 50,
+                            "stars": 2
                         }
                     ]
                 }
