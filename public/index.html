@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Clan statistics</title>
     <script>
+        // Pick the saved theme, else the device theme, before the page paints (avoids a flash)
         (function () {
             var theme = 'dark';
             try {
@@ -21,11 +22,11 @@
     <link rel="stylesheet" href="pages/style.css">
 </head>
 <body class="min-h-screen flex flex-col antialiased">
-    <main class="w-full max-w-5xl mx-auto px-4 pt-4 pb-28 flex-1">
+    <main class="w-full max-w-5xl mx-auto px-4 pt-4 pb-20 flex-1">
         <header id="clanHeader" class="w-full pt-3"></header>
         <section id="section-about" class="w-full"></section>
         <section id="section-members" class="w-full hidden-section"></section>
-        <section id="section-battle" class="w-full hidden-section py-3 pb-28 text-soft text-sm">
+        <section id="section-battle" class="w-full hidden-section py-3 text-soft text-sm">
             <div id="battleTabs"></div>
             <div id="section-war" class="w-full"></div>
             <div id="section-cwl" class="w-full hidden"></div>

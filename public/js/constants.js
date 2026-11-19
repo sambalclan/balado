@@ -52,7 +52,7 @@ export const fmt = n => Number(n || 0).toLocaleString('en-US');
 export const pageCard = (inner, rounded = 'rounded-xl') =>
     `<div class="w-full bg-surface border border-divider ${rounded} p-3">${inner}</div>`;
 
-export const pageShell = inner => `<div class="px-0 py-3 pb-28 w-full">${inner}</div>`;
+export const pageShell = inner => `<div class="px-0 py-3 w-full">${inner}</div>`;
 export const pagePanel = inner => pageShell(pageCard(inner, 'rounded-2xl'));
 
 export const emptyCard = text => `

@@ -471,7 +471,7 @@ const BANNER_IMAGE = 'assets/banner.jpg';
 const CLAN_TYPES = { open: 'Open', inviteOnly: 'Invite only', closed: 'Closed' };
 
 const bannerPill = (text, position) => text ? `
-    <span class="absolute top-3 ${position} rounded-full bg-overlay backdrop-blur-sm px-3.5 py-1.5 text-[11px] font-bold text-main-90">${escapeHtml(String(text))}</span>` : '';
+    <span class="absolute top-3 ${position} rounded-full bg-overlay px-3.5 py-1.5 text-[11px] font-bold text-main-90">${escapeHtml(String(text))}</span>` : '';
 
 const renderBanner = clan => `
     <div class="relative h-40 rounded-3xl overflow-hidden bg-surface flex items-center justify-center">

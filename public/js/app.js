@@ -21,25 +21,6 @@ function animateIn(el) {
     el.classList.add('view-anim');
 }
 
-function moveNavIndicator(instant = false) {
-    const nav = document.getElementById('bottomToolbar');
-    const active = nav?.querySelector('button.active');
-    if (!nav || !active) return;
-
-    let indicator = nav.querySelector('.nav-indicator');
-    if (!indicator) {
-        indicator = document.createElement('span');
-        indicator.className = 'nav-indicator';
-        nav.prepend(indicator);
-        instant = true;
-    }
-
-    if (instant) indicator.style.transition = 'none';
-    indicator.style.width = active.offsetWidth + 'px';
-    indicator.style.transform = `translateX(${active.offsetLeft}px)`;
-    if (instant) { void indicator.offsetWidth; indicator.style.transition = ''; }
-}
-
 const BATTLE_MODES = [
     { id: 'war', label: 'War' },
     { id: 'cwl', label: 'CWL' },
@@ -82,7 +63,6 @@ function switchView(view = 'about') {
     lastTab = target;
     document.querySelectorAll('#bottomToolbar button').forEach((btn) => btn.classList.remove('active'));
     document.getElementById('tab-' + target)?.classList.add('active');
-    moveNavIndicator();
 }
 
 function bindTabs() {
@@ -218,5 +198,4 @@ document.addEventListener('DOMContentLoaded', () => {
     switchView();
     init();
     bindTabs();
-    window.addEventListener('resize', () => moveNavIndicator(true));
 });
