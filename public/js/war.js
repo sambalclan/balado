@@ -1,4 +1,4 @@
-import { parseCoCDate, escapeHtml, fmt, warDate, getTHImage, isEndedWar, warStars, emptyCard, backButton, renderPillTabs, setPillActive } from './constants.js';
+import { parseCoCDate, escapeHtml, fmt, warDate, getTHImage, isEndedWar, warStars, emptyCard, backButton, renderMenuTabs, setMenuActive } from './constants.js';
 import { state, getRaidWeeks, getCwlRounds, getCwlMemberStats } from './state.js';
 
 // WAR
@@ -293,7 +293,7 @@ export function renderWar(wars) {
     }
 
     container.innerHTML = `
-        ${renderPillTabs('data-war', WAR_FILTERS, warFilter)}
+        ${renderMenuTabs('data-war', WAR_FILTERS, warFilter)}
         <p class="mb-2 px-1 text-[10px] text-subtle"><span id="warCount">${state.wars.length}</span> wars</p>
         <div id="warList" class="flex flex-col gap-1.5">${renderWarList()}</div>
     `;
@@ -304,7 +304,7 @@ export function renderWar(wars) {
         const btn = e.target.closest('[data-war]');
         if (btn) {
             warFilter = btn.dataset.war;
-            setPillActive(btn.closest('.pill-tabs'), 'data-war', warFilter);
+            setMenuActive(btn.closest('.menu-tabs'), 'data-war', warFilter);
             container.querySelector('#warList').innerHTML = renderWarList();
             startWarCountdown(container);
             return;
@@ -457,7 +457,7 @@ export function renderCwl() {
                 <span class="text-[11px] text-muted">${escapeHtml(season)} · ${rounds.length} / ${total} rounds</span>
             </div>
             <div class="grid grid-cols-3 gap-1.5 mb-3">${cwlSummary(rounds).map(tile).join('')}</div>
-            ${renderPillTabs('data-cwl-view', CWL_VIEWS, cwlView)}
+            ${renderMenuTabs('data-cwl-view', CWL_VIEWS, cwlView)}
             <div id="cwlBody">${renderCwlBody(rounds)}</div>
         `;
         startCwlCountdown(container);
@@ -473,7 +473,7 @@ export function renderCwl() {
         const tab = e.target.closest('[data-cwl-view]');
         if (tab) {
             cwlView = tab.dataset.cwlView;
-            setPillActive(tab.closest('.pill-tabs'), 'data-cwl-view', cwlView);
+            setMenuActive(tab.closest('.menu-tabs'), 'data-cwl-view', cwlView);
             container.querySelector('#cwlBody').innerHTML = renderCwlBody(getCwlRounds());
             startCwlCountdown(container);
             return;

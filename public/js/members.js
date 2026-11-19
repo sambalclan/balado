@@ -1,6 +1,6 @@
 import {
     roleMap, roleWeight, roleName, getTHImage, escapeHtml, fmt,
-    pageShell, renderPillTabs, setPillActive,
+    pageShell, renderMenuTabs, setMenuActive,
 } from './constants.js';
 
 const byRank = (a, b) => (a.clanRank || 0) - (b.clanRank || 0);
@@ -106,7 +106,7 @@ export function renderMembers(clan) {
             ${tile('Received', total('donationsReceived'), 'text-bad')}
         </div>
 
-        ${renderPillTabs('data-role', ROLE_FILTERS, roleFilter)}
+        ${renderMenuTabs('data-role', ROLE_FILTERS, roleFilter)}
 
         <div class="flex gap-2 mb-3">
             <input id="memberSearch" type="search" value="${escapeHtml(search)}" placeholder="Search name..." autocomplete="off"
@@ -129,7 +129,7 @@ export function renderMembers(clan) {
         const role = e.target.closest('[data-role]');
         if (!role || !container.contains(role)) return;
         roleFilter = role.dataset.role;
-        setPillActive(role.closest('.pill-tabs'), 'data-role', roleFilter);
+        setMenuActive(role.closest('.menu-tabs'), 'data-role', roleFilter);
         refreshList();
     };
 

@@ -67,20 +67,18 @@ export const backButton = attr => `
     </button>`;
 
 // PILL TABS
-export const renderPillTabs = (attr, items, activeId) => `
-    <div class="pill-tabs" style="--tabs:${items.length};--tab-index:${Math.max(items.findIndex(t => t.id === activeId), 0)}">
-        <div class="tab-pill" aria-hidden="true"></div>
+// A plain text menu (War / CWL / Raid, filters): no sliding highlight, no animation
+export const renderMenuTabs = (attr, items, activeId) => `
+    <div class="menu-tabs">
         ${items.map(({ id, label }) => `
             <button type="button" ${attr}="${id}" class="${id === activeId ? 'active' : ''}" aria-pressed="${id === activeId}">
                 ${label}
             </button>`).join('')}
     </div>`;
 
-export function setPillActive(tabs, attr, id) {
+export function setMenuActive(tabs, attr, id) {
     if (!tabs) return;
-    const buttons = [...tabs.querySelectorAll(`[${attr}]`)];
-    tabs.style.setProperty('--tab-index', Math.max(buttons.findIndex(b => b.getAttribute(attr) === id), 0));
-    buttons.forEach(b => {
+    tabs.querySelectorAll(`[${attr}]`).forEach(b => {
         const active = b.getAttribute(attr) === id;
         b.classList.toggle('active', active);
         b.setAttribute('aria-pressed', String(active));

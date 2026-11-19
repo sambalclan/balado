@@ -1,6 +1,6 @@
 import { fetchClanData, fetchClanHistory, fetchLatestRaid, fetchLatestCwl, fetchCwlWars, fetchWarIndex, fetchWarData, fetchRaidIndex, fetchRaidData, clearLiveCache } from './api.js';
 import { setWarData, setClanHistory, setRaidData, setRaids, setCwlData, setCwlWars } from './state.js';
-import { renderPillTabs, setPillActive, toggleTheme } from './constants.js';
+import { renderMenuTabs, setMenuActive, toggleTheme } from './constants.js';
 import { renderAbout, renderSettings } from './render.js';
 import { renderMembers } from './members.js';
 import { renderWar, renderCwl, renderRaid } from './war.js';
@@ -13,14 +13,6 @@ let lastTab = 'about'; // tab to return to when Settings is closed
 let warMode = 'war'; // 'war', 'cwl' or 'raid'
 
 // ═══ Navigation & Views ════════════════════════════════════════════════
-// Retrigger the light fade/slide animation on an element
-function animateIn(el) {
-    if (!el) return;
-    el.classList.remove('view-anim');
-    void el.offsetWidth; // force reflow so the animation restarts
-    el.classList.add('view-anim');
-}
-
 const BATTLE_MODES = [
     { id: 'war', label: 'War' },
     { id: 'cwl', label: 'CWL' },
@@ -30,15 +22,14 @@ const BATTLE_MODES = [
 function showBattleMode() {
     // The War / CWL / Raid switch is built here, not hardcoded in index.html
     const tabs = document.getElementById('battleTabs');
-    if (tabs && !tabs.firstElementChild) tabs.innerHTML = renderPillTabs('data-battle', BATTLE_MODES, warMode);
-    setPillActive(tabs?.querySelector('.pill-tabs'), 'data-battle', warMode);
+    if (tabs && !tabs.firstElementChild) tabs.innerHTML = renderMenuTabs('data-battle', BATTLE_MODES, warMode);
+    setMenuActive(tabs?.querySelector('.menu-tabs'), 'data-battle', warMode);
 
     BATTLE_MODES.forEach(({ id }) => {
         document.getElementById('section-' + id).classList.toggle('hidden', id !== warMode);
     });
     if (warMode === 'cwl') renderCwl();
     if (warMode === 'raid') renderRaid();
-    animateIn(document.getElementById('section-' + warMode));
 }
 
 function switchView(view = 'about') {
@@ -48,7 +39,6 @@ function switchView(view = 'about') {
     document.querySelectorAll('main > section').forEach((section) => {
         const isTarget = section.id === 'section-' + target;
         section.classList.toggle('hidden-section', !isTarget);
-        if (isTarget && section.id !== 'section-battle') animateIn(section);
     });
 
     if (target === 'battle') showBattleMode();

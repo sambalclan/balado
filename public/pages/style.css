@@ -1,7 +1,7 @@
 :root {
   --bottom-inset: var(--window-inset-bottom, 0px);
 
-  /* ===== ALL COLOURS LIVE HERE (light = monochrome grays, like Android 13's monochrome theme; dark = VitePress docs palette) =====
+  /* ===== ALL COLOURS LIVE HERE (light = monochrome grays, like Android 13's monochrome theme; dark = matching neutral grays) =====
      Light values are the default; dark values apply when <html data-theme="dark">. */
 
   color-scheme: light;
@@ -10,7 +10,6 @@
   --bg: #f2f2f2;              /* page background */
   --surface: #ffffff;         /* cards, inputs, nav bar */
   --surface-2: #e8e8e8;       /* small chips on cards */
-  --surface-sunken: #e9e9e9;  /* tab switch track */
   --track: #dcdcdc;           /* progress bar track */
   --overlay: rgba(255, 255, 255, 0.75);
   --tint: rgba(0, 0, 0, 0.05);
@@ -55,11 +54,10 @@
 :root[data-theme="dark"] {
   color-scheme: dark;
 
-  --bg: #1b1b1f;
-  --surface: #202127;
-  --surface-2: #2e3038;
-  --surface-sunken: #161618;
-  --track: #2e2e32;
+  --bg: #121212;
+  --surface: #1e1e1e;
+  --surface-2: #2c2c2c;
+  --track: #363636;
   --overlay: rgba(0, 0, 0, 0.45);
   --tint: rgba(255, 255, 255, 0.05);
   --tint-faint: rgba(255, 255, 255, 0.06);
@@ -68,23 +66,23 @@
 
   --line: rgba(255, 255, 255, 0.10);
   --line-soft: rgba(255, 255, 255, 0.07);
-  --divider: #2e2e32;
+  --divider: #2e2e2e;
 
-  --text: #dfdfd6;
-  --body: #dfdfd6;
-  --text-soft: #c5c5ce;
-  --muted: #9b9ba6;
-  --subtle: #6e6e7a;
-  --faint: #4b4b55;
-  --empty: #3a3a42;
+  --text: #e3e3e3;
+  --body: #e3e3e3;
+  --text-soft: #c7c7c7;
+  --muted: #9e9e9e;
+  --subtle: #767676;
+  --faint: #505050;
+  --empty: #3d3d3d;
 
-  --good: #22c55e;
-  --bad: #f87171;
-  --role-coleader: #fb923c;
-  --role-admin: #38bdf8;
+  --good: #e3e3e3;
+  --bad: #8f8f8f;
+  --role-coleader: #bdbdbd;
+  --role-admin: #8a8a8a;
 
-  --accent: #a8b1ff;
-  --accent-text: #a8b1ff;
+  --accent: #e3e3e3;
+  --accent-text: #e3e3e3;
 }
 
 /* Reset & Base Styling */
@@ -184,70 +182,33 @@ img, svg {
   font-variation-settings: 'FILL' 1;
 }
 
-/* Light view transition */
-@keyframes view-in {
-  from { opacity: 0; }
-  to   { opacity: 1; }
-}
-.view-anim { animation: view-in 120ms ease-out both; }
-
 /* Sections stay hidden until switchView shows them (avoids flash while loading) */
 .hidden-section { display: none; }
 
-/* Tabs with a sliding pill (role filter, War / CWL / Raid switch) */
-.pill-tabs {
-  --tabs: 3;
-  --tab-index: 0;
-  position: relative;
-  display: grid;
-  grid-template-columns: repeat(var(--tabs), minmax(0, 1fr));
-  gap: 4px;
-  padding: 4px;
+/* Text menu (War / CWL / Raid and the filters): plain, no animation */
+.menu-tabs {
+  display: flex;
   margin-bottom: 12px;
-  border: 1px solid var(--divider);
-  border-radius: 12px;
-  background: var(--surface-sunken);
-  isolation: isolate;
+  border-bottom: 1px solid var(--divider);
 }
-.pill-tabs .tab-pill {
-  position: absolute;
-  top: 4px;
-  bottom: 4px;
-  left: 4px;
-  width: calc((100% - (var(--tabs) + 1) * 4px) / var(--tabs));
-  border-radius: 8px;
-  border: 1px solid color-mix(in srgb, var(--accent) 45%, transparent);
-  background: color-mix(in srgb, var(--accent) 14%, transparent);
-  transform: translateX(calc(var(--tab-index) * (100% + 4px)));
-  transition: transform 350ms cubic-bezier(.22,1,.36,1);
-  pointer-events: none;
-  z-index: 0;
-}
-.pill-tabs button {
-  position: relative;
-  z-index: 1;
+.menu-tabs button {
+  flex: 1 1 0;
   min-width: 0;
-  padding: 7px 4px;
+  padding: 9px 4px;
+  margin-bottom: -1px;
   border: 0;
-  border-radius: 8px;
+  border-bottom: 2px solid transparent;
   background: transparent;
   color: var(--subtle);
-  font-size: 9px;
+  font-size: 10px;
   font-weight: 600;
   letter-spacing: .04em;
   text-transform: uppercase;
   white-space: nowrap;
   cursor: pointer;
-  transition: color 250ms ease, transform 150ms ease;
 }
-.pill-tabs button.active { color: var(--accent-text); }
-.pill-tabs button:active { transform: scale(.96); }
-.pill-tabs button:focus-visible { outline: 2px solid var(--accent); outline-offset: -2px; }
-
-@media (prefers-reduced-motion: reduce) {
-  .view-anim { animation: none; }
-  .pill-tabs .tab-pill, .pill-tabs button { transition: none; }
-}
+.menu-tabs button.active { color: var(--accent-text); border-bottom-color: var(--accent); }
+.menu-tabs button:focus-visible { outline: 2px solid var(--accent); outline-offset: -2px; }
 
 .text-accent { color: var(--accent-text); }
 .bg-accent { background-color: var(--accent); }
