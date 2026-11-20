@@ -6,7 +6,7 @@ import {
 const byRank = (a, b) => (a.clanRank || 0) - (b.clanRank || 0);
 const desc = (key) => (a, b) => (b[key] || 0) - (a[key] || 0);
 
-export const MEMBER_SORTS = {
+const MEMBER_SORTS = {
     rank: byRank,
     trophies: desc('trophies'),
     donations: desc('donations'),
@@ -21,14 +21,13 @@ const SORT_LABELS = {
     role: 'Role', th: 'Town Hall', name: 'Name',
 };
 
+// The line left of the rank number: leader orange, co-leader yellow, elder blue
 const ROLE_COLOR = {
-    leader:   { bar: 'bg-accent',     chip: 'text-accent bg-accent-soft border-accent-soft' },
+    leader:   { bar: 'bg-role-leader',   chip: 'chip-leader' },
     coLeader: { bar: 'bg-role-coleader', chip: 'chip-coleader' },
     admin:    { bar: 'bg-role-admin',    chip: 'chip-admin' },
-    member:   { bar: 'bg-tint-3',   chip: 'text-muted bg-tint border-line' },
+    member:   { bar: 'bg-tint-3',        chip: 'text-muted bg-tint border-line' },
 };
-
-const MAX_MEMBERS = 50;
 
 let sortKey = 'rank';
 let search = '';
@@ -48,7 +47,7 @@ const renderMemberRow = (m, i) => {
     <div class="relative flex items-center gap-3 pl-4 pr-3 py-2.5 ${i ? 'border-t border-line' : ''}">
         <span class="absolute left-0 top-2.5 bottom-2.5 w-[3px] rounded-r ${role.bar}"></span>
         <span class="w-5 shrink-0 text-center text-[10px] font-mono text-subtle">${m.clanRank ?? i + 1}</span>
-        <img src="${getTHImage(m.townHallLevel)}" class="w-9 h-9 shrink-0 object-contain"
+        <img src="${getTHImage(m.townHallLevel)}" class="w-11 h-11 shrink-0 object-contain"
              alt="TH${m.townHallLevel}" onerror="this.style.visibility='hidden'">
         <div class="min-w-0 flex-1 leading-tight">
             <div class="flex items-center gap-1.5 min-w-0">
@@ -61,8 +60,8 @@ const renderMemberRow = (m, i) => {
                 <span class="ml-1.5 text-bad">↓ ${fmt(m.donationsReceived)}</span>
             </p>
         </div>
-        <div class="shrink-0 w-14 flex flex-col items-center gap-0.5 rounded-lg border border-line bg-tint py-1">
-            ${league ? `<img src="${league}" class="w-7 h-7 object-contain" alt="" onerror="this.style.display='none'">` : ''}
+        <div class="shrink-0 w-12 flex flex-col items-center gap-0.5 rounded-lg bg-tint py-1">
+            ${league ? `<img src="${league}" class="w-6 h-6 object-contain" alt="" onerror="this.style.display='none'">` : ''}
             <span class="text-[13px] font-bold leading-none tabular-nums text-accent">${fmt(m.trophies)}</span>
         </div>
     </div>`;
@@ -87,19 +86,10 @@ export function renderMembers(clan) {
 
     // The options stay visible while the data loads, so the page is never empty
     const list = clan?.memberList || [];
-    const count = clan?.members ?? list.length;
     const total = (key) => list.reduce((n, m) => n + (m[key] || 0), 0);
     const avgTrophies = list.length ? Math.round(total('trophies') / list.length) : 0;
 
     container.innerHTML = pageShell(`
-        <div class="flex items-baseline justify-between mb-1.5">
-            <h2 class="medieval text-lg font-semibold text-main uppercase">Members</h2>
-            <span class="text-[11px] text-muted font-mono">${count} / ${MAX_MEMBERS}</span>
-        </div>
-        <div class="h-1 mb-3 rounded-full bg-tint-2 overflow-hidden">
-            <div class="h-full rounded-full bg-accent" style="width:${Math.min(count / MAX_MEMBERS, 1) * 100}%"></div>
-        </div>
-
         <div class="grid grid-cols-3 gap-1.5 mb-3">
             ${tile('Avg trophies', avgTrophies, 'text-accent')}
             ${tile('Donated', total('donations'), 'text-good')}
@@ -129,7 +119,7 @@ export function renderMembers(clan) {
         const role = e.target.closest('[data-role]');
         if (!role || !container.contains(role)) return;
         roleFilter = role.dataset.role;
-        setMenuActive(role.closest('.menu-tabs'), 'data-role', roleFilter);
+        setMenuActive(role.closest('.switch-box'), 'data-role', roleFilter);
         refreshList();
     };
 

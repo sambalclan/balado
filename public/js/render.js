@@ -1,11 +1,11 @@
-import { escapeHtml, fmt, warStars, warDate, isEndedWar, pagePanel, backButton, themeIcon } from './constants.js';
+import { escapeHtml, fmt, warStars, warDate, isEndedWar, pagePanel, backButton, getTheme, setTheme, renderMenuTabs, setMenuActive } from './constants.js';
 import { state, getRaidWeeks, getCwlRounds } from './state.js';
 import { getLiveLog, LIVE_API_URL } from './api.js';
 
 // CONFIG
-// Canvas drawing cannot use CSS classes, so it reads its colours from style.css
+// Canvas drawing cannot use CSS classes, so it reads its colours from style.css.
+// Reports keep their own colour accent (gold) in both themes.
 const token = name => getComputedStyle(document.documentElement).getPropertyValue(name).trim();
-const accentColor = () => token('--accent');
 const FONT = 'Arial, Helvetica, sans-serif';
 const SCALE = 3;
 const L = { pad: 24, cellPad: 12, rowH: 30, headH: 34, headBlock: 88, minWidth: 520 };
@@ -16,6 +16,7 @@ const THEME = {
     get line() { return token('--report-line'); },
     get zebra() { return token('--report-zebra'); },
     get border() { return token('--report-border'); },
+    get accent() { return token('--report-accent'); },
     get onAccent() { return token('--report-on-accent'); },
 };
 const shortDate = (d, opts) => d.toLocaleDateString('en-US', opts);
@@ -156,7 +157,7 @@ function drawHeader(ctx, report, width, logo) {
     ctx.fillStyle = THEME.sub;
     ctx.font = '14px ' + FONT;
     ctx.fillText(report.subtitle, textX, pad + 50);
-    ctx.fillStyle = accentColor();
+    ctx.fillStyle = THEME.accent;
     ctx.fillRect(pad, pad + 66, width - pad * 2, 3);
 }
 
@@ -174,7 +175,7 @@ function drawTable(ctx, { headers, rows }, widths, top) {
         });
     };
 
-    ctx.fillStyle = accentColor();
+    ctx.fillStyle = THEME.accent;
     ctx.fillRect(pad, top, tableW, headH);
     ctx.fillStyle = THEME.onAccent;
     ctx.font = 'bold 14px ' + FONT;
@@ -369,6 +370,8 @@ const apiHealth = () => {
 };
 
 // SETTINGS
+const DISPLAY_OPTIONS = [{ id: 'light', label: 'Light' }, { id: 'dark', label: 'Dark' }];
+
 export function renderSettings() {
     const page = document.getElementById('section-settings');
     if (!page) return;
@@ -395,10 +398,14 @@ export function renderSettings() {
             <span class="text-soft">${health.label}</span>
             <span class="ml-auto text-[10px] text-subtle">CWL excluded</span>
         </div>
+        <div class="rounded-xl border border-divider bg-surface p-3 mb-3">
+            <p class="text-xs font-semibold text-main">Display</p>
+            <p class="text-[10px] text-muted mb-3">Light or dark appearance</p>
+            <div class="[&>.switch-box]:mb-0">${renderMenuTabs('data-display', DISPLAY_OPTIONS, getTheme())}</div>
+        </div>
         <div class="rounded-xl border border-divider divide-y divide-line overflow-hidden">
             ${row('download', 'Monthly report', 'Download last month statistics', 'data-settings-report')}
             ${row('leaderboard', 'CWL report', 'Download CWL attack ranking as image', 'data-settings-cwl')}
-            ${row('refresh', 'Refresh data', 'Update clan and battle statistics', 'data-settings-refresh')}
             ${row('terminal', 'API logs', `${logs.length} requests · ${health.label}`, 'data-settings-logs')}
             <div id="settingsLogPanel" class="hidden px-3 pb-3 max-h-64 overflow-y-auto">${liveLogHtml()}</div>
         </div>
@@ -406,9 +413,13 @@ export function renderSettings() {
     `);
 
     page.onclick = e => {
-        if (e.target.closest('[data-settings-report]')) downloadReport();
+        const display = e.target.closest('[data-display]');
+        if (display) {
+            setTheme(display.dataset.display);
+            setMenuActive(display.closest('.switch-box'), 'data-display', display.dataset.display);
+        }
+        else if (e.target.closest('[data-settings-report]')) downloadReport();
         else if (e.target.closest('[data-settings-cwl]')) downloadCwlReport();
-        else if (e.target.closest('[data-settings-refresh]')) document.getElementById('refreshBtn')?.click();
         else if (e.target.closest('[data-settings-logs]')) page.querySelector('#settingsLogPanel')?.classList.toggle('hidden');
     };
 }
@@ -421,7 +432,7 @@ const renderLabel = label => `
 
 const iconButton = (id, label, icon, extra = '') => `
     <button id="${id}" type="button" aria-label="${label}" title="${label}"
-        class="relative flex items-center justify-center w-10 h-10 rounded-full bg-surface text-muted hover-text-main transition-colors duration-200 active:scale-90 ${extra}">
+        class="relative flex items-center justify-center w-10 h-10 rounded-xl border border-line bg-surface text-muted hover-text-main active:scale-90 ${extra}">
         <span class="material-symbols-outlined text-[20px]">${icon}</span>
     </button>`;
 
@@ -432,9 +443,8 @@ function renderClanHeader(clan) {
 
     el.innerHTML = `
         <div class="flex items-center justify-between gap-3 pb-2.5">
-            <h1 class="min-w-0 px-1 text-xl md:text-2xl font-semibold text-main leading-tight truncate">${escapeHtml(clan.name || 'Unknown Clan')}</h1>
+            <h1 class="font-title flex-1 min-w-0 px-1 text-main leading-tight truncate">${escapeHtml(clan.name || 'Unknown Clan')}</h1>
             <div class="relative shrink-0 flex items-center gap-2">
-                ${iconButton('themeBtn', 'Dark / light mode', themeIcon())}
                 ${iconButton('refreshBtn', 'Refresh data', 'sync', 'disabled:opacity-60')}
                 ${iconButton('settingsBtn', 'Settings', 'tune')}
                 <span aria-label="${health.label}" title="${health.label} (CWL excluded)" class="absolute right-0 top-0 w-2.5 h-2.5 rounded-full border-2 border-page pointer-events-none ${health.dot}"></span>

@@ -1,6 +1,6 @@
 import { fetchClanData, fetchClanHistory, fetchLatestRaid, fetchLatestCwl, fetchCwlWars, fetchWarIndex, fetchWarData, fetchRaidIndex, fetchRaidData, clearLiveCache } from './api.js';
 import { setWarData, setClanHistory, setRaidData, setRaids, setCwlData, setCwlWars } from './state.js';
-import { renderMenuTabs, setMenuActive, toggleTheme } from './constants.js';
+import { renderMenuTabs, setMenuActive } from './constants.js';
 import { renderAbout, renderSettings } from './render.js';
 import { renderMembers } from './members.js';
 import { renderWar, renderCwl, renderRaid } from './war.js';
@@ -20,10 +20,10 @@ const BATTLE_MODES = [
 ];
 
 function showBattleMode() {
-    // The War / CWL / Raid switch is built here, not hardcoded in index.html
-    const tabs = document.getElementById('battleTabs');
-    if (tabs && !tabs.firstElementChild) tabs.innerHTML = renderMenuTabs('data-battle', BATTLE_MODES, warMode);
-    setMenuActive(tabs?.querySelector('.menu-tabs'), 'data-battle', warMode);
+    // The War / CWL / Raid options are built here, not hardcoded in index.html
+    const box = document.getElementById('battleTabs');
+    if (box && !box.firstElementChild) box.innerHTML = renderMenuTabs('data-battle', BATTLE_MODES, warMode);
+    setMenuActive(box?.firstElementChild, 'data-battle', warMode);
 
     BATTLE_MODES.forEach(({ id }) => {
         document.getElementById('section-' + id).classList.toggle('hidden', id !== warMode);
@@ -58,13 +58,12 @@ function switchView(view = 'about') {
 function bindTabs() {
     // The header is re-rendered, so listen on the document
     document.addEventListener('click', (e) => {
-        if (e.target.closest('#themeBtn')) toggleTheme();
-        else if (e.target.closest('#refreshBtn')) refreshAll();
+        if (e.target.closest('#refreshBtn')) refreshAll();
         else if (e.target.closest('#settingsBtn')) switchView('settings');
         else if (e.target.closest('[data-settings-back]')) switchView(lastTab);
         else {
-            const tab = e.target.closest('[data-battle]');
-            if (tab && tab.dataset.battle !== warMode) { warMode = tab.dataset.battle; switchView('battle'); }
+            const item = e.target.closest('[data-battle]');
+            if (item && item.dataset.battle !== warMode) { warMode = item.dataset.battle; switchView('battle'); }
         }
     });
     VIEWS.filter((view) => view !== 'settings').forEach((view) => {

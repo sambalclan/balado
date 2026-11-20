@@ -35,21 +35,17 @@ export const warStars = member => (member.attacks || []).reduce((n, a) => n + (a
 
 // SHARED: THEME (the colours themselves live in style.css)
 export const getTheme = () => document.documentElement.dataset.theme === 'light' ? 'light' : 'dark';
-export const themeIcon = () => getTheme() === 'dark' ? 'light_mode' : 'dark_mode';
 
-export function toggleTheme() {
-    const next = getTheme() === 'dark' ? 'light' : 'dark';
-    document.documentElement.dataset.theme = next;
-    try { localStorage.setItem('theme', next); } catch { /* storage can be blocked */ }
-    const icon = document.querySelector('#themeBtn .material-symbols-outlined');
-    if (icon) icon.textContent = themeIcon();
+export function setTheme(theme) {
+    document.documentElement.dataset.theme = theme;
+    try { localStorage.setItem('theme', theme); } catch { /* storage can be blocked */ }
 }
 
 // SHARED: NUMBER FORMAT
 export const fmt = n => Number(n || 0).toLocaleString('en-US');
 
 // SHARED: UI BLOCKS
-export const pageCard = (inner, rounded = 'rounded-xl') =>
+const pageCard = (inner, rounded = 'rounded-xl') =>
     `<div class="w-full bg-surface border border-divider ${rounded} p-3">${inner}</div>`;
 
 export const pageShell = inner => `<div class="px-0 py-3 w-full">${inner}</div>`;
@@ -67,9 +63,9 @@ export const backButton = attr => `
     </button>`;
 
 // PILL TABS
-// A plain text menu (War / CWL / Raid, filters): no sliding highlight, no animation
+// Option row (War / CWL / Raid, member roles, CWL view): flat box, no sliding highlight, no animation
 export const renderMenuTabs = (attr, items, activeId) => `
-    <div class="menu-tabs">
+    <div class="switch-box">
         ${items.map(({ id, label }) => `
             <button type="button" ${attr}="${id}" class="${id === activeId ? 'active' : ''}" aria-pressed="${id === activeId}">
                 ${label}

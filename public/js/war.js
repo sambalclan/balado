@@ -2,16 +2,8 @@ import { parseCoCDate, escapeHtml, fmt, warDate, getTHImage, isEndedWar, warStar
 import { state, getRaidWeeks, getCwlRounds, getCwlMemberStats } from './state.js';
 
 // WAR
-let warFilter = 'all';
 let warSelected = null;
 let warCountdownTimer = null;
-
-const WAR_FILTERS = [
-    { id: 'all', label: 'All' },
-    { id: 'victory', label: 'Victory' },
-    { id: 'defeat', label: 'Defeat' },
-    { id: 'draw', label: 'Draw' }
-];
 
 function warCountdown(w) {
     if (isEndedWar(w)) return null;
@@ -70,15 +62,21 @@ function startWarCountdown(container) {
 
 const RESULT_TEXT = {
     ongoing: 'text-accent',
-    victory: 'text-accent',
-    defeat:  'text-muted',
+    victory: 'text-win',
+    defeat:  'text-lose',
     draw:    'text-subtle',
+};
+
+// Small picture shown in the war box: crying when we lose, cheering when we win
+const RESULT_EMOTE = {
+    victory: 'emotes/win.webp',
+    defeat:  'emotes/lose.webp',
 };
 
 const RESULT_CHIP = {
     ongoing: 'bg-accent-soft text-accent',
-    victory: 'bg-accent-soft text-accent',
-    defeat:  'bg-tint-2 text-soft',
+    victory: 'bg-tint text-win',
+    defeat:  'bg-tint text-lose',
     draw:    'bg-tint text-muted',
 };
 
@@ -93,8 +91,8 @@ function warResult(w) {
     const cd = w.clan?.destructionPercentage || 0;
     const od = w.opponent?.destructionPercentage || 0;
 
-    if (cs > os || (cs === os && cd > od)) return result('victory', 'Victory');
-    if (cs < os || (cs === os && cd < od)) return result('defeat', 'Defeat');
+    if (cs > os || (cs === os && cd > od)) return result('victory', 'Win');
+    if (cs < os || (cs === os && cd < od)) return result('defeat', 'Lose');
     return result('draw', 'Draw');
 }
 
@@ -124,12 +122,12 @@ function renderMatchCard({ openAttr, label, w, countdown }) {
 
     return `
         <div ${openAttr} class="rounded-xl border border-line-soft bg-surface px-3 py-2.5 cursor-pointer active:scale-[0.99] transition-transform">
+            <p class="flex items-center justify-center gap-1.5 pb-2 mb-2.5 border-b border-line-soft text-[11px] font-bold uppercase tracking-wider ${r.text}">
+                ${RESULT_EMOTE[r.key] ? `<img src="${RESULT_EMOTE[r.key]}" width="32" height="32" alt="" decoding="async" class="w-8 h-8 object-contain">` : ''}${r.label}
+            </p>
             <div class="grid grid-cols-[1fr_auto_1fr] items-center gap-2">
                 <div class="flex items-center gap-2 min-w-0">${badge(c)}${info(c, 'Clan', '')}</div>
-                <div class="text-center leading-none px-1">
-                    <p class="medieval text-lg font-semibold tabular-nums">${score(cs, os)} <span class="text-faint">-</span> ${score(os, cs)}</p>
-                    <p class="mt-1 text-[8px] font-semibold uppercase tracking-wider ${r.text}">${r.label}</p>
-                </div>
+                <p class="px-1 text-lg font-semibold tabular-nums leading-none">${score(cs, os)} <span class="text-faint">-</span> ${score(os, cs)}</p>
                 <div class="flex items-center justify-end gap-2 min-w-0">${info(o, 'Opponent', 'text-right')}${badge(o)}</div>
             </div>
             <p class="mt-2 text-center text-[9px] text-subtle">${label}</p>
@@ -144,19 +142,13 @@ const renderWarCard = w => renderMatchCard({
     countdown: warCountdownHtml(w),
 });
 
-function filterWars() {
-    return [...state.wars]
-        .sort((a, b) => Number(isRunning(b)) - Number(isRunning(a)) || warTime(b) - warTime(a))
-        .filter(w => warFilter === 'all' || warResult(w).key === warFilter);
+function sortedWars() {
+    return [...state.wars].sort((a, b) => Number(isRunning(b)) - Number(isRunning(a)) || warTime(b) - warTime(a));
 }
 
 function renderWarList() {
     if (!state.wars.length) return emptyCard('War data is not available yet.');
-
-    const shown = filterWars();
-    const count = document.getElementById('warCount');
-    if (count) count.textContent = `${shown.length} / ${state.wars.length}`;
-    return shown.length ? shown.map(renderWarCard).join('') : '<p class="text-sm text-subtle text-center py-6">No wars found.</p>';
+    return sortedWars().map(renderWarCard).join('');
 }
 
 // WAR DETAILS
@@ -230,7 +222,7 @@ function renderWarScoreboard(w, r, stats, countdown) {
             </div>
             <div class="grid grid-cols-[1fr_auto_1fr] items-center gap-3">
                 ${side(c)}
-                <p class="medieval text-3xl font-bold tabular-nums">${score(cs, os)} <span class="text-faint">-</span> ${score(os, cs)}</p>
+                <p class="text-3xl font-bold tabular-nums">${score(cs, os)} <span class="text-faint">-</span> ${score(os, cs)}</p>
                 ${side(o)}
             </div>
             ${countdown}
@@ -293,23 +285,13 @@ export function renderWar(wars) {
     }
 
     container.innerHTML = `
-        ${renderMenuTabs('data-war', WAR_FILTERS, warFilter)}
-        <p class="mb-2 px-1 text-[10px] text-subtle"><span id="warCount">${state.wars.length}</span> wars</p>
+        <p class="mb-2 px-1 text-[10px] text-subtle">${state.wars.length} wars</p>
         <div id="warList" class="flex flex-col gap-1.5">${renderWarList()}</div>
     `;
 
     startWarCountdown(container);
 
     container.onclick = e => {
-        const btn = e.target.closest('[data-war]');
-        if (btn) {
-            warFilter = btn.dataset.war;
-            setMenuActive(btn.closest('.menu-tabs'), 'data-war', warFilter);
-            container.querySelector('#warList').innerHTML = renderWarList();
-            startWarCountdown(container);
-            return;
-        }
-
         const card = e.target.closest('[data-war-open]');
         if (card) {
             warSelected = Number(card.dataset.warOpen);
@@ -423,10 +405,7 @@ export function renderCwl() {
     if (!rounds.length) {
         container.innerHTML = group
             ? `
-                <div class="flex items-center gap-3 mb-3">
-                    <h2 class="medieval text-lg font-semibold text-main uppercase">CWL</h2>
-                    <span class="text-[11px] text-muted">${escapeHtml(season)}</span>
-                </div>
+                <p class="mb-3 px-1 text-[11px] text-muted">${escapeHtml(season)}</p>
                 ${emptyCard('No CWL wars saved yet.')}`
             : emptyCard('CWL data is not available yet.');
         return;
@@ -452,10 +431,7 @@ export function renderCwl() {
             </div>`;
 
         container.innerHTML = `
-            <div class="flex items-center gap-3 mb-3">
-                <h2 class="medieval text-lg font-semibold text-main uppercase">CWL</h2>
-                <span class="text-[11px] text-muted">${escapeHtml(season)} · ${rounds.length} / ${total} rounds</span>
-            </div>
+            <p class="mb-3 px-1 text-[11px] text-muted">${escapeHtml(season)} · ${rounds.length} / ${total} rounds</p>
             <div class="grid grid-cols-3 gap-1.5 mb-3">${cwlSummary(rounds).map(tile).join('')}</div>
             ${renderMenuTabs('data-cwl-view', CWL_VIEWS, cwlView)}
             <div id="cwlBody">${renderCwlBody(rounds)}</div>
@@ -473,7 +449,7 @@ export function renderCwl() {
         const tab = e.target.closest('[data-cwl-view]');
         if (tab) {
             cwlView = tab.dataset.cwlView;
-            setMenuActive(tab.closest('.menu-tabs'), 'data-cwl-view', cwlView);
+            setMenuActive(tab.closest('.switch-box'), 'data-cwl-view', cwlView);
             container.querySelector('#cwlBody').innerHTML = renderCwlBody(getCwlRounds());
             startCwlCountdown(container);
             return;
@@ -646,13 +622,7 @@ export function renderRaid() {
     }
 
     page.innerHTML = open ? renderRaidDetail(open) : `
-        <div class="flex items-center justify-between mb-3">
-            <div>
-                <h2 class="text-lg font-semibold text-main">Raid Weekends</h2>
-                <p class="text-[10px] text-muted">${weeks.length} raid weekends recorded</p>
-            </div>
-            <span class="material-symbols-outlined text-accent text-[23px]">fort</span>
-        </div>
+        <p class="mb-3 px-1 text-[11px] text-muted">${weeks.length} raid weekends recorded</p>
         <div class="flex flex-col gap-3">${weeks.map(renderRaidCard).join('')}</div>
     `;
 
